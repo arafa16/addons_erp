@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="account_asset_reclass_form">
+        <field name="name">wizard.account.asset.reclass.form</field>
+        <field name="model">account.asset.reclass</field>
+        <field name="arch" type="xml">
+            <form string="Reclass Asset">
+                <group string="Asset information" col="1">
+                    <group colspan="2" col="2">
+                	    <field name="asset_id"/>
+                	    <field name="category_id"/>
+                	</group>
+                    <group string="Reclass parameters" colspan="2" col="2">
+                        <field name="method" widget="radio" options="{'horizontal': true}"/>
+                        <field name="new_asset_id" class="oe_inline" attrs="{'invisible': [('method', '=', 'category')]}"/>
+                        <field name="new_category_id" class="oe_inline" attrs="{'invisible': [('method', '=', 'asset')]}"/>
+                    </group>
+                    <group string="Generated journal" colspan="2" col="2">
+                        <field name="date" class="oe_inline"/>
+                        <field name="name"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="reclass" string="Reclass" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_asset_reclass" model="ir.actions.act_window">
+         <field name="name">Reclass Asset</field>
+         <field name="res_model">account.asset.reclass</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_id" ref="account_asset_reclass_form"/>
+         <field name="target">new</field>
+   </record>
+</odoo>

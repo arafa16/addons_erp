@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+        <report 
+            id="action_report_purchase_request"
+            string="Purchase Request"
+            model="sprogroup.purchase.request"
+            name="enhanced_purchase_request.template_purchase_request_dokumen"
+            report_type="qweb-pdf"
+            print_report_name="'Purchase Request No. %s' % (object.name)"
+        />
+
+		<template id="template_purchase_request_dokumen">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h3 style="text-align:center;">
+                                <span>Purchase Request #</span> <span t-field="doc.name"/>
+                            </h3>
+                            <div class="row mt32 mb32">
+                                <div class="col-xs-6">
+                                    <table style="border:none;" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="font-weight:bold; width:120px; padding:2px;">Requested By</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.requested_by"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold; width:120px; padding:2px;">Description</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.namex"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-xs-4">
+                                    <table style="border:none;" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="font-weight:bold; width:110px; padding:2px;">Start Date</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.date_start"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold; width:110px; padding:2px;">End Date</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.end_start"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row mt16 mb16">
+                                <div class="col-xs-12  mb8"><span style="font-size:20px;">Related Document</span></div>
+                                <div class="col-xs-5">
+                                    <table style="border:none;" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="font-weight:bold; width:110px; padding:2px;">RFQ Number</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.nomor_bidding"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold; width:110px; padding:2px;">PO Numbers</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;">
+                                                <span t-foreach="doc.nomor_po_m2o" t-as="ls">
+                                                    <span style="padding-right:10px;">
+                                                        <span t-field="ls.name"/>
+                                                    </span>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold; width:110px; padding:2px;">SO Number</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.salesorder_id"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-xs-7">
+                                    <table style="border:none;" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="font-weight:bold; width:130px; padding:2px;">Status LoA</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.loa_request"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold; width:130px; padding:2px;">RFQ Responsible</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.eksekutor"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold; width:130px; padding:2px;">Asosiated Task</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;"><span t-field="doc.pjtask"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight:bold; width:130px; padding:2px;">Chart of Account</td>
+                                            <td style="padding: 2px 5px;">:</td>
+                                            <td style="padding: 2px;" name="tempatcoa"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="co-md-12 mt16 mb8">
+                                    <div style="font-weight:bold; font-size:18px;">
+                                        Product Details
+                                    </div>
+                                </div>
+                                <div class="co-md-12">
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Description</th>
+                                                <th class="text-right">Quantity</th>
+                                                <th class="text-right">Unit Price</th>
+                                                <th class="text-right">Request Date</th>
+                                                <th class="text-right">Sub Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="sale_tbody">
+                                            <t t-foreach="doc.line_ids" t-as="baris">
+                                                <tr style="font-size:12px;">
+                                                    <td><span t-field="baris.product_id"/></td>
+                                                    <td><span t-field="baris.name"/></td>
+                                                    <td class="text-right"><span t-field="baris.product_qty"/> <span t-field="baris.product_uom_id"/></td>
+                                                    <td class="text-right"><span t-field="baris.cost_product"/></td>
+                                                    <td class="text-right" style="  white-space:nowrap;"><span t-field="baris.date_required"/></td>
+                                                    <td class="text-right"><span t-field="baris.subtotal"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="clearfix">
+                                <div class="row" name="total">
+                                    <div class="col-xs-4 pull-right">
+                                        <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                                            <tr class="border-black">
+                                                <td><strong>Total</strong></td>
+                                                <td class="text-right">
+                                                    <span t-field="doc.amount_total"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>
+                                <div style="font-weight:bold; padding-top:20px;">Description</div>
+                                <div style="border:thin solid #DADADA; padding:5px; min-height:40px;">
+                                    <span t-field="doc.description"/>
+                                </div>
+                            </p>
+                            <div style="padding-top:50px;">
+                                <div class="row" name="kolomttd">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+		</template>
+    </data>
+</odoo>

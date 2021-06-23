@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_purchase_request_loa_inherit_form">
+            <field name="name">enhanced.purchase.request.loa.inherit.form</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="sprogroup_purchase_request.view_sprogroup_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_start']" position="before">
+                    <field name="bolehConfirm" invisible="1"/>
+                    <field name="temp_dummy" invisible="1"/>
+                    <field name="setConfirmLoA" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='assigned_to']" position="attributes">
+                    <attribute name="domain">[('groups_id', 'in', budget_ref)]</attribute>
+                </xpath>
+                <xpath expr="//field[@name='end_start']" position="after">
+                    <field name="loa_request" attrs="{'invisible':[('setConfirmLoA', '=', False)]}" readonly="1"/>
+                    <field name="testx" invisible="1"/>
+                    <field name="budget_ref" invisible="1"/>
+                    <field name="isDispatch" invisible="1"/>
+                    <field name="tanggal_procure" readonly="1"/>
+                    <field name="eksekutor" domain="[('groups_id', 'in', testx)]" string="Assign to" attrs="{'readonly': [('state', 'not in', ['leader_approved'])],'required':[('state','=','done')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='create_date']" position="after">
+                    <field name="coannya" attrs="{'readonly': [('state', 'not in', ['draft','to_approve'])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='salesorder_id']" position="attributes">
+                    <attribute name="attrs">{'readonly':['|',('state','!=','draft')]}</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]" position="after">
+                    <page string="Level of Approval">
+                        <group>
+                            <group>
+                                <field name="penandatangan1" domain="[('otoritas_purchase.urutan', '=', 1)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
+                                <field name="penandatangan2" domain="[('otoritas_purchase.urutan', '=', 2)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
+                                <field name="penandatangan3" domain="[('otoritas_purchase.urutan', '=', 3)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
+                                <field name="penandatangan4" domain="[('otoritas_purchase.urutan', '=', 4)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
+                                <field name="penandatangan5" domain="[('otoritas_purchase.urutan', '=', 5)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
+                            </group>   
+                            <group>
+                                <field name="assman" domain="[('checkerPR','=',True)]" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="issasman" invisible="1"/>
+                                <field name="required1" invisible="1"/>
+                                <field name="required2" invisible="1"/>
+                                <field name="required3" invisible="1"/>
+                                <field name="required4" invisible="1"/>
+                                <field name="required5" invisible="1"/>
+                            </group> 
+                        </group>
+                        
+                    </page>
+                </xpath>
+                <xpath expr="//form/header/field[@name='state']" position="before">
+                    <button name="test_function"
+                            string="test function"
+                            type="object" invisible="1"
+                    />
+                    <button name="button_action_set_to_draft"
+                            string="Set To Draft"
+                            type="object"
+                            groups="sprogroup_purchase_request.group_sprogroup_purchase_request_manager"
+                            attrs="{'invisible': [('state', '!=', 'rejected')]}"
+                    />
+                    <button name="button_action_request_procure_receive"
+                            string="Procure Receive"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#3eb763;"
+                            groups="sprogroup_purchase_request.group_purchase_request_buyer"
+                            attrs="{'invisible': [('state', '!=', 'leader_approved')]}"
+                    />
+                    <button name="button_action_request_procure_reject"
+                            string="Reject by Procure"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#d9534f;"
+                            groups="sprogroup_purchase_request.group_purchase_request_buyer"
+                            attrs="{'invisible': [('state', '!=', 'leader_approved')]}"
+                    />
+                    <button name="button_action_request_loa_reject"
+                            string="Reject LoA"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#d9534f;"
+                            attrs="{'invisible': [('state', '!=', 'leader_request')]}"
+                    />
+                    <button name="button_action_request_budget_confirm"
+                            string="Confirm Budget"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#3eb763;"
+                            groups="sprogroup_purchase_request.group_purchase_request_budget"
+                            attrs="{'invisible': [('state', '!=', 'to_approve')]}"
+                    />
+                    <button name="button_action_request_budget_reject"
+                            string="Reject Budget"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#d9534f;"
+                            groups="sprogroup_purchase_request.group_purchase_request_budget"
+                            attrs="{'invisible': [('state', '!=', 'to_approve')]}"
+                    />
+                    <button name="button_action_assman_rejected"
+                            string="Reject By Assman"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#c34a71;"
+                            attrs="{'invisible':['|',('state', '!=', 'assman_check'),('issasman','=',False)]}"
+                    />
+                    <button name="button_action_request_budget_check"
+                            string="Request Budget Check"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#4CAF50;"
+                            attrs="{'invisible':['|',('state', '!=', 'assman_check'),('issasman','=',False)]}"
+                    />
+                    <button name="button_action_assman_check"
+                            string="Request Assman Check"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#4a6fc3;"
+                            attrs="{'invisible':[('state', '!=', 'draft')]}"
+                    />
+                    <button name="print_purchase_request_dokumen"
+                            string="Print PR"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#5893ff;"
+                            icon="fa-print"
+                    />
+                </xpath>
+                <xpath expr="//field[@name='is_editable']" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="press_approval_bertingkat" style="background-color:#fbffd5" icon="fa-check" attrs="{'invisible':['|','|',('setConfirmLoA', '=', False),('bolehConfirm', '=', True),('state','!=','leader_request')]}">
+                            <field name="apvteks" class="widgetbuttonmerah" widget="statinfo"/>
+                        </button>
+                    </div>
+                </xpath>
+               
+            </field>
+        </record>
+    </data>
+</odoo>

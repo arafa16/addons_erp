@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="hr_employee_cc_inherit_form_view" model="ir.ui.view">
+            <field name="name">hr.employee.cc.inherit.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="account_analytic_kopkarla.view_employee_form"/>
+                <field name="arch" type="xml">
+                    <field name="analytic_account_id" position="before">
+                        <field name="cost_center_id" options="{'no_quick_create':True,'no_create_edit':True}" attrs="{'required': 1}"/>
+                    </field>
+                    <!--<xpath expr="//page[@name='hr_settings']" position="inside">
+                        <group string="Accounting" name="accounting_group">
+                            <field name="cost_center_id" options="{'no_quick_create':True,'no_create_edit':True}" attrs="{'required': 1}"/>
+                        </group>
+                    </xpath>-->
+                </field>
+        </record>
+
+    </data>
+
+</odoo>

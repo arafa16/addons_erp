@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="static_resouce_esa" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/enhanced_sales_approval/static/src/css/button.css"/>
+            </xpath>
+        </template>
+        <record model="ir.ui.view" id="esa_sales_order_approval">
+            <field name="name">esa.sales.order.approval</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="is_spv" invisible="1"/>
+                    <field name="is_assman" invisible="1"/>
+                    <field name="requestLoA" invisible="1"/>
+                    <field name="bolehConfirm" invisible="1"/>
+                    <field name="allowInvoice" invisible="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_view_invoice']" position="after">
+                    <button class="widgetbuttonmerah oe_stat_button" type="object" name="press_approval" icon="fa-check" attrs="{'invisible':[('state', '!=', 'requestloa')]}">
+                        <field name="apvteks" class="widgetbuttonmerah" widget="statinfo"/>
+                    </button>
+                </xpath>
+                <xpath expr="//form/header" position="replace">
+                    <header>
+                        <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                                type="action" class="btn-primary"
+                                attrs="{'invisible': ['|',('allowInvoice','=',False),('invoice_status', '!=', 'to invoice')]}"/>
+                        <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                                type="action" context="{'default_advance_payment_method': 'percentage'}"
+                                attrs="{'invisible': ['|','|',('allowInvoice','=',False),('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
+                        <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
+                        <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary o_sale_print"/>
+                        <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
+                        <button name="print_quotation" string="Print" type="object" states="sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale" class="o_sale_print"/>
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale"/>
+                        <button name="action_cancel" states="draft,sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale" type="object" string="Cancel"/>
+                        <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
+                        <button name="action_done" type="object" string="Lock" states="sale"
+                            help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                        <button name="action_unlock" type="object" string="Unlock" states="done" groups="sales_team.group_sale_manager"/>
+
+                        <button name="action_confirm" id="action_confirm" string="Confirm Sale" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in','loaconfirmed')]}"/>
+                        <button name="button_action_spv_check"
+                                string="SPV Request Check"
+                                type="object"
+                                style="color:#FFFFFF; background-color:#00897B;"
+                                attrs="{'invisible': [('state', 'not in', ['draft','sent'])]}"
+                        />
+                        <button name="button_action_spv_approved"
+                                string="SPV Approved"
+                                type="object"
+                                style="color:#FFFFFF; background-color:#2E7D32;"
+                                attrs="{'invisible': ['|',('state', '!=', 'spvcheck'),('is_spv','=',False)]}"
+                        />
+                        <button name="button_action_spv_rejected"
+                                string="SPV Rejected"
+                                type="object"
+                                style="color:#FFFFFF; background-color:#D32F2F;"
+                                attrs="{'invisible': ['|',('state', '!=', 'spvcheck'),('is_spv','=',False)]}"
+                        />
+                        <button name="button_action_assman_approved"
+                                string="Assman Approved"
+                                type="object"
+                                style="color:#FFFFFF; background-color:#2E7D32;"
+                                attrs="{'invisible': ['|',('state', '!=', 'assmancheck'),('is_assman','=',False)]}"
+                        />
+                        <button name="button_action_assman_rejected"
+                                string="Assman Rejected"
+                                type="object"
+                                style="color:#FFFFFF; background-color:#D32F2F;"
+                                attrs="{'invisible': ['|',('state', '!=', 'assmancheck'),('is_assman','=',False)]}"
+                        />
+                        <button name="button_action_bast_accepted"
+                                string="Close SO"
+                                type="object"
+                                style="color:#FFFFFF; background-color:#238988;"
+                                attrs="{'invisible': ['|',('state', '!=', 'sale'),('allowInvoice','=',True)]}"
+                        />
+                        <button name="button_action_baypass"
+                                string="BY PASS"
+                                type="object"
+                                style="color:#FFFFFF; background-color:#FA5432;"
+                                invisible="1"
+                        />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="esa_sales_order_inherit_sales_qoutation">
+            <field name="name">esa.sales.order.inherit.sales.qoutation</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="enhanced_sales_attribute.esa_qotation_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='jenis_so']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'not in', ['draft','sent'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='jenis_so']" position="after">
+                    <field name="loa_request" readonly="1" attrs="{'invisible':[('state', 'in', ['draft','sent','spvcheck'])]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="esa_sales_order_inherit_sales_attribut_set_spv">
+            <field name="name">esa.sales.order.inherit.sales.attribut.set.spv</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="enhanced_sales_ttd.qotationsale_enhance_field_ttd"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='tab_reference_sub3']" position="inside">
+                    <field name="employee_spv" domain="[('sales_spv', '=', True)]" attrs="{'required':[('state', 'in', ['draft','sent'])],'readonly':[('state', 'not in', ['draft','sent','sale'])]}"/>
+                    <field name="employee_assman" domain="[('sales_assman', '=', True)]" attrs="{'readonly':[('state', 'not in', ['draft','sent','spvcheck'])]}"/>
+                    
+                    <field name="penandatangan1" domain="[('otoritas_sales.urutan', '=', 1)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale'])],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
+                    <field name="penandatangan2" domain="[('otoritas_sales.urutan', '=', 2)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale','cancel'])],'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
+                    <field name="penandatangan3" domain="[('otoritas_sales.urutan', '=', 3)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale'])],'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
+                    <field name="penandatangan4" domain="[('otoritas_sales.urutan', '=', 4)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale'])],'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
+                    <field name="penandatangan5" domain="[('otoritas_sales.urutan', '=', 5)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale'])],'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
+                            
+                    <field name="required1" invisible="1"/>
+                    <field name="required2" invisible="1"/>
+                    <field name="required3" invisible="1"/>
+                    <field name="required4" invisible="1"/>
+                    <field name="required5" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

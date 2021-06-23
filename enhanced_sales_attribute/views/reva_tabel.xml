@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="enhanced_reva_tabel_tree">
+            <field name="name">enhanced.reva.tabel.tree</field>
+            <field name="model">enhanced.reva.tabel</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="jenis"/>
+                    <field name="urutan"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="enhanced_reva_tabel_action">
+            <field name="name">Master Reva Tabel</field>
+            <field name="res_model">enhanced.reva.tabel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="tabel_master_reva"
+            name="Data Master Reva"
+            parent="sale.menu_sale_config"
+            action="enhanced_reva_tabel_action"
+            sequence="4"/>
+    </data>
+</odoo>

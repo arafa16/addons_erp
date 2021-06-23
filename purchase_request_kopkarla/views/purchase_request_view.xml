@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_sprogroup_purchase_request_form_reqtype">
+            <field name="name">sprogroup.purchase.request.form.reqtype</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="sprogroup_purchase_request.view_sprogroup_purchase_request_form"/>
+            <field name="arch" type="xml">
+<!--
+                <xpath expr="//sheet/field[@name='is_editable']" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="show_available_budget" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="active_budget_count" widget="statinfo" string="Active Budget"/>
+                        </button>
+                    </div>
+                </xpath>
+-->
+                <field name="requested_by" position="after">
+                    <field name="allow_on_behalf_of" invisible="1"/>
+                    <field name="on_behalf_of" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('allow_on_behalf_of', '=', False)]}"/>
+                </field>
+                <field name="department_id" position="after">
+                    <field name="request_type" attrs="{'invisible': [('salesorder_id', '!=', False)]}"/>
+                </field>
+                <field name="product_id" position="after">
+                    <field name="account_id" force_save="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_purchase_request_employee_mapping_tree">
+            <field name="name">purchase.request.employee.mapping.tree</field>
+            <field name="model">purchase.request.employee.mapping</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Request Employee Mapping" editable="bottom">
+                    <field name="requested_by"/>
+                    <field name="on_behalf_of"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="purchase_request_employee_mapping">
+            <field name="name">Purchase Request On Behalf Of</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.request.employee.mapping</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem
+            id="menu_purchase_request_employee_mapping"
+            sequence="10"
+            parent="menu_purchase_request_configuration_act"
+            action="purchase_request_employee_mapping"
+            groups="sprogroup_purchase_request.group_sprogroup_purchase_request_user"
+            />
+    </data>
+</odoo>

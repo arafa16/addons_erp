@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="epa_ttd_form">
+            <field name="name">epa.ttd.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="enhanced_sales_ttd.est_ttd_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='otoritas']" position="after">
+                    <field name="otoritas_purchase" widget="many2many_tags" string="Purchase Authority"/>
+                    <field name="checkerPO"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

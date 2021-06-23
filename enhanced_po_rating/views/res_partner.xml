@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="epor_res_partner_form">
+            <field name="name">epor.res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lang']" position="after">
+                    <field name="periode" create="False" attrs="{'invisible':[('supplier', '=', False)]}"/>
+                    <field name="ratingavg" readonly="1" string="Rating Score" attrs="{'invisible':[('supplier', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="faks_num" placeholder="Fax. Number"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

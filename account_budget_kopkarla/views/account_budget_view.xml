@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_budget_post_commitment_limit_form_view" model="ir.ui.view">
+            <field name="name">account.budget.post.commitment_limit.tree</field>
+            <field name="model">account.budget.post.commitment_limit</field>
+            <field name="arch" type="xml">
+                <tree string="Budgetary Position Commitment Limit" editable="top">
+                    <field name="budget_post_id" invisible="context.get('budget_pos_view')"/>
+                    <field name="user_id" invisible="context.get('res_users_view')"/>
+                    <field name="amount_limit"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_budget_post_tree_inherit" model="ir.ui.view">
+            <field name="name">account.budget.post.tree.inherit</field>
+            <field name="model">account.budget.post</field>
+            <field name="inherit_id" ref="account_budget.view_budget_post_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="replace">
+                    <field name="group_id" invisible="1"/>
+                    <field name="name"/>
+                    <field name="sign"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_budget_post_form">
+            <field name="name">account.budget.post.form</field>
+            <field name="model">account.budget.post</field>
+            <field name="inherit_id" ref="account_budget.view_budget_post_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="budget_type"/>
+                    <field name="group_id"/>
+                    <field name="sign"/>
+                </field>
+                <xpath expr="//notebook/page" position="replace"/>
+                <notebook position="inside">
+                    <page name="asset" string="Asset"
+                          attrs="{'invisible':[('budget_type','==','ledger')], 'focus':[('budget_type','==','asset')]}">
+                        <field name="budget_asset_ids"/>
+                    </page>
+                    <page string="Accounts">
+                        <field name="account_ids">
+                            <tree>
+                                <field name="code"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="limits" string="Commitment Limits">
+                        <field name="commitment_limit_ids"
+                               context="{'budget_pos_view': True, 'default_budget_post_id': active_id}"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="view_budget_post_search" model="ir.ui.view">
+            <field name="name">account.budget.post.search</field>
+            <field name="model">account.budget.post</field>
+            <field name="inherit_id" ref="account_budget.view_budget_post_search"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <group string="Group by .." expand="1">
+                        <filter name="group_id" string="Budget Group" domain="[]" context="{'group_by':'group_id'}"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crossovered_budget_view_inherit">
+            <field name="name">crossovered.budget.view.inherit</field>
+            <field name="model">crossovered.budget</field>
+            <field name="inherit_id" ref="account_budget.crossovered_budget_view_form"/>
+            <field name="arch" type="xml">
+                <field name="creating_user_id" position="replace">
+                    <field name="cost_center_id" attrs="{'readonly':[('state','!=','draft')]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="analytic_account_id" attrs="{'readonly':[('state','!=','draft')]}" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="company_id" position="before">
+                    <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="date_to" position="after">
+                    <button name="update_budget_line_period" class="oe_edit_only" invisible="1"
+                            type="object" string="Update Lines" style="margin-left: 10px"/>
+                </field>
+                <xpath expr="//notebook" position="replace">
+                    <notebook>
+                        <page string="Budget Lines">
+                            <field name="crossovered_budget_line" context="{'default_date_from': date_from,'default_date_to': date_to}" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                                <tree string="Budget Lines" editable="bottom"
+                                      decoration-danger="state=='draft'"
+                                      decoration-info="state=='ready'"
+                                      decoration-muted="state=='close'">
+                                    <field name="state" invisible="1"/>
+                                    <field name="general_budget_id" options="{'no_create': True, 'no_open':True}"/>
+                                    <field name="cost_center_id" invisible="1"/>
+                                    <field name="analytic_account_id" invisible="1"/>
+                                    <field name="date_from" invisible="1"/>
+                                    <field name="date_to" invisible="1"/>
+                                    <!--<field name="paid_date" groups="base.group_no_one"/>-->
+                                    <field name="restrict_allow"/>
+                                    <field name="restrict_allow_ledger"/>
+                                    <field name="planned_amount" sum="Planned Amount" widget="monetary" string="Budget"/>
+                                    <!--<field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                    <field name="theoritical_amount" sum="Theoretical Amount" widget="monetary"/>
+                                    <field name="percentage"/>-->
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+                <!--<xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">state == 'draft'</attribute>
+                    <attribute name="decoration-info">state == 'ready'</attribute>
+                    <attribute name="decoration-muted">state == 'close'</attribute>
+                </xpath>-->
+<!--
+                <field name="analytic_account_id" position="replace">
+                    <field name="state" invisible="1"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>
+                </field>
+                <field name="paid_date" position="after">
+                    <field name="restrict_allow"/>
+                    <field name="restrict_allow_ledger"/>
+                </field>
+                <field name="planned_amount" position="after">
+                    <field name="planned_changes_amount"/>
+                    <field name="planned_amount_sum"/>
+                </field>
+                <xpath expr="//field[@name='crossovered_budget_line']/tree/field[@name='practical_amount']"
+                       position="before">
+                    <field name="requested_amount"/>
+                    <field name="avail_req_amount"/>
+                    <field name="state"/>
+                </xpath>
+                <xpath expr="//field[@name='crossovered_budget_line']/tree/field[@name='percentage']" position="after">
+                    <button name="action_open_analytic_lines" type="object" icon="STOCK_JUMP_TO" string="View details"/>
+                </xpath>
+                <xpath expr="//form//group//group//field[@name='planned_amount']" position="replace">
+                    <field name="cost_center_id" required="1"/>
+                </xpath>
+                <xpath expr="//form//group//group//field[@name='paid_date']" position="after">
+                    <field name="restrict_allow" widget="radio" options="{'horizontal': true}"/>
+                    <field name="restrict_allow_ledger" widget="radio" options="{'horizontal': true}"/>
+                </xpath>
+                <xpath expr="//notebook//page//field//form" position="inside">
+                    <group>
+                        <field name="planned_amount" widget="monetary"/>
+                    </group>
+                </xpath>
+-->
+                <!--<xpath expr="//field[@name='crossovered_budget_line']/tree/field[@name='practical_amount']" position="before">
+	                <field name="commitment_amount"/>
+	                <field name="available_amount"/>
+				</xpath>-->
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_crossovered_budget_line_tree_ledger_analysis">
+            <field name="name">crossovered.budget.line.tree.ledger.analysis</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="inherit_id" ref="account_budget.view_crossovered_budget_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree string="Budget Lines">
+                        <field name="crossovered_budget_id" invisible="1"/>
+                        <field name="general_budget_id"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="paid_date" groups="base.group_no_one"/>
+                        <field name="planned_amount" widget="monetary"/>
+                        <field name="practical_amount" widget="monetary"/>
+                        <field name="theoritical_amount" widget="monetary"/>
+                        <field name="percentage"/>
+                    </tree>
+                </xpath>
+                <!--<field name="analytic_account_id" position="before">
+                    <field name="cost_center_id"/>
+                </field>
+                <field name="practical_amount" position="before">
+                    &lt;!&ndash;<field name="commitment_amount"/>&ndash;&gt;
+                    <field name="planned_changes_amount" widget="monetary"/>
+                    <field name="available_amount" widget="monetary"/>
+                </field>
+                <field name="percentage" position="after">
+                    <button name="action_open_analytic_lines" type="object" icon="STOCK_JUMP_TO" string="View details"/>
+                </field>
+                <field name="paid_date" position="replace"/>-->
+            </field>
+        </record>
+
+        <!--<record model="ir.ui.view" id="view_crossovered_budget_line_form">
+            <field name="name">crossovered.budget.lines.form</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="inherit_id" ref="account_budget.view_crossovered_budget_line_form"/>
+            <field name="arch" type="xml">
+                <field name="practical_amount" position="before">
+                    <field name="commitment_amount"/>
+                    <field name="available_amount"/>
+                </field>
+                <xpath expr="//sheet/group" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_analytic_lines" type="object" icon="fa-usd" string="View details"
+                                context="{'target': 'current'}"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>-->
+
+        <record id="view_crossovered_budget_line_search" model="ir.ui.view">
+            <field name="name">account.budget.line.search</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="inherit_id" ref="account_budget.view_crossovered_budget_line_search"/>
+            <field name="arch" type="xml">
+                <field name="analytic_account_id" position="attributes">
+                    <attribute name="domain">[('type','!=','view')]</attribute>
+                </field>
+                <field name="analytic_account_id" position="after">
+                    <field name="crossovered_budget_id"/>
+                    <field name="general_budget_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="budget_id" string="Budgets" domain="[]" context="{'group_by':'crossovered_budget_id'}"/>
+                        <filter name="budget_position" string="Budget Position" domain="[]" context="{'group_by':'general_budget_id'}"/>
+                        <filter name="group" string="Budget Group" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter name="cost_center" string="Cost Center" domain="[]" context="{'group_by':'cost_center_id'}"/>
+                        <filter name="analytic_account" string="Analytic Account" domain="[]" context="{'group_by':'analytic_account_id'}"/>
+                        <!--<filter string="Date from" context="{'group_by':'date_from'}"/>
+                        <filter string="Date to" context="{'group_by':'date_to'}"/>-->
+                    </group>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="account_budget.act_crossovered_budget_lines_view">
+            <field name="name">Budget Ledger Analysis</field>
+            <field name="res_model">crossovered.budget.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','ready')]</field>
+            <field name="view_id" ref="view_crossovered_budget_line_tree_ledger_analysis"/>
+            <field name="search_view_id" ref="account_budget.view_crossovered_budget_line_search"/>
+            <field name="context">{ 'search_default_budget_id':True,
+                                    'search_default_budget_position':True }</field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_analytic_account_form_inherit_budget">
+            <field name="name">account.analytic.account.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account_budget.view_account_analytic_account_form_inherit_budget"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='crossovered_budget_line']/tree/field[@name='practical_amount']"
+                       position="before">
+                    <field name="commitment_amount"/>
+                    <field name="available_amount"/>
+                </xpath>
+                <xpath expr="//field[@name='crossovered_budget_line']/form/field[@name='planned_amount']"
+                       position="after">
+                    <field name="commitment_amount"/>
+                    <field name="available_amount"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crossovered_budget_view_tree">
+            <field name="name">crossovered.budget.view.tree</field>
+            <field name="model">crossovered.budget</field>
+            <field name="inherit_id" ref="account_budget.crossovered_budget_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree decoration-info="state == 'draft'"
+                          decoration-muted="state in ('done','cancel')"
+                          default_order="date_from asc, name asc"
+                          string="Budget">
+                        <field name="name" colspan="1"/>
+                        <field name="cost_center_id"/>
+                        <field name="analytic_account_id"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <field name="creating_user_id"/>
+                        <field name="state"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_budget_post_group_tree">
+            <field name="name">budget.post.group.tree</field>
+            <field name="model">account.budget.post.group</field>
+            <field name="arch" type="xml">
+                <tree string="Budget Position Group">
+                    <field name="name"/>
+                    <field name="direction"/>
+                    <field name="sign"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_budget_post_group_form" model="ir.ui.view">
+            <field name="name">budget.post.group.form</field>
+            <field name="model">account.budget.post.group</field>
+            <field name="arch" type="xml">
+                <form string="Budget Position Group">
+                    <sheet string="Budget Position Group">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="direction" class="oe_inline" widget="radio"/>
+                            <field name="sign" class="oe_inline" widget="radio"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_budget_post_group" model="ir.actions.act_window">
+            <field name="name">Budgetary Position Group</field>
+            <field name="res_model">account.budget.post.group</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_budget_post_group_tree" />
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to record a new budget position group.
+              </p>
+            </field>
+        </record>
+
+        <record id="view_budget_post_report_tree" model="ir.ui.view">
+            <field name="name">account.budget.post.report.tree</field>
+            <field name="model">account.budget.post.list</field>
+            <field name="arch" type="xml">
+                <tree string="Budgetary Position">
+                    <field name="group_id"/>
+                    <field name="account_id"/>
+                    <field name="name"/>
+                    <field name="sign"/>
+                    <field name="budget_type"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_budget_post_report" model="ir.actions.act_window">
+            <field name="name">Budgetary Position COA List</field>
+            <field name="res_model">account.budget.post.list</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_budget_post_report_tree"/>
+        </record>
+
+        <!--<record id="view_budget_monitoring_form" model="ir.ui.view">
+            <field name="name">account.budget.monitoring.form</field>
+            <field name="model">account.budget.monitoring</field>
+            <field name="arch" type="xml">
+                <form string="Budget Monitoring" create="false" edit="false" delete="false">
+                    <sheet string="Budget Filter">
+                        <group colspan="2">
+                            <group string="Department">
+                                <field name="cost_center_id"/>
+                                <field name="analytic_line_ids"/>
+                            </group>
+                            <group string="Period">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Budget Realization">
+                                <tree string="Budget Realization">
+                                    <field name="general_budget_id"/>
+                                    <field name="cost_center_id"/>
+                                    <field name="analytic_line_ids"/>
+                                    <field name="planned_amount"/>
+                                </tree>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_budget_monitoring" model="ir.actions.act_window">
+            <field name="name">Budget Monitoring</field>
+            <field name="res_model">account.budget.monitoring</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_budget_monitoring_form"/>
+        </record>
+        <menuitem action="action_budget_monitoring" id="menu_budget_monitoring"
+                  parent="account_budget_kopkarla.menu_budget_reports" sequence="4"
+                  groups="account.group_account_user"/>-->
+    </data>
+</odoo>

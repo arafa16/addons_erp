@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="num_to_words_inherit_custom_report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@t-if='o.comment']" position="before">
+            <p t-if='o.text_amount'>
+                <strong>Total amount in words:</strong>
+                <span t-field="o.text_amount"/>
+            </p>
+        </xpath>
+
+    </template>
+</odoo>

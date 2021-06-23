@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="epca_contact_view" model="ir.ui.view">
+            <field name="name">epca.contact.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lang']" position="after">
+                    <field name="singkatan"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

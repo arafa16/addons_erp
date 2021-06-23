@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="budget_approval_for_purchase_request_view">
+            <field name="name">budget.approval.for.purchase.request.view</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree create="false" delete="false">
+                    <field name="name"/>
+                    <field name="namex" invisible="1"/>
+                    <field name="date_start"/>
+                    <field name="amount_total"/>
+                    <field name="requested_by" invisible="1"/>
+                    <field name="state"/>
+                    <field name="salesorder_id"/>
+                    <field name="sales_delivery_doc"/>
+                    <field name="sales_amount_total"/>
+                    <field name="sales_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="budget_approval_for_purchase_request_search" model="ir.ui.view">
+            <field name="name">budget.approval.for.purchase.request.search</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Request">
+                    <field name="name" string="Purchase Request"/>
+                    <field name="salesorder_id" string="Sales Order"/>
+
+                    <filter name="budget_approval" string="Budget Approval" domain="[('state','=','to_approve')]" help="Show PR need to budget approval"/>
+                    <!--<separator/>-->
+                    <group expand="0" string="Group By...">
+                        <filter string="Purchase Request" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'name'}"/>
+                        <filter string="Sales Order" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'salesorder_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="budget_approval_for_purchase_request_action">
+            <field name="name">Budget Approval for Purchase Request</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="budget_approval_for_purchase_request_view"/>
+            <field name="context">{"search_default_budget_approval":'to_approve'}</field>
+            <!--<field name="domain">[('state', 'in', ['leader_approved','done'])]</field>-->
+            <field name="search_view_id" ref="budget_approval_for_purchase_request_search"/>
+        </record>
+
+        <menuitem 
+            id="budget_approval_for_purchase_request_menuitem"
+            name="Budget Approval"
+            parent="menu_budget_documents"
+            sequence="1"
+            action="budget_approval_for_purchase_request_action"
+        />
+    </data>
+</odoo>

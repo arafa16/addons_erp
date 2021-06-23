@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_journal_backend" inherit_id="web.assets_backend">
+<!--        <xpath expr="." position="inside">-->
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/account_kopkarla/static/src/js/payment_journal.js"></script>
+        </xpath>
+    </template>
+</odoo>

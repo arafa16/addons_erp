@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+            id="report_advance_expense"
+            model="hr.advance"
+            string="Print Advance Expense"
+            report_type="qweb-pdf"
+            name="hr_expense_kopkarla.report_expense_show"
+            file="hr_expense_kopkarla.report_expense_show"
+        />
+
+        <template id="report_expense_show">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row">
+                                <div class="text-center">
+                                    <h3>
+                                        Cash Advance -
+                                        <span t-field="doc.name"/>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="text-left">
+                                <h3>
+                                    <span t-field="doc.employee_id.name"/>
+                                    -
+                                    <span t-field="doc.state"/>
+                                </h3>
+                            </div>
+                            <table class="table table-responsive">
+                                <tr style="border: 2px solid black;">
+                                    <td>
+                                        <strong>Department</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.department_id.name"/>
+                                    </td>
+                                    <td>
+                                        <strong>Job Title</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.job_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr style="border: 2px solid black;">
+                                    <td>
+                                        <strong>Request Date</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.request_date"/>
+                                    </td>
+                                    <td>
+                                        <strong>Request User</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.user_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr style="border: 2px solid black;">
+                                    <td>
+                                        <strong>Requested Amount</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.total_amount_expense"
+                                              t-field-options='{"widget": "monetary", "display_currency": "doc.currency_id"}'/>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <!--<h3>General Information</h3>
+                            <table class="table table-responsive">
+                                <tr style="border: 2px solid black;">
+                                    <td>
+                                        <strong>Confirmed Date</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.confirm_date"/>
+                                    </td>
+                                    <td>
+                                        <strong>Confirmed By</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.confirm_by_id"/>
+                                    </td>
+                                </tr>
+                                <tr style="border: 2px solid black;">
+                                    <td>
+                                        <strong>Approved Date</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.hr_validate_date"/>
+                                    </td>
+                                    <td>
+                                        <strong>Approved By</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.hr_manager_by_id"/>
+                                    </td>
+                                </tr>
+                                <tr style="border: 2px solid black;">
+                                    <td>
+                                        <strong>Paid Date</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.account_validate_date"/>
+                                    </td>
+                                    <td>
+                                        <strong>Paid By</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.account_by_id"/>
+                                    </td>
+                                </tr>
+                            </table>-->
+                            <h3>Advance Expense Lines</h3>
+                            <table class="table table-responsive">
+                                <thead style="border: 2px solid black;">
+                                    <th>Expense</th>
+                                    <th>Description</th>
+                                    <th>Unit Price</th>
+                                    <th>Quantity</th>
+                                    <th>Unit of Measure</th>
+                                    <th>Subtotal</th>
+                                </thead>
+                                <tr t-foreach="doc.advance_line_ids" t-as="line" style="border: 2px solid black;">
+                                    <td>
+                                        <span t-field="line.product_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.description"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.unit_amount"
+                                              t-field-options='{"widget": "monetary", "display_currency": "doc.currency_id"}'/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.quantity"/>
+                                        <span t-field="line.product_uom_id.name" groups="product.group_uom"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.product_uom_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.total_amount"
+                                              t-field-options='{"widget": "monetary", "display_currency": "doc.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--<h3>Accounting Information</h3>
+                            <table class="table table-responsive">
+                                <tr style="border: 2px solid black;">
+                                    <td>
+                                        <strong>Employee Account</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.partner_id.name"/>
+                                    </td>
+                                    <td>
+                                        <strong>Payment Method</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.journal_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr style="border: 2px solid black;">
+                                    <td>
+                                        <strong>Asset Account</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.account_id.name"/>
+                                    </td>
+                                    <td>
+                                        <strong>Paid Amount</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.paid_amount"
+                                              t-field-options='{"widget": "monetary", "display_currency": "doc.paid_in_currency"}'/>
+                                    </td>
+                                </tr>
+                            </table>-->
+                            <div>
+                                <strong>Reason For Advance :</strong>
+                                <br/>
+                                <span t-field="doc.reason_for_advance"/>
+                            </div>
+                            <div>
+                                <strong>Comment :</strong>
+                                <br/>
+                                <span t-field="doc.comment"/>
+                            </div>
+                            <!--<div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <strong>Requester Signature:____________________</strong>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <strong>Approver Signature:____________________</strong>
+                                </div>
+                            </div>-->
+                            <div style="height: 400px; page-break-inside: avoid;">
+                                <div style="padding-top:30px;">
+                                    <table class="table" style="widht:100%;height:175px;border: 1px solid black">
+                                        <tr class="border-black" style="height:25px;">
+                                            <td width="20%">Dibuat,</td>
+                                            <td width="20%" style="border: 1px solid">Diperiksa,</td>
+                                            <td width="20%" style="border: 1px solid">Mengetahui,</td>
+                                            <t t-if="doc.done_sign_by">
+                                                <td width="20%" style="border: 1px solid">Dilaksanakan,</td>
+                                            </t>
+                                            <t t-if="doc.management_sign_by">
+                                                <td width="20%">Pengurus,</td>
+                                            </t>
+                                        </tr>
+                                        <tr class="border-black">
+                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="doc.created_sign_by"/></td>
+                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.checked_sign_by"/></td>
+                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.known_sign_by"/></td>
+                                            <t t-if="doc.done_sign_by">
+                                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.done_sign_by"/></td>
+                                            </t>
+                                            <t t-if="doc.management_sign_by">
+                                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="doc.management_sign_by"/></td>
+                                            </t>
+                                        </tr>
+                                    </table>
+                                    <!--<t t-if="doc.management_sign_by">
+                                        <div class="col-xs-3" style="padding:0px;">
+                                            <table style="widht:33.5%;height:175px;border: 1px solid black">
+                                                <tr style="height:25px;">
+                                                    <td width="33.5%" style="padding-left:5px;padding-top:3px;">Pengurus,</td>
+                                                </tr>
+                                                <tr class="border-black">
+                                                    <td style="text-align: center; vertical-align: bottom;"><span t-field="doc.management_sign_by"/></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </t>-->
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+  </data>
+</odoo>

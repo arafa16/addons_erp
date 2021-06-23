@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="asset_reclass_form_inherit" model="ir.ui.view">
+            <field name="name">asset.reclass.form.inherit</field>
+            <field name="model">account.asset.reclass.table</field>
+            <field name="inherit_id" ref="account_asset_kopkarla.asset_reclass_form"/>
+            <field name="arch" type="xml">
+                <button name="post" position="after">
+                    <button name="action_reclass_cancel" type="object" states="posted" string="Cancel Reclass"
+                            groups="dev_picking_cancel.picking_cancel_button"/>
+                </button>
+            </field>
+        </record>
+    </data>
+</odoo>

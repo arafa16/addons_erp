@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend_123" name="static_resouce_printx" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/enhanced_pr_print/static/src/css/bg.css"/>
+            </xpath>
+        </template>
+        <record model="ir.ui.view" id="set_new_setting_template">
+            <field name="name">set.new.setting.template</field>
+            <field name="inherit_id" ref="web.external_layout_background"/>
+            <field name="arch" type="xml">
+                <xpath expr="//t/div[2]" position="replace">
+                    <div class="article o_report_layout_tanpabg">
+                        <t t-raw="0" />
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

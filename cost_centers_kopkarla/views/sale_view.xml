@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <!-- Inherited sale order main form view to add cost center field -->
+        <record id="sale_order_inherit_cc_form" model="ir.ui.view">
+            <field name="name">sale.order.inherit.cc.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+                <field name="arch" type="xml">
+                    <!--<xpath expr="//form/sheet/group/group[2]/field[@name='pricelist_id']" position="after">-->
+                    <field name="client_order_ref" position="after">
+                        <field name="cost_center_id" string="Cost Center"
+                               options="{'no_create_edit':True, 'no_open': True}"/>
+                    </field>
+
+                    <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom']"
+                        position="after">
+                        <field name="cost_center_id" string="Cost Center"
+                               options="{'no_create_edit':True, 'no_open': True}" context="{'cost_center_id':cost_center_id}" invisible="1"/>
+                    </xpath>
+
+                    <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/form/group/group[2]"
+                        position="inside">
+                        <field name="cost_center_id" string="Cost Center" context="{'default_cost_center_id':cost_center_id}"
+                               options="{'no_create_edit':True, 'no_open':True}" invisible="1"/>
+                    </xpath>
+
+                    <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='analytic_tag_ids']" position="attributes">
+                        <attribute name='invisible'>1</attribute>
+                    </xpath>
+                </field>
+        </record>
+
+     <!--    <record id="sale_line_inherit_cc_readonly" model="ir.ui.view">
+            <field name="name">sale.order.line.inherit.cc.form</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.sale_order_line_view_form_readonly"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//form/sheet/group/group[1]/field[@name='qty_delivered']"
+                            position="after">
+                        <field name="cost_center_id" string="Cost Center" context="{'default_cost_center_id':cost_center_id}"
+                               options="{'no_quick_create':True,'no_create_edit':True}"/>
+                    </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>
+

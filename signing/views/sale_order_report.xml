@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="signing_inherit_custom_report_sale_order_document" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//p[@t-field='doc.note']" position="after">
+            <t t-if="'pegawai_ttd' in doc.fields_get()">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>                
+                <br/>
+                <br/>
+                <br/>
+                <strong>( <span t-field="doc.pegawai_ttd"/> )</strong>
+            </t>
+        </xpath>
+    </template>
+</odoo>

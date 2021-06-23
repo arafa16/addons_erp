@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="enhanced_sales_project_print_so" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@name='payment_term']" position="after">
+                <div name="nojar" t-if="doc.nojar and doc.jenis_so in ['Project']" class="col-xs-3">
+                    <strong>Nomor Jaringan:</strong>
+                    <p t-field="doc.nojar"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

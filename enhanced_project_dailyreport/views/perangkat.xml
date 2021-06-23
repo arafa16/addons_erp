@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="alokasi_perangkat_tree">
+            <field name="name">alokasi.perangkat.tree</field>
+            <field name="model">alokasi.perangkat</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="alokasi_perangkat_action">
+            <field name="name">Alokasi Perangkat</field>
+            <field name="res_model">alokasi.perangkat</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem 
+            id="daily_report_alokasi_perangkat"
+            name="Alokasi Perangkat"
+            parent="project.menu_project_config"
+            action="alokasi_perangkat_action"
+            sequence="11"
+        />
+    </data>
+</odoo>

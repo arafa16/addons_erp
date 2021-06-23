@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* purchase_tender_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-25 19:25+0000\n"
+"PO-Revision-Date: 2017-12-25 19:25+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: purchase_tender_report
+#: code:addons/purchase_tender_report/wizard/tender_report.py:22
+#, python-format
+msgid " You have not enough rights to access this report, please contact administrator to access this report."
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "<strong>Quotation Date:</strong>"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "<strong>Quotation No:</strong>"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Amount"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Base Price"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Category"
+msgstr ""
+
+#. module: purchase_tender_report
+#: selection:tender.report,condition:0
+msgid "Compare Highest To Lowest Quotation Prices"
+msgstr ""
+
+#. module: purchase_tender_report
+#: selection:tender.report,condition:0
+msgid "Compare Lowest To Highest Quotation Prices"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model.fields,field_description:purchase_tender_report.field_tender_report_create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model.fields,field_description:purchase_tender_report.field_tender_report_create_date
+msgid "Created on"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Description"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model.fields,field_description:purchase_tender_report.field_report_purchase_tender_report_purchasetender_report_display_name
+#: model:ir.model.fields,field_description:purchase_tender_report.field_tender_report_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model.fields,field_description:purchase_tender_report.field_report_purchase_tender_report_purchasetender_report_id
+#: model:ir.model.fields,field_description:purchase_tender_report.field_tender_report_id
+msgid "ID"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model.fields,field_description:purchase_tender_report.field_report_purchase_tender_report_purchasetender_report___last_update
+#: model:ir.model.fields,field_description:purchase_tender_report.field_tender_report___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Last PO\n"
+"                                        Price(PU)"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model.fields,field_description:purchase_tender_report.field_tender_report_write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model.fields,field_description:purchase_tender_report.field_tender_report_write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Part No."
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model.fields,field_description:purchase_tender_report.field_tender_report_condition
+msgid "Price Comparision Type"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchased_tender_compr_wizard
+msgid "Purchase Report"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:res.groups,name:purchase_tender_report.group_purchase_requisition_report
+msgid "Purchase Tender Report"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "QUOTATION FORM"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Qty."
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Supplier Name"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.actions.act_window,name:purchase_tender_report.act_tender_compr_report
+#: model:ir.actions.act_window,name:purchase_tender_report.action_tender_compr_report
+#: model:ir.actions.report,name:purchase_tender_report.menu_tender_comparision_report
+msgid "Tender Report"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchasetender_report
+msgid "Vat Amount"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchased_tender_compr_wizard
+msgid "_Cancel"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchased_tender_compr_wizard
+msgid "_PDF"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.ui.view,arch_db:purchase_tender_report.purchased_tender_compr_wizard
+msgid "or"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model,name:purchase_tender_report.model_report_purchase_tender_report_purchasetender_report
+msgid "report.purchase_tender_report.purchasetender_report"
+msgstr ""
+
+#. module: purchase_tender_report
+#: model:ir.model,name:purchase_tender_report.model_tender_report
+msgid "tender.report"
+msgstr ""
+

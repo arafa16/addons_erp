@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_group_tree_inherit" model="ir.ui.view">
+            <field name="name">account.group.tree.inherit</field>
+            <field name="model">account.group</field>
+            <field name="inherit_id" ref="account.view_account_group_tree"/>
+            <field name="arch" type="xml">
+                <xpath  expr="//tree" position="replace">
+                    <tree string="Account Group">
+                        <field name="name"/>
+                        <field name="code_prefix"/>
+                        <field name="parent_id"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+        <menuitem action="account.action_account_group_tree" id="menu_action_account_group_form"
+                  parent="account.account_account_menu" groups="account.group_account_user" sequence="0"/>
+    </data>
+</odoo>

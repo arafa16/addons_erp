@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="res_partner_periode_tree">
+            <field name="name">res.partner.periode.tree</field>
+            <field name="model">res.partner.periode</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="tanggal1"/>
+                    <field name="tanggal2"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="res_partner_periode_action">
+            <field name="name">Periode Rating</field>
+            <field name="res_model">res.partner.periode</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem 
+            id="res_partner_periode_menu"
+            name="Periode Rating"
+            parent="purchase.menu_procurement_management"
+            action="res_partner_periode_action"
+        />
+
+    </data>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.rental</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]//div[hasclass('app_settings_block')]" position="inside">
+                <h2>Rental Terms</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box" groups="sales_team.group_sale_salesman">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label string="Rental Rate Calculation Method"/>
+                            <div class="text-muted">
+                                Rental rate calculation method for rental product. 
+                            </div>
+                            <div class="">
+                                <field name="rental_rate_calculation_method" required="1"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" groups="sales_team.group_sale_salesman">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label string="Rental Security Refund Product"/>
+                            <div class="text-muted">
+                                Product used for rental security refund invoice. 
+                            </div>
+                            <div class="">
+                                <field name="security_refund_product_id" style="width:100%" required="1"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
+                        <div class="o_setting_left_pane">
+                            <div class="text-muted">
+                                <field name="auto_generate_rental_in_move"/>
+                            </div>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label string="Auto Generate Stock Moves"/>
+                            <div class="text-muted">
+                                Enable for auto generate stock move when rental contract get expired. 
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

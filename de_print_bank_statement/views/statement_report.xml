@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--Report-->
+    <template id="statement_report_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="doc.with_context({'lang': 'en_US'})" />
+            <div class="page">
+                <div class="oe_structure"/>
+                <div class="row">
+                    <div class="col-xs-12 col-xs-offset-4">
+                        <h2><span t-field="o.journal_id"/> STATEMENT</h2>
+                    </div>
+                    <div class="col-xs-6 col-xs-offset-0">
+                        <p><strong>Statement Date: </strong><span t-field="o.date"/></p>
+                        <p><strong>Statement Reference: </strong><span t-field="o.name"/></p>
+                        <p><strong>Status: </strong><span t-field="o.state"/></p>
+                    </div>
+                    <div class="col-xs-6 pull-right">
+                        <p><strong>Opening Balance: </strong><span t-field="o.balance_start"/></p>
+                        <p><strong>Closing Balance: </strong><span t-field="o.balance_end_real"/></p>
+                        <p><strong>Difference: </strong><span t-field="o.difference"/></p>
+
+                    </div>
+                </div>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Label</th>
+                            <th>Partner</th>
+                            <th>Reference</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="o.line_ids" t-as="l">
+                            <td>
+                                <span t-field="l.date"/>
+                            </td>
+                            <td>
+                                <span t-field="l.name"/>
+                            </td>
+                            <td>
+                                <span t-field="l.partner_id"/>
+                            </td>
+                            <td>
+                                <span t-field="l.ref"/>
+                            </td>
+                            <td>
+                                <span t-field="l.amount"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-xs-3 pull-right">
+                    <p><strong>Computed Balance: </strong><span t-field="o.balance_end"/></p>
+                </div>
+                <div style="height: 250px; page-break-inside: avoid;">
+                    <div style="padding-top:50px;">
+                        <table class="table" style="widht:100%;height:175px;border: 1px solid black">
+                            <tr class="border-black" style="height:25px;">
+                                <td width="25%">Dibuat,</td>
+                                <td width="25%" style="border: 1px solid">Diperiksa,</td>
+                                <td width="25%" style="border: 1px solid">Mengetahui,</td>
+                            </tr>
+                            <tr class="border-black">
+                                <td style="text-align: center; vertical-align: bottom;"><!--<span t-field="doc.created_sign_by"/>--></td>
+                                <td style="text-align: center; vertical-align: bottom; border: 1px solid"><!--<span t-field="doc.checked_sign_by"/>--></td>
+                                <td style="text-align: center; vertical-align: bottom; border: 1px solid"><!--<span t-field="doc.known_sign_by"/>--></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!--TEMPLATE [BANK STATEMENT REPORT]-->
+    <template id="statement_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="de_print_bank_statement.statement_report_document"/>
+            </t>
+        </t>
+    </template>
+
+    <report id="action_statement_report"
+            model="account.bank.statement"
+            string="Statement"
+            report_type="qweb-pdf"
+            name="de_print_bank_statement.statement_report"
+            file="de_print_bank_statement.statement_report"
+            attachment_use="True"
+    />
+    <!--FORM BANK STATEMENT-->
+    <record id="view_account_bank_statement_form_inherit" model="ir.ui.view">
+        <field name="name">account.bank.statement.report.form</field>
+        <field name="model">account.bank.statement</field>
+        <field name="inherit_id" ref="account.view_bank_statement_form"/>
+        <field name="arch" type="xml">
+            <button name="check_confirm_bank" position="after">
+                <button name="print_bank_statement" string="Print Statement" type="object" help="Print in Pdf"/>
+            </button>
+        </field>
+
+    </record>
+
+</odoo>

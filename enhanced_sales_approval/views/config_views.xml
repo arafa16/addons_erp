@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- <record model="ir.ui.view" id="enhanced_sales_approval_tree">
+            <field name="name">enhanced.sales.approval.tree</field>
+            <field name="model">enhanced.sales.approval</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="idx"/>
+                    <field name="name"/>
+                    <field name="colN"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="enhanced_sales_approval_action">
+            <field name="name">enhanced sales approval</field>
+            <field name="res_model">enhanced.sales.approval</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="tabel_master_approval_sales"
+            name="Level Approval"
+            parent="sale.menu_sale_config"
+            action="enhanced_sales_approval_action"
+            sequence="4"/> -->
+    </data>
+</odoo>

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+157395779772055369,random,model_tabel_ttd_purhchase,base.group_user,1,0,0,0

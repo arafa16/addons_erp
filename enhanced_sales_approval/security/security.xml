@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record model="ir.module.category" id="module_enhanced_sales_approval">
+            <field name="name">Enhnaced Sales Approval</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="res.groups" id="group_approval_sales_user">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_enhanced_sales_approval"/>
+        </record>
+        <record model="res.groups" id="group_approval_sales_manager">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_enhanced_sales_approval"/>
+        </record>
+    </data>
+</odoo>

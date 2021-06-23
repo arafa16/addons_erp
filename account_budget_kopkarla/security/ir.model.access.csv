@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_budget_post_commitment_limit,account.budget.post.commitment_limit,model_account_budget_post_commitment_limit,account.group_account_manager,1,1,1,1
+access_account_budget_post_commitment_limit_accountant,account.budget.post.commitment_limit accountant,model_account_budget_post_commitment_limit,account.group_account_invoice,1,0,0,0
+access_budget_request,budget.request,model_budget_request,account.group_account_user,1,1,1,1
+access_budget_request_line,budget.request.line,model_budget_request_line,account.group_account_user,1,1,1,1
+access_budget_adjustment,budget.adjustment,model_budget_adjustment,account.group_account_user,1,0,0,0
+access_budget_adjustment_line,budget.adjustment.line,model_budget_adjustment_line,account.group_account_user,1,1,1,1
+access_account_budget_post_invoice,account.budget.post.invoice,account_budget.model_account_budget_post,account.group_account_invoice,1,0,0,0
+access_account_budget_post_manager,account.budget.post.manager,account_budget.model_account_budget_post,account.group_account_manager,1,1,1,1
+access_account_budget_post_invoice,account.budget.post.group.invoice,model_account_budget_post_group,account.group_account_invoice,1,0,0,0
+access_account_budget_post_manager,account.budget.post.group.manager,model_account_budget_post_group,account.group_account_manager,1,1,1,1
+access_budget_request_margin_invoice,budget.request.margin.invoice,model_budget_request_margin,account.group_account_invoice,1,0,0,0
+access_budget_request_margin_manager,budget.request.margin.manager,model_budget_request_margin,account.group_account_manager,1,1,1,1

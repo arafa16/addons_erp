@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ehs_qotation_view">
+            <field name="name">ehs.qotation.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="so_bagian" domain="[('adadiSO','=',True)]" required="1" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

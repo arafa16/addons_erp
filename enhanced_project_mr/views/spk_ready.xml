@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="sale_order_spk_ready_invoice_tree">
+            <field name="name">sale.order.spk.ready.invoice.tree</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="nojar"/>
+                    <field name="confirmation_date"/>
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                    <field name="add_cost"/>
+                    <field name="invoice_status"/>
+                    <field name="task_id"/>
+                    <field name="taskrel"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="sale_order_spk_ready_invoice_action">
+            <field name="name">SPK Ready to Check</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['&amp;','&amp;','&amp;',('task_id.kanban_baru', '=', 'D'),('taskrel.ready_invoice', '=', True),('jenis_so', '=', 'Project'),('invoice_status','in',['to invoice','no'])]</field>
+            <!-- <field name="domain">[('taskrel.ready_invoice', '=', True)]</field> -->
+            <!-- <field name="domain">[('task_id.kanban_baru', '=', 'D')]</field> -->
+            <field name="view_id" ref="sale_order_spk_ready_invoice_tree"/>
+        </record>
+
+        <menuitem 
+            id="sale_order_spk_ready_invoice_menutab"
+            name="SPK ready to Check"
+            parent="sale.sale_order_menu"
+            action="sale_order_spk_ready_invoice_action"
+        />
+
+    </data>
+</odoo>

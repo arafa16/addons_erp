@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="purchase_budget_request_tree">
+            <field name="name">purchase.budget.request.tree</field>
+            <field name="model">budget.request.report</field>
+            <field name="arch" type="xml">
+                <tree string="Budget Request" create="false" delete="false">
+                    <!--<header>
+                        <button string="Populate Data" name="populate_budget_request" object="object" class="btn-success"/>
+                    </header>-->
+                    <field name="request_id"/>
+                    <field name="date"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="account_id"/>
+                    <field name="budget_request_line_id"/>
+                    <field name="request_amount"/>
+                    <field name="budget_amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="purchase_budget_request_search" model="ir.ui.view">
+            <field name="name">purchase.budget.request.search</field>
+            <field name="model">budget.request.report</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Budget Request">
+                    <field name="request_id" string="Purchase Request"/>
+                    <field name="account_id" string="Account"/>
+                    <field name="cost_center_id" string="Cost Center"/>
+                    <field name="analytic_account_id" string="Analytic Account"/>
+
+                    <filter name="budgeted_request" string="Request Budgeted" domain="[('unbudget','=',False)]"/>
+                    <filter name="unbudgeted_request" string="Request Unbudgeted" domain="[('unbudget','=',True)]"/>
+                    <!--<separator/>-->
+                    <group expand="0" string="Group By...">
+                        <!--<filter name="account" string="Account" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'account_id'}"/>-->
+                        <filter name="cost_center" string="Cost Center" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'cost_center_id'}"/>
+                        <filter name="analytic_account" string="Analytic Account" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'analytic_account_id'}"/>
+                        <filter name="request" string="Purchase Request" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'request_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_purchase_budget_request">
+            <field name="name">Purchase Budget Request</field>
+            <field name="res_model">budget.request.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_budget_request_tree"/>
+            <field name="search_view_id" ref="purchase_budget_request_search"/>
+            <field name="context">{ 'search_default_cost_center':True,
+                                    'search_default_analytic_account':True,
+                                    'search_default_request':True,}</field>
+        </record>
+
+        <menuitem parent="account_budget_kopkarla.menu_budget_reports"
+            id="menu_act_budget_request"
+            name="Budget Request Details"
+            action="act_purchase_budget_request" sequence="5"
+            groups="account.group_account_user"/>
+    </data>
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record model="ir.module.category" id="enhanced_sales_jenis_project">
+            <field name="name">Enhnaced Master Jenis Project</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="res.groups" id="group_jenis_project_user">
+            <field name="name">User</field>
+            <field name="category_id" ref="enhanced_sales_jenis_project"/>
+        </record>
+        <record model="res.groups" id="group_jenis_project_manager">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="enhanced_sales_jenis_project"/>
+        </record>
+    </data>
+    <data noupdate="0">
+        <record model="ir.module.category" id="enhanced_sales_jenis_order">
+            <field name="name">Enhnaced Master Jenis Order</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="res.groups" id="group_jenis_order_user">
+            <field name="name">User</field>
+            <field name="category_id" ref="enhanced_sales_jenis_order"/>
+        </record>
+        <record model="res.groups" id="group_jenis_order_manager">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="enhanced_sales_jenis_order"/>
+        </record>
+    </data>
+    <data noupdate="0">
+        <record model="ir.module.category" id="enhanced_sales_jenis_pekerjaan">
+            <field name="name">Enhnaced Master Jenis Pekerjaan</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="res.groups" id="group_jenis_pekerjaan_user">
+            <field name="name">User</field>
+            <field name="category_id" ref="enhanced_sales_jenis_pekerjaan"/>
+        </record>
+        <record model="res.groups" id="group_jenis_pekerjaan_manager">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="enhanced_sales_jenis_pekerjaan"/>
+        </record>
+    </data>
+</odoo>

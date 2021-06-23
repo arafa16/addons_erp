@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="est_ttd_form">
+            <field name="name">est.ttd.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Ttd autorithy">
+                        <group>
+                            <group string="Otoritas Tandatangan PR &amp; PO" name="ttd_autority">
+                                <field name="otoritas" widget="many2many_tags" invisible="1" string="Sales Authority not used anymore"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

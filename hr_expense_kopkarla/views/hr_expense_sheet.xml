@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_expense_sheet_form_inherit_advance_expense" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.form</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_sheet_move_create']" position="attributes">
+                    <attribute name="string">Post and Paid</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_sheet_move_create']" position="replace">
+                    <button name="%(hr_expense_kopkarla.hr_expense_sheet_register_payment_wizard_action)d" type="action"
+                        string="Register Payment" class="oe_highlight o_expense_sheet_pay"
+                        attrs="{'invisible': [('state', '!=', 'approve')]}"
+                        context="{'default_sheet_id': id,
+                                  'default_employee_id': employee_id,
+                                  'default_journal_id': advance_journal_id,
+                                  'default_ret_journal_id': ret_journal_id,
+                                  'default_expense_amount': expense_amount,
+                                  'default_payment_mode': payment_mode,
+                                  'default_advance_amount': advance_amount,
+                                  'default_amount': total_amount,
+                                  'default_partner_id': partner_id,
+                                  'default_communication': communication,}"
+                        groups="account.group_account_manager"/>
+                </xpath>
+                <xpath expr="//button[@name='%(hr_expense.hr_expense_refuse_wizard_action)d']" position="after">
+                    <button string="Cancel" name="cancel" states="post,done" type="object"
+                            groups="hr_expense.group_hr_expense_user"/>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']/.." position="replace">
+                    <group>
+                        <field name="employee_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="advance_id" attrs="{'readonly': [('state', '!=', 'submit')]}" options="{'no_create': True,}"
+                               domain="[('employee_id', '=', employee_id), ('state', 'in', ['paid']), ('expense_id', '=', False)]"/>
+                        <field name="advance_journal_id" force_save="1" invisible="1"/>
+                        <field name="ret_journal_id" force_save="1" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="expense_amount" widget="monetary" options="{'currency_field': 'currency_id'}" force_save="1"/>
+                               <!--attrs="{'invisible': [('advance_id', '=', False)]}"/>-->
+                        <field name="advance_amount" widget="monetary" options="{'currency_field': 'currency_id'}"
+                               attrs="{'invisible': [('advance_id', '=', False)]}"/>
+                        <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"
+                               attrs="{'invisible': [('advance_id', '=', False)]}"/>
+                    </group>
+                    <group>
+                        <field name="report_date" attrs="{'readonly': [('state', '!=', 'submit')]}"/>
+                        <field name="payment_mode" widget="radio" options="{'horizontal': true}"
+                               attrs="{'readonly': ['|', ('state', 'not in', ['submit','approve']), ('advance_id', '!=', False)]}"/>
+                        <field name="communication" attrs="{'readonly': [('state', '!=', 'submit')]}" string="Description"/>
+                    </group>
+                </xpath>
+                <xpath expr="//button[@name='action_get_attachment_view']" position="replace"/>
+                <xpath expr="//notebook" position="replace">
+                    <notebook>
+                        <page string="Expense Lines">
+                            <field name="expense_line_ids" nolabel="1" context="{'expense_adding_line': True}">
+                                <tree editable="bottom" delete="false">
+                                    <field name="date" invisible="1"/>
+                                    <field name="product_id" options="{'no_create': True, 'no_open':True}"/>
+                                    <field name="name"/>
+                                    <field name="employee_id" force_save="1" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="unit_amount"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"
+                                           invisible="1"/>
+                                    <field name="message_unread" invisible="1"/>
+                                    <field name="attachment_number" invisible="1" string=" "/>
+                                    <button name="action_get_attachment_view" string="View Attachments" type="object"
+                                            icon="fa-paperclip" invisible="1"/>
+                                    <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="payment_mode" invisible="1"/>
+                                    <field name="advance_expense_id" invisible="1"/>
+                                    <field name="total_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="advance_amount" force_save="1"
+                                           attrs="{'column_invisible': [('parent.advance_id', '==', False)]}"/>
+                                    <field name="variance_amount" force_save="1" readonly="1"
+                                           attrs="{'column_invisible': [('parent.advance_id', '==', False)]}"/>
+                                    <field name="advance_expense_id" invisible="True"/>
+                                    <button name="unlink" class="oe_edit_only" icon="fa-trash-o" type="object" string="Delete" attrs="{'invisible': [('advance_expense_id', '!=', False)]}"/>
+                                    <!--<field name="is_refused" invisible="True"/>
+                                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="reported, refused" string="Refuse" context="{'hr_expense_refuse_model':'hr.expense'}" type="action" groups="hr_expense.group_hr_expense_user, account.group_account_user" icon="fa-times" attrs="{'invisible': ['|', ('is_refused', '=', True),('state', 'in', ['done'])]}"/>-->
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="accounting" string="Expense Information" groups="account.group_account_user">
+                            <group>
+                                <group>
+                                    <!--<field name="journal_id"
+                                           attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"
+                                           groups="account.group_account_user"/>-->
+                                    <!--<field name="bank_journal_id" groups="account.group_account_user"
+                                           attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>-->
+                                    <field name="partner_id" groups="account.group_account_user"
+                                           options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="journal_id" domain="[('type', '=', 'purchase')]"
+                                           options="{'no_open': True, 'no_create': True}"
+                                           attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
+                                    <field name="account_move_id"
+                                           attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
+                                </group>
+                                <group>
+                                    <field name="job_id" readonly="1" force_save="1"/>
+                                    <field name="department_id" readonly="1" force_save="1"/>
+                                    <field name="user_id"/>
+                                    <field name="responsible_id" readonly="1"/>
+                                    <field name="address_id" readonly="1" invisible="1"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Payment" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}">
+                            <group>
+                                <group>
+                                    <!--<field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>-->
+                                    <field name="bank_journal_id" groups="account.group_account_user"
+                                           options="{'no_open': True, 'no_create': True}"
+                                           domain="[('type', 'in', ['cash', 'bank'])]"/>
+                                    <field name="accounting_date" groups="account.group_account_user"
+                                           attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])], 'readonly': [('state', 'not in', ['approve'])]}"/>
+                                </group>
+                                <group>
+                                    <field name="move_id" groups="account.group_account_user"
+                                           attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
+                                    <field name="payment_id"
+                                           attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Charge To">
+                            <group>
+                                <group>
+                                    <field name="order_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('request_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>
+                                    <field name="request_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': ['|',('order_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>
+                                    <field name="department_id_charge_to" string="Department" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('order_id', '!=', False),('request_id', '!=', False)]}"/>
+                                </group>
+                                <group>
+                                    <field name="cost_center_id" options="{'no_open': True, 'no_create': True}"
+                                           attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
+                                    <field name="analytic_account_id" options="{'no_open': True, 'no_create': True}"
+                                           attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Sign By">
+                            <group>
+                                <group>
+                                    <field name="created_sign_by"/>
+                                    <field name="checked_sign_by"/>
+                                    <field name="known_sign_by"/>
+                                    <field name="done_sign_by"/>
+                                    <field name="management_sign_by"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+                <!--<xpath expr="//div[hasclass('oe_chatter')]" position="replace"/>-->
+            </field>
+        </record>
+
+        <record id="view_hr_expense_sheet_tree" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.tree</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree string="Expense Reports" decoration-warning="state=='draft'"
+                          decoration-bf="message_unread == True" decoration-danger="state=='cancel'">
+                        <field name="name" string="Expense Sheet"/>
+                        <field name="employee_id"/>
+                        <field name="report_date"/>
+                        <field name="advance_id"/>
+                        <field name="advance_date"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="advance_amount" sum="Advance Amount"/>
+                        <field name="expense_amount" sum="Expense Amount"/>
+                        <field name="total_amount" sum="Settle Amount"/>
+                        <field name="state"/>
+                        <field name="message_unread" invisible="1"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_expense.action_hr_expense_sheet_my_all" model="ir.actions.act_window">
+            <field name="name">My Reports</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph</field>
+            <field name="view_id" ref="view_hr_expense_sheet_tree"/>
+            <field name="search_view_id" ref="hr_expense.view_hr_expense_sheet_filter"/>
+            <field name="domain">[('employee_id.user_id', '=', uid), ('state', '!=', 'cancel')]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new expense report.
+              </p><p>
+                Once you have created your expense, submit it to your manager who will validate it.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_hr_expense_sheet" model="ir.actions.act_window">
+            <field name="name">Expenses</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph</field>
+            <field name="search_view_id" ref="hr_expense.view_hr_expense_sheet_filter"/>
+            <field name="domain"></field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new expense report.
+              </p><p>
+                Once you have created your expense, submit it to your manager who will validate it.
+              </p>
+            </field>
+        </record>
+
+        <record id="hr_expense.hr_expense_actions_my_unsubmitted" model="ir.actions.act_window">
+            <field name="name">List of Expenses</field>
+            <field name="res_model">hr.expense</field>
+            <field name="view_mode">tree,kanban,form,graph,pivot</field>
+            <field name="search_view_id" ref="hr_expense.view_hr_expense_filter"/>
+            <field name="domain"></field>
+            <field name="context"></field>
+        </record>
+
+
+
+        <menuitem id="hr_expense.menu_hr_expense_my_expenses" name="My Expenses" sequence="1" parent="hr_expense.menu_hr_expense_root" groups="account_kopkarla.group_hidden_object"/>
+        <menuitem id="hr_expense.menu_hr_expense_my_expenses_to_submit" name="Expenses to Submit" sequence="1" parent="hr_expense.menu_hr_expense_my_expenses" action="hr_expense.hr_expense_actions_my_unsubmitted" groups="account_kopkarla.group_hidden_object"/>
+        <menuitem id="hr_expense.menu_hr_expense_sheet_my_reports_refused" name="Refused Reports" sequence="2" parent="hr_expense.menu_hr_expense_my_expenses" action="hr_expense.action_hr_expense_sheet_my_refused" groups="account_kopkarla.group_hidden_object"/>
+        <menuitem id="hr_expense.menu_hr_expense_sheet_my_reports" name="Expense Reports" sequence="3" parent="hr_expense.menu_hr_expense_my_expenses" action="hr_expense.action_hr_expense_sheet_my_all" groups="account_kopkarla.group_hidden_object"/>
+
+        <menuitem id="hr_expense.menu_hr_expense_to_approve" name="To Approve" sequence="2" parent="hr_expense.menu_hr_expense_root" groups="account_kopkarla.group_hidden_object"/>
+        <menuitem id="hr_expense.menu_hr_expense_sheet_all_to_approve" name="Expense Reports To Approve" sequence="1" parent="hr_expense.menu_hr_expense_to_approve" action="hr_expense.action_hr_expense_sheet_all_to_approve" groups="account_kopkarla.group_hidden_object"/>
+
+        <menuitem id="hr_expense.menu_hr_expense_accountant" name="Accountant" sequence="3" parent="hr_expense.menu_hr_expense_root" groups="account_kopkarla.group_hidden_object"/>
+        <menuitem id="hr_expense.menu_hr_expense_sheet_all_to_post" name="Expense Reports To Post" sequence="2" parent="hr_expense.menu_hr_expense_accountant" action="hr_expense.action_hr_expense_sheet_all_to_post" groups="account_kopkarla.group_hidden_object"/>
+        <menuitem id="hr_expense.menu_hr_expense_sheet_all_to_pay" name="Expense Reports To Pay" sequence="3" parent="hr_expense.menu_hr_expense_accountant" action="hr_expense.action_hr_expense_sheet_all_to_pay" groups="account_kopkarla.group_hidden_object"/>
+
+        <menuitem id="menu_hr_expense_entry" name="Expenses" sequence="2" parent="hr_expense.menu_hr_expense_root" groups="base.group_user"/>
+        <menuitem id="menu_hr_expense_sheet_entry" name="Expense Entry" sequence="1" parent="menu_hr_expense_entry" action="action_hr_expense_sheet"/>
+        <menuitem id="menu_hr_expense_expense_cost_list" name="List of Expense" sequence="2" parent="menu_hr_expense_entry" action="hr_expense.hr_expense_actions_my_unsubmitted"/>
+
+        <menuitem id="hr_expense.menu_hr_expense_root" name="Expenses" sequence="100"
+                  web_icon="hr_expense,static/description/icon.png"
+                  groups="account.group_account_user,account.group_account_manager"/>
+    </data>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="enhanced_project_task_saleschannel_search" model="ir.ui.view">
+            <field name="name">enhanced.project.task.saleschannel.search</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='project']" position="after">
+                    <filter name="salesperson_project" string="Sales Channel" context="{'group_by':'related_team_id'}"/>
+                    <filter name="salesdepartement_project" string="Sales Departement" context="{'group_by':'related_department'}"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="sale_order_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

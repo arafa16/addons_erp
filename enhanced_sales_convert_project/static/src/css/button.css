@@ -1,0 +1,16 @@
+.buttontoska{
+    background-color: #0c927c;
+    color: #FFFFFF;
+}
+.buttontoska:hover{
+    background-color: #076858;
+    color: #FFFFFF;
+}
+.buttonungu{
+    background-color: #920c80;
+    color: #FFFFFF;
+}
+.buttonungu:hover{
+    background-color: #770968;
+    color: #FFFFFF;
+}

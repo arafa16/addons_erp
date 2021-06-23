@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_sales_project_tabel_tree_inherit">
+            <field name="name">enhanced.sales.project.tabel.tree.inherit</field>
+            <field name="model">enhanced.sales.project.tabel</field>
+            <field name="inherit_id" ref="enhanced_sales_project.enhanced_sales_project_tabel_tree"/>
+            <field name="arch" type="xml">
+                <field name="urutan" position="after">
+                    <field name="project_income_id"/>
+                    <field name="project_account_id"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="enhanced_sales_project_tabel_form_inherit">
+            <field name="name">enhanced.sales.project.tabel.form.inherit</field>
+            <field name="model">enhanced.sales.project.tabel</field>
+            <field name="inherit_id" ref="enhanced_sales_project.enhanced_sales_project_tabel_form"/>
+            <field name="arch" type="xml">
+                <field name="urutan" position="after">
+                    <field name="project_income_id"/>
+                    <field name="project_account_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

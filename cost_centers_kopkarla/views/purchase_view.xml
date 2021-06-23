@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="purchase_order_inherited_cc_form" model="ir.ui.view">
+            <field name="name">purchase.order.inherited.cc.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+                <field name="arch" type="xml">
+                    <!--<xpath expr="//form/sheet/group/group[2]/field[@name='company_id']" position="after">
+                        <field name="cost_center_id" options="{'no_create': True, 'no_open':True}"/>
+                    </xpath>-->
+                    <field name="date_approve" position="after">
+                        <field name="cost_center_id" options="{'no_create': True, 'no_open':True}"/>
+                    </field>
+                    <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='account_analytic_id']" position="before">
+                        <field name="cost_center_id"  options="{'no_create': True, 'no_open':True}" invisible="1"/>
+                    </xpath>
+                </field>
+        </record>
+
+        <record id="purchase_line_cc_inherited_form" model="ir.ui.view">
+            <field name="name">purchase.line.cc.inherited.form</field>
+            <field name="model">purchase.order.line</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group[1]/div/field[@name='product_qty']" position="after">
+                    <field name="cost_center_id" options="{'no_quick_create':True,'no_create_edit':True}"  string="Cost Center" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+
+</odoo>

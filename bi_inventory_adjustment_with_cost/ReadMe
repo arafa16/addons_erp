@@ -1,0 +1,6 @@
+11.0.0.1 ==> solved issue of inventory valuation and journal entries.
+11.0.0.2 ==>solved issue of invventory valuation's value and added default cost price into stock inventory line.
+
+=> 11.0.0.3 : Improved an index with features of latest changes.
+
+11.0.0.4 : price_unit field given in stock move view.

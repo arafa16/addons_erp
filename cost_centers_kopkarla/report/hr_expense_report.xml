@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_expense_sheet_cc_inherited" inherit_id="hr_expense.report_expense_sheet">
+            <xpath expr="//div[hasclass('page')]/table/thead/tr/th[5]" position="after">
+                <th class="text-left">Cost Center</th>
+            </xpath>
+             <xpath expr="//div[hasclass('page')]/table/tbody/tr/td[5]" position="after">
+                <td class="text-left">
+                    <span t-field="line.cost_center_id"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="escp_task_view_inherit">
+            <field name="name">escp.task.view.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="testx" invisible="1"/>
+                    <field name="sale_order_id" readonly="1"/>
+                    <field name="related_date_order"/>
+                    <field name="related_cust" string="Customer"/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="related_nojar" string="No. Jaringan"/>
+                    <field name="related_pek_type" string="Jenis Pekerjaan"/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='stage_id']" position="attributes">
+                    <attribute name="domain">[('project_ids', '=', project_id),('jenis_pek', '=', related_pek_type)]</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="domain">[('groups_id', 'in', testx)]</attribute>
+                </xpath>
+                <xpath expr="//button[@name='toggle_active']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="escp_task_view_tree_inherit">
+            <field name="name">escp.task.view.tree.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="enhanced_project_dashboard.epv_menu_dashboard_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="related_area" string="Operation Area"/>
+                    <field name="sale_order_id" string="Sales Order"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

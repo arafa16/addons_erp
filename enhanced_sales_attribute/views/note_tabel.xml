@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="enhanced_note_tabel_tree">
+            <field name="name">enhanced.note.tabel.tree</field>
+            <field name="model">enhanced.note.tabel</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <!-- List View -->
+        <record model="ir.ui.view" id="enhanced_note_tabel_tree">
+            <field name="name">enhanced.note.tabel.tree</field>
+            <field name="model">enhanced.note.tabel</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record model="ir.ui.view" id="enhanced_note_tabel_from">
+            <field name="name">enhanced.note.tabel.tree</field>
+            <field name="model">enhanced.note.tabel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="deskripsi"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="enhanced_note_tabel_action">
+            <field name="name">Master Note</field>
+            <field name="res_model">enhanced.note.tabel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="tabel_master_note"
+            name="Data Referensi Note"
+            parent="sale.menu_sale_config"
+            action="enhanced_note_tabel_action"
+            sequence="4"/>
+    </data>
+</odoo>

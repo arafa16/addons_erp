@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_asset" name="Assets" parent="account.menu_finance" sequence="3"/>
+        <!--Sales sub-menus-->
+        <menuitem id="menu_asset_documents" name="Documents" parent="menu_asset" sequence="1"/>
+        <menuitem id="menu_asset_master_data" name="Master Data" parent="menu_asset" sequence="2"/>
+        <menuitem id="menu_asset_reports" name="Reports" parent="menu_asset" sequence="3"/>
+
+        <menuitem parent="menu_asset_documents" id="asset_depreciation_menu" action="asset_depreciation_action" sequence="1" groups="account.group_account_user"/>
+        <menuitem parent="menu_asset_documents" id="asset_sale_menu" action="asset_sale_action" sequence="2" groups="account.group_account_user"/>
+        <menuitem parent="menu_asset_documents" id="asset_reclass_menu" action="asset_reclass_action" sequence="3" groups="account.group_account_user"/>
+        <menuitem parent="menu_asset_documents" id="asset_revaluation_menu" action="asset_revaluation_action" sequence="4" groups="account.group_account_user"/>
+        <menuitem parent="menu_asset_documents" id="asset_disposal_menu" action="asset_disposal_action" sequence="5" groups="account.group_account_user"/>
+        <menuitem parent="menu_asset_master_data" id="account_asset.menu_action_account_asset_asset_form" action="account_asset.action_account_asset_asset_form" sequence="1" groups="account.group_account_user"/>
+        <menuitem name="Assets Analysis" action="account_asset.action_asset_asset_report" id="account_asset.menu_action_asset_asset_report" parent="menu_asset_reports" sequence="21"/>
+    </data>
+</odoo>

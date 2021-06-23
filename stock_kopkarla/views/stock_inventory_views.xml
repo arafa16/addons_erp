@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_inventory_form_tbd" model="ir.ui.view">
+            <field name="name">stock.inventory.form</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <field name="exhausted" position="after">
+                    <field name="inv_cost_ledger" attrs="{'readonly': [('state', 'in',['assigned','done'])]}" groups="stock_force_date_app.group_stock_force_date"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

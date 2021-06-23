@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="escp_project_view_inherit">
+            <field name="name">escp.project.view.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="j_project"/>
+                    <field name="nojar"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

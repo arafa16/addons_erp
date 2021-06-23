@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_payment_tax_adjustment" model="ir.ui.view">
+            <field name="name">account.payment.tax.adjustment.form</field>
+            <field name="model">payment.journal.tax.adjustment</field>
+            <field name="arch" type="xml">
+                <form string="Tax Adjustment">
+                    <group>
+                         <group>
+                             <field name="payment_id"/>
+                             <field name="date"/>
+                             <field name="description"/>
+
+                         </group>
+                         <!--<group>
+                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','!=','refund')]}" class="oe_grey" colspan="4">
+                                You will be able to edit and validate this
+                                credit note directly or keep it draft,
+                                waiting for the document to be issued by
+                                your supplier/customer.
+                             </div>
+                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','!=','cancel')]}" class="oe_grey" colspan="4">
+                                Use this option if you want to cancel an invoice you should not
+                                have issued. The credit note will be created, validated and reconciled
+                                with the invoice. You will not be able to modify the credit note.
+                             </div>
+                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','!=','modify')]}" class="oe_grey" colspan="4">
+                                Use this option if you want to cancel an invoice and create a new
+                                one. The credit note will be created, validated and reconciled
+                                with the current invoice. A new draft invoice will be created
+                                so that you can edit it.
+                             </div>
+                         </group>-->
+                         <group>
+                             <field name="filter_adj" widget="radio"/>
+                             <field name="payment_tax_id" options="{'no_create': True, 'no_open': True}" domain="[('payment_id', '=', payment_id)]"/>
+                             <!--<button string='Load PPH' name="populate_tax" type="object" class="btn-primary"/>-->
+                         </group>
+                    </group>
+                    <!--<notebook>
+                        <page string="Tax">
+                            <field name="tax_adj_ids">
+                                <tree string="Tax lines" editable="bottom" create="false">
+                                    <field name="tax_id"/>
+                                    <field name="tax_no"/>
+                                    <field name="tax_date"/>
+                                    <field name="base_amt"/>
+                                    <field name="tax_amt"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>-->
+                    <footer>
+                        <button string='Adjust PPH' name="adjust_pph" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_payment_tax_adjustment" model="ir.actions.act_window">
+            <field name="name">PPH Adjustment</field>
+            <field name="res_model">payment.journal.tax.adjustment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_payment_tax_adjustment"/>
+            <field name="context">{'default_payment_id': active_id}</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

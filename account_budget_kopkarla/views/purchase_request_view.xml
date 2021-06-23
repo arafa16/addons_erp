@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sprogroup_purchase_request_inherit">
+            <field name="name">sprogroup.purchase.request.inherit</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="sprogroup_purchase_request.view_sprogroup_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/field[@name='is_editable']" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <field name="budget_request_id" invisible="1"/>
+                        <button name="show_selected_budget" type="object" class="oe_stat_button" icon="fa-codepen"
+                            attrs="{'invisible': [('budget_request_id', '=', False)]}">
+                            <span>Budget</span>
+                        </button>
+                        <button name="show_available_budget" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="active_budget_count" widget="statinfo" string="Budget List"/>
+                        </button>
+                    </div>
+                </xpath>
+
+                <field name="product_id" position="replace">
+                    <field name="product_id" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="budget_request_line_id" invisible="0" groups="account.group_account_manager"/>
+                </field>
+
+                <xpath expr="//notebook/page[4]/group" position="replace">
+                    <group colspan="2">
+                        <group string="Accounting">
+                            <field name="cost_center_id" options="{'no_create': True, 'no_open':True}" attrs="{'readonly': [('state', '!=', 'draft')], 'required': 1}"/>
+                            <field name="analytic_account_id" options="{'no_create': True, 'no_open':True}" attrs="{'readonly': [('state', '!=', 'draft')], 'required': 1}"/>
+                        </group>
+                        <group string="Log">
+                            <field name="create_uid"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sprogroup_purchase_request_buyer_tree_budget">
+            <field name="name">sprogroup.purchase.request.buyer.tree.budget</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="enhanced_purchase_request_loa.sprogroup_purchase_request_buyer_tree"/>
+            <field name="arch" type="xml">
+                <field name="namex" position="after">
+                    <field string="Budget" name="budget_request_id" widget="boolean"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- PR COA Mapping -->
+        <record model="ir.ui.view" id="purchase_request_line_tree">
+            <field name="name">sprogroup.purchase.request.line.tree</field>
+            <field name="model">sprogroup.purchase.request.line</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Request Detail">
+                    <!--<field name="account_id"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>-->
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <!--<field name="coannya"/>-->
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <field name="cost_product"/>
+                    <field name="subtotal"/>
+                    <field name="date_required"/>
+                    <field name="request_id"/>
+                    <field name="requested_by"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="purchase_request_line_search" model="ir.ui.view">
+            <field name="name">sprogroup.purchase.request.line.search</field>
+            <field name="model">sprogroup.purchase.request.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Request Line">
+                    <field name="request_id" string="Purchase Request"/>
+                    <!--<field name="account_id" string="Account"/>-->
+                    <field name="cost_center_id" string="Cost Center"/>
+                    <field name="analytic_account_id" string="Analytic Account"/>
+
+<!--                    <filter name="budget_approval" string="Budget Approval" domain="[('state','=','to_approve')]" help="Show PR need to budget approval"/>-->
+                    <!--<separator/>-->
+                    <group expand="0" string="Group By...">
+                        <!--<filter name="account" string="Account" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'account_id'}"/>-->
+                        <filter name="cost_center" string="Cost Center" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'cost_center_id'}"/>
+                        <filter name="analytic_account" string="Analytic Account" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'analytic_account_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_purchase_request_line_tree">
+            <field name="name">Purchase Request Details</field>
+            <field name="res_model">sprogroup.purchase.request.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_request_line_tree"/>
+            <field name="search_view_id" ref="purchase_request_line_search"/>
+            <field name="domain">[('state', 'in', ['leader_request','leader_approved','done'])]</field>
+            <field name="context">{ 'search_default_account':True,
+                                    'search_default_cost_center':True,
+                                    'search_default_analytic_account':True }</field>
+        </record>
+
+        <menuitem parent="account_budget_kopkarla.menu_budget_reports"
+            id="menu_act_purchase_request_line_tree"
+            name="Purchase Request Details"
+            action="act_purchase_request_line_tree" sequence="4"
+            groups="account.group_account_user"/>
+    </data>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enh_stock_picking_tree">
+            <field name="name">enh.stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="date_done"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="enh_stock_picking_form">
+            <field name="name">enh.stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="mr_responsible" readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='location_id']" position="after">
+                    <field name="sopr"/>
+                    <field name="sopraddress"/>
+                    <field name="isDirect"/>
+                </xpath>
+                <xpath expr="//field[@name='group_id']" position="after">
+                    <field name="prCreator"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

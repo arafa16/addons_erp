@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sprogroup_purchase_request_waiting_budget_tree">
+            <field name="name">sprogroup.purchase.request.waiting.budget.tree</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="namex"/>
+                    <field name="date_start"/>
+                    <field name="requested_by"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="sprogroup_purchase_request_waiting_budget_action">
+            <field name="name">Budget waiting list</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state', '=', 'to_approve')]</field>
+            <field name="context">{"search_default_assigned_to":uid}</field>
+            <field name="view_id" ref="sprogroup_purchase_request_waiting_budget_tree"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem 
+            id="sprogroup_purchase_request_waiting_budget_menu"
+            name="Budget Waiting List"
+            parent="purchase.menu_procurement_management"
+            sequence="2"
+            action="sprogroup_purchase_request_waiting_budget_action"
+            groups="sprogroup_purchase_request.group_purchase_request_budget"
+        />
+        <menuitem id="purchase_request_menu_1_2" name="Budget Waiting List" parent="sprogroup_purchase_request.purchase_request_menu_1" action="enhanced_purchase_request.sprogroup_purchase_request_waiting_budget_action" sequence="2" groups="sprogroup_purchase_request.group_purchase_request_budget"/>
+
+    </data>
+</odoo>

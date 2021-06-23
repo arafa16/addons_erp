@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="enhanced_wizard_invoutopr_form" model="ir.ui.view">
+            <field name="name">enhanced.wizard.invoutopr.form</field>
+            <field name="model">enhanced.wizard.invoutopr</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div style="white-space: pre-line;">
+                        <h5>Report Inventory Out To Operation By Date</h5>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tanggal_awal" required="1"/>
+                            <field name="tanggal_ahir" required="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <footer>
+                        
+                        <button name="process_wizard"
+                            string="XLS"
+                            type="object"
+                            class="oe_highlight"
+                            />
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="enhanced_wizard_invoutopr_action" model="ir.actions.act_window">
+            <field name="name">Inventory Out  Operation Report</field>
+            <field name="res_model">enhanced.wizard.invoutopr</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="enhanced_wizard_invoutopr_form"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="enhanced_wizard_invoutopr_menu" name="Inventory Out to Operation" parent="stock.menu_warehouse_report" sequence="257" action="enhanced_wizard_invoutopr_action"/>
+    </data>
+</odoo>

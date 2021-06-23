@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sprogroup_purchase_request_assign_tome_search">
+            <field name="name">sprogroup.purchase.request.assign.tome.search</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="sprogroup_purchase_request.view_sprogroup_purchase_request_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='state_done']" position="after">
+                    <separator/>
+                    <filter name="onprogress_torf" string="To RFQ" domain="[('nomor_bidding','=',False)]" help="PR Belum RFQ"/>
+                    <filter name="onprogress_donerf" string="Sudah RFQ" domain="[('nomor_bidding','!=',False)]" help="PR Sudah RFQ"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="sprogroup_purchase_request_assign_tome_action">
+            <field name="name">PR Assign to Me</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="domain">['&amp;','&amp;',('state', '=', 'done'),('isDispatch','=',True),('eksekutor','=',uid)]</field>
+            <field name="context">{"search_default_onprogress_torf":1}</field>
+            <!-- <field name="view_id" ref="sprogroup_purchase_request_waiting_budget_tree"/> -->
+            <field name="view_mode">tree,form,kanban,pivot,graph</field>
+        </record>
+
+        <menuitem 
+            id="sprogroup_purchase_request_assign_tome_menu"
+            name="PR Assign to Me"
+            parent="purchase.menu_procurement_management"
+            sequence="5"
+            action="sprogroup_purchase_request_assign_tome_action"
+            groups="sprogroup_purchase_request.group_purchase_request_eksekutor"
+        />
+    </data>
+</odoo>

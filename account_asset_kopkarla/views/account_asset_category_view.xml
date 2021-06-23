@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	    <record model="ir.ui.view" id="view_account_asset_category_inherit">
+	        <field name="name">account.asset.category.inherit</field>
+	        <field name="model">account.asset.category</field>
+            <field name="inherit_id" ref="account_asset.view_account_asset_category_form"/>
+            <field name="arch" type="xml">
+                <xpath  expr="//form" position="replace">
+                    <form string="Asset category">
+                        <group>
+                            <div class="oe_title">
+                                <label for="name" string="Asset Type" class="oe_edit_only" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                                <label for="name" string="Deferred Revenue Type" class="oe_edit_only" attrs="{'invisible': [('type','==','purchase')]}"/>
+                                <h1>
+                                    <field name="name" placeholder="e.g. Computers"/>
+                                </h1>
+                            </div>
+                            <group>
+                                <field name="type" invisible="1"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            </group>
+                            <group string="Journal Entries">
+                                <field name="asset_in_progress" />
+                                <field name="journal_acq_id" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>
+                                <field name="journal_id" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>
+                                <field name="journal_reval_id" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>
+                                <field name="journal_reclass_id"/>
+                                <field name="journal_disp_id"/>
+                            </group>
+                            <group string="Accounting">
+                                <field name="account_asset_id" attrs="{'invisible': [('type','=', False)]}" domain="[('company_id', '=', company_id)]"/>
+                                <field name="account_depreciation_id" string="Accum. Depre. Acc." domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>
+                                <field name="account_depreciation_expense_id" string="Depre. Account" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>
+                                <field name="account_profit_id"/>
+                                <field name="account_loss_id"/>
+                                <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                                <!--<div>
+                                    <label for="account_asset_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                                    <label for="account_asset_id" string="Deferred Revenue Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                                </div>
+                                <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}" domain="[('company_id', '=', company_id)]"/>-->
+                                <!--<div attrs="{'invisible': [('asset_in_progress','=',True)]}">
+                                    <label for="account_depreciation_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                                    <label for="account_depreciation_id" string="Recognition Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                                </div>
+                                <field name="account_depreciation_id" nolabel="1" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>-->
+                                <!--<div attrs="{'invisible': [('asset_in_progress','=',True)]}">
+                                    <label for="account_depreciation_expense_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                                    <label for="account_depreciation_expense_id" string="Recognition Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                                </div>
+                                <field name="account_depreciation_expense_id" nolabel="1" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>-->
+                            </group>
+                            <group string="Depreciation Method and Periodicity" attrs="{'invisible': [('asset_in_progress','=',True)]}">
+                                <field name="method" widget="radio"/>
+                                <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                                <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
+                                <field name="method_time" string="Time Method Based On" widget="radio" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                                <field name="method_number" string="Number of Entries" attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
+                                <label for="method_period" string="One Entry Every"/>
+                                <div>
+                                    <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}" class="oe_inline"/>
+                                    months
+                                </div>
+                                <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
+                            </group>
+                            <group string="Additional Options">
+                                <field name="open_asset"/>
+                                <field name="group_entries"/>
+                                <field name="asset_class" />
+                                <!--<field name="sequence_reclass_id" attrs="{'invisible': [('asset_in_progress','=', False)]}" />-->
+                            </group>
+                        </group>
+                    </form>
+                </xpath>
+                <!--<xpath  expr="//field[@name='group_entries']" position="after">
+                    <field name="asset_class" />
+                    <field name="asset_in_progress" />
+                </xpath>
+                <xpath  expr="//form//group//group[2]" position="replace">
+                    <group string="Journal Entries">
+                        <field name="journal_id"/>
+                        <div>
+                            <label for="account_asset_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_asset_id" string="Deferred Revenue Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}" domain="[('company_id', '=', company_id)]"/>
+                        <div attrs="{'invisible': [('asset_in_progress','=',True)]}">
+                            <label for="account_depreciation_id" string="Accum. Depre. Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_depreciation_id" string="Recognition Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="account_depreciation_id" nolabel="1" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>
+                        <div attrs="{'invisible': [('asset_in_progress','=',True)]}">
+                            <label for="account_depreciation_expense_id" string="Depreciation Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_depreciation_expense_id" string="Recognition Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="account_depreciation_expense_id" nolabel="1" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('asset_in_progress','=',True)]}"/>
+                        <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                    </group>
+                </xpath>-->
+            </field>
+		</record>
+	</data>
+</odoo>

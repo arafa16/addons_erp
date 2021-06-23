@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="enhanced_wizard_invalin_form" model="ir.ui.view">
+            <field name="name">enhanced.wizard.invalin.form</field>
+            <field name="model">enhanced.wizard.invalin</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div style="white-space: pre-line;">
+                        <h5>Report Inventory In</h5>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tanggal" required="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <footer>
+                        
+                        <button name="process_wizard"
+                            string="XLS"
+                            type="object"
+                            class="oe_highlight"
+                            />
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="enhanced_wizard_invalin_action" model="ir.actions.act_window">
+            <field name="name">Inventory In By Date</field>
+            <field name="res_model">enhanced.wizard.invalin</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="enhanced_wizard_invalin_form"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="enhanced_wizard_invalin_menu" name="Inventory In By Date" parent="stock.menu_warehouse_report" sequence="251" action="enhanced_wizard_invalin_action"/>
+    </data>
+</odoo>

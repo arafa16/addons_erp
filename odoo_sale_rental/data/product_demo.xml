@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="0">
+        <record id="rental_security_payment_product_demo_data" model="product.product">
+            <field name="name">Rental Security Payment Refund</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="type">service</field>
+        </record>
+        <function id="default_refund_product"
+                  model="ir.default" name="set"
+                  eval="('res.config.settings', 'security_refund_product_id', ref('odoo_sale_rental.rental_security_payment_product_demo_data'))"
+                  />
+    </data>
+</odoo>

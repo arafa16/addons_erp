@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- agregado de account type en búsqueda de apuntes -->
+    <record id="view_account_move_line_filter" model="ir.ui.view">
+        <field name="name">account.move.line.search</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+        <field name="arch" type="xml">
+            <field name="date" position="after">
+                <filter name="month"
+                        string="This Month"
+                        domain="['&amp;', ('date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Month"
+                        name="last_month"
+                        domain="['&amp;', ('date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
+                <filter string="This Year"
+                        name="year"
+                        domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter name="last_year"
+                        string="Last Year"
+                        domain="['&amp;', ('date', '&gt;=', (context_today()-relativedelta(years=1)).strftime('%Y-01-01')), ('date', '&lt;', context_today().strftime('%Y-01-01'))]"/>
+            </field>
+            <field name="account_id" position="after">
+                <field name="user_type_id"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
+            </field>
+            <group>
+                <filter string="Account Type" context="{'group_by':'user_type_id'}"/>
+                <filter string="Analytic Account" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                <filter string="Company" domain="[]" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+            </group>
+            <filter context="{'group_by':'date'}" position="after">
+                <filter string="Due date" context="{'group_by':'date_maturity'}"/>
+            </filter>
+            <!-- add name to this group so it can be send as default by other modules -->
+            <filter context="{'group_by':'account_id'}" position="attributes">
+                <attribute name="name">group_by_account</attribute>
+            </filter>
+        </field>
+    </record>
+
+    <!-- agregado de boton para abrir documento relacionado -->
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <tree>
+                <button type="object" string="Open Document" icon="fa-file-o" help="Open Related Document" name="action_open_related_document"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_move_line_payment_group_tree" model="ir.ui.view">
+        <field name="name">account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_payment_group.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <tree>
+                <button type="object" string="Open Document" icon="fa-external-link" help="Open Related Document" name="action_open_related_document"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_move_line_analisis" model="ir.actions.act_window">
+        <field name="name">Análisis de Apuntes Contables</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.move.line</field>
+        <!-- <field name="view_id" ref="view_wizard_multi_chart"/> -->
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph,pivot</field>
+    </record>
+
+    <menuitem id="menu_move_line_analisis" sequence="5" parent="account.account_reports_business_intelligence_menu" action="action_move_line_analisis"/>
+
+    <record id="view_move_line_form" model="ir.ui.view">
+        <field name="name">account.move.line.form</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="groups_id" eval="[(4, ref('base.group_no_one'))]"/>
+        <field name="arch" type="xml">
+            <group groups="base.group_multi_currency" position="before">
+                <group string="Residuals">
+                    <field name="amount_residual"/>
+                    <field name="amount_residual_currency"/>
+                    <field name="reconciled"/>
+                </group>
+            </group>
+            <field name="matched_credit_ids" position="replace"/>
+            <field name="matched_debit_ids" position="replace"/>
+            <label for="full_reconcile_id" position="before">
+                <field name="matched_credit_ids" readonly="1" >
+                    <tree create="0">
+                        <field name="credit_move_id"/>
+                        <field name="amount" sum="Total"/>
+                        <field name="amount_currency" sum="Total"/>
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </tree>
+                </field>
+                <field name="matched_debit_ids" readonly="1" >
+                    <tree create="0">
+                        <field name="debit_move_id"/>
+                        <field name="amount" sum="Total"/>
+                        <field name="amount_currency" sum="Total"/>
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </tree>
+                </field>
+            </label>
+        </field>
+    </record>
+
+</odoo>

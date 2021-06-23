@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="epmr_wizard" model="ir.ui.view">
+            <field name="name">epmr.wizard</field>
+            <field name="model">em.request</field>
+            <field name="arch" type="xml">
+                <form string="Show Wizard">
+                    <header>
+                        <field name="stat" widget="statusbar" readonly="1"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+                        <group>
+                            <field name="tanggal"/>
+                        </group>
+                    </group>
+                    <notebook>
+                            <page string="Material">
+                                <field name="material_ids">
+                                    <tree editable="bottom">
+                                        <field name="barang_id"/>
+                                        <field name="gudang_pengambilan" domain="[('usage','=','internal')]"/>
+                                        <field name="tersedia" readonly="1"/>
+                                        <field name="permintaan"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    <footer>
+                        <button name="process_wizard" string="Save" type="object" icon="fa-save" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" icon="fa-times" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="epmr_action" model="ir.actions.act_window">
+            <field name="name">Form Material Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">em.request</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="epmr_wizard"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

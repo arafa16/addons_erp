@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_journal_user,payment.journal,model_payment_journal,account.group_account_user,1,0,0,0
+access_payment_journal_line_user,payment.journal.line,model_payment_journal_line,account.group_account_user,1,0,0,0
+access_payment_journal_line_tax_user,payment.journal.line.tax,model_payment_journal_line_tax,account.group_account_user,1,0,0,0
+access_payment_journal_line_tax_adjust_user,payment.journal.line.tax.adjust,model_payment_journal_line_tax_adjust,account.group_account_user,1,0,0,0
+access_payment_journal_billing,payment.journal,model_payment_journal,account.group_account_invoice,1,1,1,1
+access_payment_journal_line_billing,payment.journal.line,model_payment_journal_line,account.group_account_invoice,1,1,1,1
+access_payment_journal_line_tax_billing,payment.journal.line.tax,model_payment_journal_line_tax,account.group_account_invoice,1,1,1,1
+access_payment_journal_line_tax_adjust_billing,payment.journal.line.tax.adjust,model_payment_journal_line_tax_adjust,account.group_account_invoice,1,1,1,1
+access_payment_journal_advisor,payment.journal,model_payment_journal,account.group_account_manager,1,1,1,1
+access_payment_journal_line_advisor,payment.journal.line,model_payment_journal_line,account.group_account_manager,1,1,1,1
+access_payment_journal_line_tax_advisor,payment.journal.line.tax,model_payment_journal_line_tax,account.group_account_manager,1,1,1,1
+access_payment_journal_line_tax_adjust_advisor,payment.journal.line.tax.adjust,model_payment_journal_line_tax_adjust,account.group_account_manager,1,1,1,1
+access_move_line_tax_user,account.move.line.tax,model_account_move_line_tax,account.group_account_user,1,0,0,0
+access_move_line_tax_advisor,account.move.line.tax,model_account_move_line_tax,account.group_account_invoice,1,1,1,1
+access_move_line_tax_manager,account.move.line.tax,model_account_move_line_tax,account.group_account_manager,1,1,1,1
+access_payment_journal_tax_adjustment,payment.journal.tax.adjustment,model_payment_journal_tax_adjustment,account.group_account_invoice,1,1,1,1

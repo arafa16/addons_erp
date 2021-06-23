@@ -1,0 +1,151 @@
+<odoo>
+
+    <template id="purchasetender_report">
+        <t t-call="web.html_container">
+            <t t-set="data_report_dpi" t-value="110" />
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center">
+                            <h3>QUOTATION FORM</h3>
+                        </div>
+                        <div class="row mt32 mb32" id="informations">
+                            <div class="col-xs-3">
+                                <strong>Quotation No:</strong>
+                                <p t-field="doc.name" />
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Quotation Date:</strong>
+                                <p t-field="doc.schedule_date" />
+                            </div>
+                        </div>
+                        <t t-set="best_suppliers"
+                            t-value="get_best_supplier(doc, data['form']['condition'])" />
+                        <table class="table table-condensed"
+                            style="border-style: groove;">
+                            <thead>
+                                <tr>
+                                    <th class="text-left"></th>
+                                    <th class="text-left"></th>
+                                    <th class="text-center"></th>
+                                    <th class="text-center"></th>
+                                    <t t-foreach="best_suppliers"
+                                        t-as="p">
+                                        <th class="text-center"
+                                            colspan="3">
+                                            <strong
+                                                t-esc="get_supplier_name(p)" />
+                                        </th>
+                                    </t>
+                                    <th class="text-right"></th>
+                                    <th class="text-right"></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">Qty.</th>
+                                    <th class="text-center">Description
+                                    </th>
+                                    <th class="text-center">Category</th>
+                                    <th class="text-center">Part No.</th>
+
+                                    <t t-foreach="best_suppliers"
+                                        t-as="p">
+                                        <th class="text-right">Base Price</th>
+                                        <th class="text-right">Vat Amount</th>
+                                        <th class="text-right">Amount</th>
+                                    </t>
+
+                                    <th class="text-center">Last PO
+                                        Price(PU)
+                                    </th>
+                                    <th class="text-center">Supplier Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.line_ids" t-as="l">
+                                    <t t-if="l.product_id">
+                                        <t t-set="last_data"
+                                            t-value="last_purchased(l.product_id.id)" />
+                                        <td class="text-center">
+                                            <span
+                                                t-esc="round(l.product_qty,2)" />
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="l.product_id.name" />
+                                        </td>
+                                        <td class="text-center">
+                                            <span
+                                                t-field="l.product_id.categ_id.name" />
+                                        </td>
+                                        <td class="text-center">
+                                            <span
+                                                t-field="l.product_id.default_code" />
+                                        </td>
+                                        <t t-foreach="best_suppliers"
+                                            t-as="p">
+                                            <t t-set="qty"
+                                                t-value="tender_wise_value(doc, p, l.product_id.id, data['form']['condition'])" />
+                                            <td class="text-right"
+                                                style="color:#855979;">
+                                                <span t-esc="qty[0]" />
+                                            </td>
+                                            <td class="text-right"
+                                                style="color:#855979;">
+                                                <span t-esc="qty[1]" />
+                                            </td>
+                                            <td class="text-right"
+                                                style="color:#855979;">
+                                                <span t-esc="qty[2]" />
+                                            </td>
+                                        </t>
+                                        <td class="text-center">
+                                            <span t-esc="last_data[0]" />
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="last_data[1]" />
+                                        </td>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <span />
+                                    </td>
+                                    <td class="text-center">
+                                        <span />
+                                    </td>
+                                    <td class="text-center">
+                                        <span />
+                                    </td>
+                                    <td class="text-center">
+                                        <span />
+                                    </td>
+                                    <t t-foreach="best_suppliers"
+                                        t-as="p">
+                                        <t t-set="total_cost"
+                                            t-value="total_by_suppliers(doc, p, data['form']['condition'])" />
+                                        <td class="text-right" style="color:#855979;">
+                                            <span />
+                                        </td>
+                                        <td class="text-right" style="color:#855979;">
+                                            <span />
+                                        </td>
+                                        <td class="text-right" style="color:#855979;">
+                                            <strong t-esc="total_cost[2]" />
+                                        </td>
+                                    </t>
+                                    <td class="text-center">
+                                        <span />
+                                    </td>
+                                    <td class="text-center">
+                                        <span />
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

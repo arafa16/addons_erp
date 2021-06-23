@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="qotationsale_enhance_field_ttd">
+            <field name="name">qotationsale.enhance.field.ttd</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="enhanced_sales_attribute.esa_qotation_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='tab_reference_sub1']" position="after">
+                    <group name="tab_reference_sub3" string="Level of Approval">
+                        <field name="pegawai_ttd" invisible="1" string="variable not used anymore"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

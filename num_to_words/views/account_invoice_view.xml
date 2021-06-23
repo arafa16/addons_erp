@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="add_text_amount_to_invoice_form" model="ir.ui.view">
+        <field name="name">add.text.amount.to.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='comment']" position="before">
+                <group >
+                    <field name="text_amount"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

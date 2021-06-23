@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="pr_assman_checker_form">
+            <field name="name">pr.assman.checker.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="enhanced_purchase_approval.epa_ttd_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='checkerPO']" position="after">
+                    <field name="checkerPR"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

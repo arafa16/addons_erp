@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="expense_form_view_advance_req" model="ir.ui.view">
+            <field name="name">hr.expense.form</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_form_view"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr = "//field[@name='tax_ids']" position="after">
+                    <field name="advance_currency_id" invisible="1" />
+                    <field name="advance_amount" widget="monetary" options="{'currency_field': 'advance_currency_id'}"/>
+                </xpath>-->
+                <xpath expr="//form/sheet" position="replace">
+                    <sheet>
+                        <div class="oe_button_box" invisible="context.get('expense_adding_line')">
+                            <button name="action_get_attachment_view"
+                                    class="oe_stat_button"
+                                    icon="fa-book"
+                                    type="object">
+                                <field name="attachment_number" widget="statinfo" string="Documents"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="advance_expense_id" attrs="{'invisible': [('advance_expense_id', '==', False)]}"/>
+                                <field name="product_id"
+                                       context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"/>
+                                <field name="name" placeholder="e.g. Lunch with Customer"/>
+                                <field name="sheet_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="currency_id"/>
+                                <field name="unit_amount" required="1" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <label for="quantity"/>
+                                <div>
+                                    <field name="quantity" class="oe_inline"/>
+                                    <field name="product_uom_id" widget="selection" class="oe_inline"
+                                           groups="product.group_uom"/>
+                                </div>
+                                <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]"
+                                       widget="many2many_tags" groups="account.group_account_user"/>
+                                <field name="advance_amount" widget='monetary' attrs="{'invisible': [('advance_expense_id', '==', False)]}"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_amount" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="variance_amount" widget='monetary' attrs="{'invisible': [('advance_expense_id', '==', False)], 'readonly': [True]}"
+                                       options="{'currency_field': 'currency_id'}" force_save="1"/>
+                                <!--<label for="payment_mode"/>
+                                <div>
+                                    <field name="payment_mode" widget="radio"/>
+                                </div>-->
+                            </group>
+
+                        </group>
+                        <div>
+                            <field name="description" placeholder="Notes..."/>
+                        </div>
+                    </sheet>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

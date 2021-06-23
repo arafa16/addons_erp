@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- view tree -->
+        <record model="ir.ui.view" id="epa_purchase_order_line_tree">
+            <field name="name">epa.purchase.order.line.tree</field>
+            <field name="model">purchase.order.line</field>
+            <field name="priority" eval="21"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="product_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <!-- action window -->
+        <record model="ir.actions.act_window" id="epa_purchase_order_line_action">
+            <field name="name">Purchase Order Line</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,pivot,graph</field>
+            <field name="domain">[('order_id.state','=','purchase')]</field>
+            <!-- <field name="context">{'default_is_dokter': True}</field> -->
+            <field eval="False" name="view_id"/>
+        </record>
+        <!-- action window view tree -->
+        <record model="ir.actions.act_window.view" id="epa_purchase_order_line_action_view_tree" >
+            <field eval="21" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="epa_purchase_order_line_tree"/>
+            <field name="act_window_id" ref="epa_purchase_order_line_action"/>
+        </record>
+        
+        <menuitem 
+            id="epa_menu_purchase_order_line"
+            name="Purchase Order For Report"
+            parent="purchase.menu_procurement_management"
+            action="epa_purchase_order_line_action"
+            sequence="150"
+        />
+        
+        <record model="ir.ui.view" id="inherit_search_purchase_order_line">
+            <field name="name">inherit.search.purchase.order.line</field>
+            <field name="model">purchase.order.line</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="kategorix"/>
+                </xpath>
+                <xpath expr="//filter[@name='groupby_supplier']" position="before">
+                    <filter name="groupby_category" string="Product Category" domain="[]" context="{'group_by' : 'kategorix'}"/>
+                    <filter string="Current Month" name="current_month" domain="['&amp;',('date_order','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01')),('date_order','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

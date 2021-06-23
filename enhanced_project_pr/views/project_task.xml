@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="project_pr_inherit_main_form">
+            <field name="name">project.pr.inherit.main.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[@name='description_page']" position="before">
+                    <page name="page_pr" string="Permintaan PR">
+                        <field name="purchase_req_m2m" readonly="1"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_purchase_order_open_new">
+            <field name="name">Open Purchase Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('pjtask','=',active_id)]</field>
+            <field name="context">{"default_pjtask":active_id, "fromproject": True}</field>
+        </record>
+
+        <record model="ir.ui.view" id="project_pr_project_task2_form">
+            <field name="name">project.pr.project.task2.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header" position="inside">
+                    <button name="%(action_purchase_order_open_new)d" string="Open PR" type="action" class="btn btn-primary"/>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

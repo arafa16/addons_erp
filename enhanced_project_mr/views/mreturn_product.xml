@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="em_return_product_tree">
+            <field name="name">em.return.product.tree</field>
+            <field name="model">em.return.products</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="barang_id"/>
+                    <field name="ret_pros"/>
+                    <field name="ret_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form View -->
+        <record model="ir.ui.view" id="em_return_product_form">
+            <field name="name">em.return.product.form</field>
+            <field name="model">em.return.products</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="barang_id"/>
+                                <field name="ret_pros"/>
+                                <field name="ret_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="em_return_product_action">
+            <field name="name">Material Return Product</field>
+            <field name="res_model">em.return.products</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- <menuitem 
+            action="em_return_product_action"
+            id="enhanced_material_return_product_menu" 
+            name="Material Return Products" 
+            parent="project.menu_project_config" sequence="10"/> -->
+    </data>
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="eca_contact_view" model="ir.ui.view">
+            <field name="name">eca.contact.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <label for="tdp" string="TDP/NIB &amp; Expired" />
+                    <div class="address_format">
+                        <field name="tdp" placeholder="Nomor TDP" style="width: 50%"/>
+                        <field name="tdp_berkalu" placeholder="Masa Belaku TDP" style="width: 50%"/>
+                    </div>
+                    <label for="siup" string="SIUP &amp; Expired" />
+                    <div class="address_format">
+                        <field name="siup" placeholder="Nomor SIUP" style="width: 50%"/>
+                        <field name="siup_berkalu" placeholder="Masa Belaku SIUP" style="width: 50%"/>
+                    </div>
+                    <label for="pkp" string="PKP" />
+                    <div class="address_format">
+                        <field name="pkp" style="width: 25%"/>
+                        <field name="pkp_number" attrs="{'invisible':[('pkp','=',False)]}" placeholder="Nomor PKP" style="width: 72%"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="string">N.P.W.P</attribute>
+                </xpath>
+                <xpath expr="//field[@name='active']" position="attributes">
+                    <attribute name="options">{"terminology": {"string_true": "AKTIF","hover_true": "Blokir","string_false": "BLOKIR","hover_false": "Aktif"}}</attribute>
+                </xpath>
+                <!-- <xpath expr="//field[@name='lang']" position="after">
+                    <field name="singkatan"/>
+                </xpath> -->
+                <button name="toggle_active" position="after">
+                    <button class="oe_stat_button" type="object" name="press_creditlimit" icon="fa-credit-card">
+                        <field string="Credit Limit" name="jumlah_credit_limit" widget="statinfo"/>
+                    </button>
+                </button>
+            </field>
+        </record>
+        <record id="eca_contact_filter" model="ir.ui.view">
+            <field name="name">eca.contact.filter</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="replace">
+                    <filter string="Kontak di Blokir" domain="[('active','=',False)]"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="eca_contact_tree" model="ir.ui.view">
+            <field name="name">eca.contact.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">openInv &gt; jumlah_credit_limit</attribute>
+                </xpath>
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="openInv"/>
+                    <field name="jumlah_credit_limit"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

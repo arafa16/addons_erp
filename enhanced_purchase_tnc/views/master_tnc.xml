@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="enhanced_master_tnc_purchase_tree">
+            <field name="name">enhanced.master.tnc.purchase.tree</field>
+            <field name="model">tabel.tnc.purchase</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record model="ir.ui.view" id="enhanced_master_tnc_purchase_form">
+            <field name="name">enhanced.master.tnc.purchase.form</field>
+            <field name="model">tabel.tnc.purchase</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="description"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="enhanced_master_tnc_purchase_action">
+            <field name="name">Master Term &amp; Condition Purchase</field>
+            <field name="res_model">tabel.tnc.purchase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="tabel_master_tnc_purchase_menu"
+            name="Master Term &amp; Condition"
+            parent="purchase.menu_purchase_config"
+            action="enhanced_master_tnc_purchase_action"
+            sequence="3"/>
+    </data>
+</odoo>

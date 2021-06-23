@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_line_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="date_maturity" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </field>
+            </field>
+        </record>
+        <record id="view_move_remove_due_date_form" model="ir.ui.view">
+            <field name="name">account.move.remove_due_date.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="date_maturity" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </field>
+                <field name="analytic_tag_ids" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </field>
+            </field>
+        </record>
+        <record id="view_account_bank_journal_form_bank_info" model="ir.ui.view">
+            <field name="name">view.account.bank.journal.form.bank.info</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_bank_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath  expr="//form/sheet/group/group" position="inside">
+                    <field name="bank_acc_holder_name"/>
+                    <field name="bank_name"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

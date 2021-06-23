@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="enhanced_invemtory_product_do_print" inherit_id="stock.report_delivery_document">
+                <xpath expr="//div[hasclass('page')]/h2" position="replace">
+                    <h2 style="text-align:center;">
+                        <span t-if="o.purchase_id.id">
+                            <span>RECEIPT NOTE</span>
+                        </span>
+                        <span t-if="o.purchase_id.id == False">Delivery Order</span>
+                    </h2>
+                    <h3>
+                        <span t-field="o.name"/>
+                    </h3>
+                    <div style="text-align:right;">
+                        <span t-field="o.sale_id.spk_sementara"/>
+                    </div>
+                </xpath>
+                <xpath expr="//th[@name='td_sched_date_h']" position="after">
+                    <th name="td_print_date_now">
+                        <strong>BA Date</strong>
+                    </th>
+                    <th name="td_print_date_now">
+                        <strong>SO Number</strong>
+                    </th>
+                    <th name="td_print_date_now">
+                        <strong>Requestor</strong>
+                    </th>
+                </xpath>
+                <xpath expr="//td[@name='td_sched_date']" position="after">
+                    <td name="td_printed_date">
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%Y %H:%M')"/>
+                    </td>
+                    <td>
+                        <span t-field="o.sopr"/>
+                    </td>
+                    <td>
+                        <span t-field="o.prCreator"/>
+                    </td>
+                </xpath>
+                <xpath expr="//div[hasclass('page')]/p[2]" position="after">
+                    <div style="padding-top:40px;">
+                        <div style="float:left; width:200px;">
+                            <div style="font-weight:bold;">
+                                 &#160; &#160; &#160; &#160; &#160; &#160; Pengirim
+                            </div>
+                            <div style="padding-top:80px;">
+                                ( &#160; <span style="text-decoration:underline;">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;</span> &#160; )
+                            </div>
+                        </div>
+                        <div style="float:right; width:200px;">
+                            <div style="font-weight:bold;">
+                                 &#160; &#160; &#160; &#160; &#160; &#160; Penerima
+                            </div>
+                            <div style="padding-top:80px;">
+                                ( &#160; <span style="text-decoration:underline;">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;</span> &#160; )
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </xpath>
+        </template>
+    </data>
+</odoo>

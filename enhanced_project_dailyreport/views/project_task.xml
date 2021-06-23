@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="project_task_daily_report_extra_form">
+            <field name="name">project.task.daily.report.extra.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[@name='extra_info']" position="after">
+                    <page string="Daily Report">
+                        <group>
+                            <group>
+                                <field name="daily_speed"/>
+                                <field name="daily_media_akses"/>
+                                <field name="daily_tgl_stop_clock"/>
+                                <field name="daily_tgl_open_clock"/>
+                                <field name="daily_durasi"/>
+                                <field name="daily_sdt"/>
+                            </group>
+                            <group>
+                                <field name="daily_tgl_mulai"/>
+                                <field name="daily_tgl_status"/>
+                                <field name="daily_tgl_selesai"/>
+                                <field name="daily_cp_la"/>
+                                <field name="daily_cp_lapangan"/>
+                                <field name="daily_cp_pelanggan"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="daily_mingguan"/>
+                                <field name="daily_los"/>
+                                <field name="daily_alokasi_perangkat" string="ALOK. PERANGKAT"/>
+                                <field name="daily_ikg"/>
+                                <field name="daily_tindak_lanjut"/>
+                            </group>
+                            <group>
+                                <field name="daily_perizinan"/>
+                                <field name="daily_deposit"/>
+                                <field name="daily_supervisi"/>
+                                <field name="daily_biaya_sewa"/>
+                                <field name="daily_sewa_space"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="daily_teknisi1"/>
+                                <field name="daily_teknisi2"/>
+                            </group>
+                            <group>
+                                <field name="daily_keterangan"/>
+                                <field name="daily_terpasang" string="Perangkat Terpasang"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

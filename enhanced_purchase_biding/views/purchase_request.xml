@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_purchase_bidding_purchase_request_form">
+            <field name="name">enhanced.purchase_bidding.purchase.request.form</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="sprogroup_purchase_request.view_sprogroup_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='assigned_to']" position="after">
+                    <field name="nomor_bidding" string="RFQs Number" readonly="1"/>
+                    <field name="nomor_po_m2o" widget="many2many_tags" readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="before">
+                    <button string="To RFQ" name="make_bidding" type="object" style="color:#FFFFFF; background-color:#3eb763;"
+                        groups="sprogroup_purchase_request.group_purchase_request_eksekutor"  attrs="{'invisible':['|',('state', '!=', 'done'),('nomor_bidding', '!=', False)]}"
+                    />
+                    <button string="Return To Buyer" name="back_to_buyer" type="object" style="color:#FFFFFF; background-color:#b73e65;"
+                        groups="sprogroup_purchase_request.group_purchase_request_eksekutor"  attrs="{'invisible':['|',('state', '!=', 'done'),('nomor_bidding', '!=', False)]}"
+                    />
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="enhanced_purchase_bidding_purchase_request_tree">
+            <field name="name">enhanced.purchase_bidding.purchase.request.tree</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="sprogroup_purchase_request.view_sprogroup_purchase_request_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='namex']" position="after">
+                    <field name="nomor_po_m2o" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

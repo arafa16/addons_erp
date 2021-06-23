@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="esc_qotation_coa_view">
+            <field name="name">esc.qotation.coa.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='fiscal_position_id']" position="before">
+                    <field create="False" name="nomor_coa" domain="[('internal_type','!=',False)]" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

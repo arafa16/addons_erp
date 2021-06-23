@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="account_move_report"
+            model="account.move"
+            string="Journal"
+            report_type="qweb-pdf"
+            name="account_kopkarla.account_move_report_template"
+            file="account_kopkarla.account_move_report_template"
+        />
+    </data>
+</odoo>

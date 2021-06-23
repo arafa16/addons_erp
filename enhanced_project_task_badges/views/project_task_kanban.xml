@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="static_resouce_etb" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/enhanced_project_task_badges/static/src/css/badge.css"/>
+            </xpath>
+        </template>
+        <record model="ir.ui.view" id="etb_badges_kanban">
+            <field name="name">etb.badges.kanban</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='kanban_state']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='kanban_state']" position="after">
+                    <label for="kanban_baru" string=" " class="o_status badgeGrey oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['B','C','D','E'])]}"/>
+                    <label for="kanban_baru" string=" " class="o_status badgeYellow oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['A','C','D','E'])]}"/>
+                    <label for="kanban_baru" string=" " class="o_status badgeOrange oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['A','B','D','E'])]}"/>
+                    <label for="kanban_baru" string=" " class="o_status badgeHijau oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['A','B','C','E'])]}"/>
+                    <label for="kanban_baru" string=" " class="o_status badgeMerah oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['A','B','C','D'])]}"/>
+                    <field name="kanban_baru" invisible="1"/>
+                </xpath>
+            </field>
+        </record>    
+        <record model="ir.ui.view" id="etb_badges_kanban_form">
+            <field name="name">etb.badges.kanban.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='kanban_state']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='kanban_state']" position="after">
+                    <label for="kanban_baru" string=" " class="o_status badgeGrey oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['B','C','D','E'])]}"/>
+                    <label for="kanban_baru" string=" " class="o_status badgeYellow oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['A','C','D','E'])]}"/>
+                    <label for="kanban_baru" string=" " class="o_status badgeOrange oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['A','B','D','E'])]}"/>
+                    <label for="kanban_baru" string=" " class="o_status badgeHijau oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['A','B','C','E'])]}"/>
+                    <label for="kanban_baru" string=" " class="o_status badgeMerah oe_project_kanban_legend" attrs="{'invisible':[('kanban_baru', 'in', ['A','B','C','D'])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="kanban_baru"/>
+                </xpath>
+            </field>
+        </record>    
+    </data>
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- view tree -->
+        <record model="ir.ui.view" id="enhanced_project_dashboard_laporan_daily_tree_view">
+            <field name="name">enhanced.project.dashboard.laporan.daily.tree.view</field>
+            <field name="model">project.task</field>
+            <field name="priority" eval="10"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sale_order_id" string="No. SO"/>
+                    <field name="daily_so_spk"/>
+                    <field name="name"/>
+                    <field name="related_nojar" string="NOMOR JARINGAN"/>
+                    <field name="related_cust" string="NAMA PELANGGAN"/>
+                    <field name="daily_so_alamat" string="ALAMAT"/>
+                    <field name="related_proj_type" string="JENIS ORDER"/>
+                    <field name="related_pek_type" string="JENIS PEKERJAAN"/>
+                    <field name="daily_so_area_new" string="AREA"/>
+                    <field name="daily_speed"/>
+                    <field name="daily_media_akses"/>
+                    <field name="daily_tgl_mulai"/>
+                    <field name="daily_tgl_stop_clock"/>
+                    <field name="daily_tgl_open_clock"/>
+                    <field name="daily_tgl_status"/>
+                    <field name="daily_tgl_selesai"/>
+                    <field name="daily_durasi"/>
+                    <field name="daily_sdt"/>
+                    <field name="daily_cp_la"/>
+                    <field name="daily_cp_lapangan"/>
+                    <field name="daily_cp_pelanggan"/>
+                    <field name="stage_id" string="STAGE"/>
+                    <field name="kanban_baru" string="STATUS PEKERJAAN"/>
+                    <field name="daily_mingguan" string="MINGGUAN"/>
+                    <field name="daily_los"/>
+                    <field name="data_teknis" string="DATEK"/>
+                    <field name="daily_alokasi_perangkat"/>
+                    <field name="daily_perizinan"/>
+                    <field name="daily_deposit"/>
+                    <field name="daily_supervisi"/>
+                    <field name="daily_biaya_sewa"/>
+                    <field name="daily_ikg"/>
+                    <field name="daily_sewa_space" string="SEWA SPACE ANTENA"/>
+                    <field name="daily_tindak_lanjut"/>
+                    <field name="daily_teknisi1"/>
+                    <field name="daily_teknisi2"/>
+                    <field name="daily_keterangan"/>
+                    <field name="daily_terpasang" string="PERANGKAT TERPASANG"/>
+                </tree>
+            </field>
+        </record>
+        <!-- action window -->
+        <record model="ir.actions.act_window" id="enhanced_project_dashboard_laporan_daily_action">
+            <field name="name">Daily Report</field>
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- <field name="domain">[('is_pasien','=', True)]</field> -->
+            <!-- <field name="context">{'default_is_pasien': True}</field> -->
+            <field eval="False" name="view_id"/>
+        </record>
+        <!-- action window view tree -->
+        <record model="ir.actions.act_window.view" id="enhanced_project_dashboard_laporan_daily_action_view_tree" >
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="enhanced_project_dashboard_laporan_daily_tree_view"/>
+            <field name="act_window_id" ref="enhanced_project_dashboard_laporan_daily_action"/>
+        </record>
+        <menuitem 
+            id="enhanced_project_dailyreport_menu"
+            name="Laporan Harian"
+            parent="project.menu_project_report"
+            action="enhanced_project_dashboard_laporan_daily_action"
+            sequence="11"
+        /> 
+    </data>
+</odoo>

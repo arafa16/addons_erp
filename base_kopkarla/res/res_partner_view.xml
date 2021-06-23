@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form_tbd" model="ir.ui.view">
+            <field name="name">res.partner.form.tbd</field>
+            <field name="model">res.partner</field>
+<!--            <field name="priority" eval="1"/>-->
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="before">
+                    <field name="ref" placeholder="Partner Code"/>
+                </field>
+                <xpath expr="//notebook/page[3]/group/group[3]/field[@name='ref']" position="attributes">
+                    <attribute name="placeholder">Partner Code</attribute>
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

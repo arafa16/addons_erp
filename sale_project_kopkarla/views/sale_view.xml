@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" position="replace"/>
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" position="replace">
+                    <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                        type="action" class="btn-primary" groups="account.group_account_invoice"
+                        attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
+                    <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                        type="action" context="{'default_advance_payment_method': 'percentage'}" groups="account.group_account_invoice"
+                        attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+                </button>
+                <button name="action_done" position="replace">
+                    <button name="action_done" type="object" string="Lock" states="sale" groups="sales_team.group_sale_manager"
+                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                </button>
+                <button name="action_view_invoice" position="replace">
+                    <button name="action_view_invoice" groups="account.group_account_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                        <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                    </button>
+                </button>
+                <!--<button name="action_cancel" position="replace">
+                    <button name="action_cancel" groups="dev_picking_cancel.picking_cancel_button"
+                            states="draft,sent,sale" type="object" string="Cancel"/>
+                </button>-->
+                <!--<button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                    type="action" context="{'default_advance_payment_method': 'percentage'}"
+                    attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>-->
+                <field name="partner_id" position="replace">
+                    <field name="partner_id"
+                           options='{"always_reload": True, "no_quick_create": True, "no_create_edit":True, "no_open": True}'
+                           context="{'search_default_customer':1, 'show_address': 1}"
+                           domain="[('customer', '=', True), ('is_company', '=', True), ('active', '=', True)]"/>
+                </field>
+                <field name="partner_invoice_id" position="replace">
+                    <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address"
+                           options='{"always_reload": True, "no_quick_create": True, "no_create_edit":True, "no_open": True}'
+                           context="{'default_type':'invoice'}"
+                           domain="[('customer', '=', True), ('active', '=', True), '|', ('is_company', '=', True), ('type', '=', 'invoice')]"/>
+                           <!--domain="['|', ('id', '=', partner_id), ('parent_id', '=', partner_id)]"/>-->
+                </field>
+                <field name="partner_shipping_id" position="replace">
+                    <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address"
+                           options='{"always_reload": True, "no_quick_create": True, "no_create_edit":True, "no_open": True}'
+                           context="{'default_type':'delivery'}"/>
+                           <!--domain="['|', ('id', '=', partner_id), ('parent_id', '=', partner_id)]"/>-->
+                </field>
+                <field name="so_bagian" position="replace">
+                    <field name="so_bagian" domain="[('adadiSO','=',True)]" options="{'no_create': True, 'no_open':True}"
+                           required="1" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                </field>
+                <field name="payment_term_id" position="replace">
+                    <field name="payment_term_id" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="att_note" position="replace">
+                    <field name="att_note" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="sales_area_kode" position="replace">
+                    <field name="sales_area_kode" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="warehouse_id" position="replace">
+                    <field name="warehouse_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations"/>
+                </field>
+                <field name="user_id" position="replace">
+                    <field name="user_id" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="team_id" position="replace">
+                    <field name="team_id" options="{'no_create': True, 'no_open': True}"/>
+                </field>
+                <!--<field name="nomor_coa" position="replace">
+                    <field name="nomor_coa" options="{'no_create': True, 'no_open':True}"/>
+                </field>-->
+                <field name="employee_spv" position="replace">
+                    <field name="employee_spv" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="employee_assman" position="replace">
+                    <field name="employee_assman" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="penandatangan1" position="replace">
+                    <field name="penandatangan1" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <field name="stat_reva" position="replace">
+                    <field name="stat_reva" options="{'no_create': True, 'no_open':True}"/>
+                </field>
+                <xpath expr="//tree/field[@name='product_id']" position="replace">
+                    <field name="product_id"
+                        attrs="{'readonly': [('product_updatable', '=', False)]}"
+                        force_save="1" options="{'no_create': True, 'no_open':True}"
+                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>
+                </xpath>
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="BAST" attrs="{'invisible': [('state', 'not in', ['sale','done'])]}">
+                        <group colspan="2">
+                            <group>
+                                <field name="bast_no"/>
+                                <field name="bast_date"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="replace"/>
+                <field name="name" position="after">
+                    <field name="nomor_spk"/>
+                    <field name="partner_id"/>
+                    <field name="partner_invoice_name"/>
+                    <field name="nomor_surat"/>
+                </field>
+                <field name="user_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="confirmation_date" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="sale_order_view_search_inherit_sale1" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.sale1</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="after">
+                    <field name="nomor_spk"/>
+                </field>
+                <xpath expr="//filter[@name='customer']" position="after">
+                    <separator/>
+                    <filter name="partner_invoice_name" string="Customer Invoice" domain="[]" context="{'group_by':'partner_invoice_name'}"/>
+                    <filter name="invoice_status" string="Invoice Status" domain="[]" context="{'group_by':'invoice_status'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_quotation_tree_tbd" model="ir.ui.view">
+            <field name="name">sale.order.tree.tbd</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="nomor_surat"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="esa_qotation_view">
+            <field name="name">esa.qotation.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <field name="delivery_doc"/>
+                    <field name="jenis_so" attrs="{'readonly': [('state', 'in', ['done','sale'])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="att_note"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook" position="inside">
+                    <page string="Reference">
+                        <group name="tab_reference">
+                            <group string="Reference information" name="tab_reference_sub1">
+                                <field name="nomor_surat" placeholder="Reference Number"/>
+                                <field name="nomor_fam" placeholder="RFQ Number"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Rental Option" invisible="1">
+                        <group name="tab_rental_option">
+                            <group string="Additional Information" name="tab_rental_option_sub1">
+                                <field name="tgl_rental_start"/>
+                                <field name="tgl_rental_warning"/>
+                                <field name="tgl_rental_end"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="REVA" attrs="{'invisible': [('state', 'in', ['draft'])]}" name="page_spk">
+                        <group name="page_spk_x">
+                            <group string="Status REVA" name="info_reva">
+                                <field name="type_reva"/>
+                                <field name="stat_reva" domain="[('jenis','=',type_reva)]"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="esa_qotation_tree_view">
+            <field name="name">esa.qotation.tree.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="partner_shipping_id"/>
+                    
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

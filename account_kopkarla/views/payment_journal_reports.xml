@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="payment_journal_report"
+            model="payment.journal"
+            string="Payment Proposal"
+            report_type="qweb-pdf"
+            name="account_kopkarla.payment_journal_report_template"
+            file="account_kopkarla.payment_journal_report_template"
+        />
+        <report
+            id="payment_voucher_report"
+            model="payment.journal"
+            string="Payment Voucher"
+            report_type="qweb-pdf"
+            name="account_kopkarla.payment_voucher_report_template"
+            file="account_kopkarla.payment_voucher_report_template"
+        />
+    </data>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="enhanced_sales_jenis_tabel_tree">
+            <field name="name">enhanced.sales.jenis.tabel.tree</field>
+            <field name="model">enhanced.sales.jenis.tabel</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="bypassLoA"/>
+                    <field name="urutan"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form View -->
+        <record model="ir.ui.view" id="enhanced_sales_jenis_tabel_form">
+            <field name="name">enhanced.sales.jenis.tabel.form</field>
+            <field name="model">enhanced.sales.jenis.tabel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="bypassLoA"/>
+                                <field name="urutan"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="enhanced_sales_jenis_tabel_action">
+            <field name="name">Master Jenis Order tabel</field>
+            <field name="res_model">enhanced.sales.jenis.tabel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+    <menuitem id="tabel_master_sales_order"
+            name="Data Master Jenis Order"
+            parent="sale.menu_sale_config"
+            action="enhanced_sales_jenis_tabel_action"
+            sequence="4"/>
+</odoo>

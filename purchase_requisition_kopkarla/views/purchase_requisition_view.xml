@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_purchase_requisition_form_inherit">
+            <field name="name">purchase.requisition.form.inherit</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <field name="account_analytic_id" position="before">
+                    <field name="cost_center_id" options="{'no_create': True, 'no_open':True}"/><!--attrs="{'readonly': [('state', '!=', 'draft')], 'required': 1}"/>-->
+                </field>
+                <xpath expr="//notebook/page/field/tree/field[@name='account_analytic_id']" position="before">
+                    <field name="cost_center_id" options="{'no_create': True, 'no_open':True}"/><!--attrs="{'readonly': [('parent.state', '!=', 'draft')], 'required': 1}"/>-->
+                </xpath>
+                <xpath expr="//form/group/field[@name='account_analytic_id']" position="before">
+                    <field name="cost_center_id" options="{'no_create': True, 'no_open':True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

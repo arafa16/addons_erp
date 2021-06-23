@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="purchase.request.type" id="purchase_request_type_trade"><field name="name">Trading</field><field name="account_id"></field></record>
+        <record model="purchase.request.type" id="purchase_request_type_datacom"><field name="name">Datacom</field><field name="account_id"></field></record>
+        <record model="purchase.request.type" id="purchase_request_type_other"><field name="name">Other</field><field name="account_id"></field></record>
+    </data>
+</odoo>

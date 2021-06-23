@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="static_resouce_escp" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/enhanced_sales_convert_project/static/src/css/button.css"/>
+            </xpath>
+        </template>
+        <record model="ir.ui.view" id="escp_sales_order_inherit">
+            <field name="name">escp.sales.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="enhanced_sales_approval.esa_sales_order_approval"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="task_id" invisible="True"/>
+                    <field name="kanbanbaru" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="before">
+                    <button name="convert_to_project" class="buttontoska" style="color:#FFFFFF" type="object" string="Set to Project" attrs="{'invisible':['|','|',('state', 'not in', ['sale','done']),('jenis_so','!=','Project'),('task_id','!=',False)]}"/>
+                    <button name="task_relation" class="buttonungu" style="color:#FFFFFF" type="object" string="Related Project Task" attrs="{'invisible':[('task_id','=',False)]}"/>
+                    <button name="task_spk_invoice_reject" style="color:#FFFFFF; background-color:#920c0c;" type="object" string="Reject BAST" attrs="{'invisible':['|','|','|',('allowInvoice','=',True),('jenis_so', '!=', 'Project'),('invoice_status','not in',['to invoice','no']),('kanbanbaru','!=','D')]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="escp_sales_order_inherit_project">
+            <field name="name">escp.sales.order.inherit.project</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="enhanced_sales_project.esjp_sales_order_tab"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='proj_type']" position="attributes">
+                    <attribute name="attrs">{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')],'readonly':[('task_id','!=',False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='ord_type']" position="attributes">
+                    <attribute name="attrs">{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')],'readonly':[('task_id','!=',False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='pek_type']" position="attributes">
+                    <attribute name="attrs">{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')],'readonly':[('task_id','!=',False)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

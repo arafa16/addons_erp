@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="static_resouce_escp" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/enhanced_project_mr/static/src/css/button.css"/>
+            </xpath>
+        </template>
+        <record model="ir.ui.view" id="epmr_project_task2_form">
+            <field name="name">epmr.project.task2.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="related_mr" invisible="1"/>
+                    <field name="related_ret" invisible="1"/>
+                </xpath>
+                <xpath expr="//button[@name='toggle_active']" position="before">
+                    <button name="%(enhanced_project_mr.epmr_action)d" style="background-color:#dafffe" icon="fa-clipboard" string="M. Request" type="action" context="{'id_conx': id}" attrs="{'invisible':[('related_mr', '=', False)]}"/>
+                    <button name="form_return" style="background-color:#ffedda" icon="fa-clipboard" string="M. Return" type="object" attrs="{'invisible':[('related_ret', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//notebook/page[@name='description_page']" position="before">
+                    <page name="material_request_tab" string="Material Request">
+                        <group string="Material Request">
+                            <field name="mr_ids" nolabel="1">
+                                <tree create="false">
+                                    <field name="name" attrs="{'readonly': [('stat', '!=', 'draft')]}"/>
+                                    <field name="tanggal" attrs="{'readonly': [('stat', '!=', 'draft')]}"/>
+                                    <field name="stat" readonly="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                    <page string="Material Return">
+                        <field name="return_ids">
+                            <tree create="false" decoration-danger="kode_move == 'Dihapus'">
+                                <field name="name"/>
+                                <field name="tanggal"/>
+                                <field name="stat"/>
+                                <field name="kode_move"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="material_onhand_tab" string="Material Usage">
+                        <group string="Material On Hand">
+                            <field name="barangown" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="barang_id"/>
+                                    <field name="quantity"/>
+                                    <field name="ret"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//notebook/page[@name='description_page']" position="attributes">
+                    <attribute name="string">Data Teknis</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

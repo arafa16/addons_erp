@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="payment_journal_payable_form" model="ir.ui.view">
+            <field name="name">payment.journal.payable.form</field>
+            <field name="model">payment.journal</field>
+            <field name="inherit_id" ref="account_kopkarla.view_payment_journal_payable_form"/>
+            <field name="arch" type="xml">
+                <button name="post" position="after">
+                    <button name="action_cancel" type="object" states="posted" string="Cancel"
+                            groups="dev_picking_cancel.picking_cancel_button"/>
+                </button>
+            </field>
+        </record>
+
+        <record id="payment_journal_receivable_form" model="ir.ui.view">
+            <field name="name">payment.journal.receivable.form</field>
+            <field name="model">payment.journal</field>
+            <field name="inherit_id" ref="account_kopkarla.view_payment_journal_receivable_form"/>
+            <field name="arch" type="xml">
+                <button name="post" position="after">
+                    <button name="action_cancel" type="object" states="posted" string="Cancel" groups="account.group_account_invoice"/>
+                </button>
+            </field>
+        </record>
+    </data>
+</odoo>

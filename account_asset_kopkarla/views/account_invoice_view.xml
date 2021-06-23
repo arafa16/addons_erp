@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--<record id="account_invoice_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="replace">
+                    <field name="asset_id"/>
+                    <field name="account_id" groups="account.group_account_user" attrs="{'readonly': [('asset_id','!=',False)]}"
+                           force_save="True" domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
+                </xpath>
+            </field>
+        </record>-->
+        <record id="invoice_supplier_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="replace"/>
+                <xpath expr="//field[@name='asset_category_id']" position="replace">
+                    <field string="Asset Category" name="asset_category_id" attrs="{'readonly': [('asset_id','!=',False)]}"
+                           force_save="True" domain="[('type','=','purchase')]" context="{'default_type':'purchase'}"
+                           options="{'no_create': True, 'no_open': True}"/>
+                    <field name="asset_id" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="account_id" groups="account.group_account_user" attrs="{'readonly': ['|', ('asset_category_id','!=',False), ('asset_id','!=',False)]}"
+                           force_save="True" domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"
+                           options="{'no_create': True, 'no_open': True}"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_invoice_asset_category">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="before">
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

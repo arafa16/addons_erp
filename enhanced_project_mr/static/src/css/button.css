@@ -1,0 +1,16 @@
+.buttonsimpan{
+    background-color: #0a9111;
+    color: #FFFFFF;
+}
+.buttonsimpan:hover{
+    background-color: #0a6b0f;
+    color: #FFFFFF;
+}
+.buttonbatal{
+    background-color: #9e0231;
+    color: #FFFFFF;
+}
+.buttonbatal:hover{
+    background-color: #7e0227;
+    color: #FFFFFF;
+}

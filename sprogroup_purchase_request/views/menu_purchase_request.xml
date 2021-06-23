@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+        <menuitem id="purchase_request_root" name="Purchase Request" sequence="3" groups="sprogroup_purchase_request.group_sprogroup_purchase_request_user" web_icon="sprogroup_purchase_request,static/description/icon.png"/>
+            <menuitem id="purchase_request_menu_1" name="Purchase Request" parent="sprogroup_purchase_request.purchase_request_root" sequence="1" />
+                <menuitem id="purchase_request_menu_1_1" name="Purchase Requests" parent="sprogroup_purchase_request.purchase_request_menu_1" action="sprogroup_purchase_request.sprogroup_purchase_request_form_action" sequence="1"  groups="sprogroup_purchase_request.group_sprogroup_purchase_request_user"/>                
+    </data>
+</odoo>

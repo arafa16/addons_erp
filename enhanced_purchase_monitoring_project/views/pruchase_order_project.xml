@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="enhanced_purchase_monitoring_project_action">
+            <field name="name">Purchase Order Project</field>
+            <field name="res_model">purchase.order</field>
+            <field name="domain">['&amp;','&amp;','&amp;',('gettask_rel.kanban_baru', '=', 'D'),('getstage_rel.ready_invoice', '=', True),('state', '=', 'purchase'),('invoice_status', 'in', ['no','to invoice'])]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+       
+        
+        <menuitem 
+            id="enhanced_purchase_monitoring_project_menu"
+            name="Purchase Project Done"
+            parent="purchase.menu_procurement_management"
+            sequence="7"
+            action="enhanced_purchase_monitoring_project_action"
+        />
+    </data>
+</odoo>

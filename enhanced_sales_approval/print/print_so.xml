@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="enhanced_sales_approval_print_so" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[hasclass('page')]/h2" position="replace">
+                <h2 style="text-align:center;">
+                    <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                        <span t-if="doc.state in ['sale']">Sales Order</span>
+                        <span t-if="doc.state not in ['sale']">Quotation</span>
+                    </t>
+                    <t t-if="env.context.get('proforma', False) or is_pro_forma">
+                        <span>Pro-Forma Invoice # </span>
+                    </t>
+                </h2>
+                <h3>
+                    <span t-field="doc.name"/>
+                </h3>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]/p[1]" position="before">
+                <div style="font-weight:bold; text-decoration:underline;">
+                    Kondisi Penawaran:
+                </div>
+            </xpath>  
+            <xpath expr="//div[hasclass('oe_structure')][2]" position="after">
+                <div style="padding-top:20px;">
+                    Demikian penawaran ini kami sampaikan, kami sangat menunggu kabar baiknya. Atas perhatiannya kami ucapkan terima kasih.
+                </div>
+                <div style="padding-top:10px;">
+                    <div style="float:left;">
+                        <div style="padding-top:35px;">
+                            Hormat kami,<br/>
+                        </div>
+                        <div style="padding-top:110px;">
+                            <div style="font-weight:bold; text-decoration:underline;" t-field="doc.pegawai_ttd"></div>
+                            <!--<div t-field="doc.pegawai_ttd.job_id"></div>-->
+                            <div t-field="doc.penandatangan.name"></div>
+                        </div>
+                    </div>
+                    <div style="float:right;">
+                        <div style="padding-top:35px;">
+                            Menyetujui,<br/>
+                            <span t-field="doc.partner_id.name"/>
+                        </div>
+                        <div style="padding-top:90px;">
+                            (______________)
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:both;">
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('col-xs-6')]/t" position="replace">
+                <strong>Shipping address:</strong>
+                <div t-field="doc.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+            </xpath>
+            <xpath expr="//t[@t-if='amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]']/td[1]/span[2]" position="replace">
+                nbsp;
+            </xpath>
+            <!-- <xpath expr="//t[@t-foreach='doc.order_lines_layouted()']/table/thead/tr/th[2]" position="after"> -->
+                <!-- <t t-if="jenis_so=='rental'">  -->
+                    <!-- <th class="text-right">Tenure</th> -->
+                <!-- </t> -->
+            <!-- </xpath> -->
+        </template>
+    </data>
+</odoo>

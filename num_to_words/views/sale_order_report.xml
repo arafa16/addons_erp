@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="num_to_words_inherit_custom_report_sale_order_document" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@name='total']" position="after">
+            <p t-if='doc.text_amount'>
+                <div style="float:right;">
+                    <strong>Terbilang:</strong>
+                    <span t-field="doc.text_amount"/>
+                </div>
+                <div style="clear:both;"></div>
+            </p>
+        </xpath>
+
+    </template>
+</odoo>

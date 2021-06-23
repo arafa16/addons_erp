@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="res.groups" id="modul_helpdesk_developer">
+            <field name="name">Helpdesk Developer</field>
+        </record>
+    </data>
+</odoo>

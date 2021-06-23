@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="signing_inherit_custom_report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//p[@t-field='o.notes']" position="after">
+            <t t-if="'o.penandatangan' in o.fields_get()">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <strong>( <span t-field="o.penandatangan"/> )</strong>
+            </t>
+        </xpath>
+    </template>
+</odoo>

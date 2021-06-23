@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- view tree -->
+        <record model="ir.ui.view" id="enhanced_project_dashboard_laporan_daily_tree_view">
+            <field name="name">enhanced.project.dashboard.laporan.daily.tree.view</field>
+            <field name="model">project.task</field>
+            <field name="priority" eval="10"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="kanban_baru"/>
+                    <field name="data_teknis"/>
+                </tree>
+            </field>
+        </record>
+        <!-- action window -->
+        <record model="ir.actions.act_window" id="enhanced_project_dashboard_laporan_daily_action">
+            <field name="name">Laporan Harian</field>
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <!-- <field name="domain">[('is_pasien','=', True)]</field>
+            <field name="context">{'default_is_pasien': True}</field> -->
+            <field eval="False" name="view_id"/>
+        </record>
+        <!-- action window view tree -->
+        <record model="ir.actions.act_window.view" id="enhanced_project_dashboard_laporan_daily_action_view_tree" >
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="enhanced_project_dashboard_laporan_daily_tree_view"/>
+            <field name="act_window_id" ref="enhanced_project_dashboard_laporan_daily_action"/>
+        </record>
+        <!-- menu item -->
+        <menuitem 
+            id="enhanced_project_dashboard_laporan_daily"
+            name="Laporan harian"
+            parent="project.menu_project_report"
+            action="enhanced_project_dashboard_laporan_daily_action"
+            sequence="11"
+        />
+    </data>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_purchase_request_type_form">
+            <field name="name">purchase.request.type.form</field>
+            <field name="model">purchase.request.type</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Request Type">
+                    <sheet>
+                        <group>
+                            <field name="prod_categ_id"/>
+                            <field name="account_trade_request_id"/>
+                            <field name="account_datacom_request_id"/>
+                            <field name="account_overhead_request_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_purchase_request_type_tree">
+            <field name="name">purchase.request.type.tree</field>
+            <field name="model">purchase.request.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="prod_categ_id"/>
+                    <field name="account_trade_request_id"/>
+                    <field name="account_datacom_request_id"/>
+                    <field name="account_overhead_request_id"/>
+                </tree>
+          </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="purchase_request_type_form_action">
+            <field name="name">Purchase Request Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.request.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="menu_purchase_request_configuration_act"
+            name="Configuration"
+            sequence="9"
+            parent="sprogroup_purchase_request.purchase_request_root"
+            groups="sprogroup_purchase_request.group_sprogroup_purchase_request_user"
+            />
+        <menuitem
+            id="menu_purchase_request_type_act"
+            sequence="9"
+            parent="menu_purchase_request_configuration_act"
+            action="purchase_request_type_form_action"
+            groups="sprogroup_purchase_request.group_sprogroup_purchase_request_user"
+            />
+    </data>
+</odoo>

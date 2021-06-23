@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_cost_center_acc_manager,cost_center_account_manager,model_cost_center,account.group_account_manager,1,1,1,1
+access_cost_center_all,cost_center_model_access_all,model_cost_center,,1,0,0,0

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="asset_reclass_tree" model="ir.ui.view">
+            <field name="name">asset.reclass.tree</field>
+            <field name="model">account.asset.reclass.table</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Reclass">
+                    <field name="name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="asset_reclass_form" model="ir.ui.view">
+            <field name="name">asset.reclass.form</field>
+            <field name="model">account.asset.reclass.table</field>
+            <field name="arch" type="xml">
+                <form string="Asset Reclass" class="o_invoice_form">
+                <header>
+                    <button name="post" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
+                    <button name="action_reclass_draft" states="cancel" string="Reset to Draft" type="object" groups="account.group_account_invoice"/>
+<!--                    <button name="action_reclass_cancel" type="object" states="posted" string="Cancel Invoice" groups="account.group_account_invoice"/>-->
+                    <field name="state" widget="statusbar"/>
+<!--                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid"/>-->
+                </header>
+                <sheet string="Reclass">
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Reclass Name"/>
+                        <h1><field name="name" placeholder="Reclass name"/></h1>
+                    </div>
+                    <group>
+                        <group colspan="2">
+                            <field name="date" class="oe_inline"/>
+                            <field name="description" colspan="2"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Reclass Lines">
+                            <field name="reclass_line_ids" nolabel="1" widget="one2many_list" mode="tree">
+                                <tree string="Reclass Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="asset_id"/>
+                                    <field name="name"/>
+                                    <field name="cost_center_id"/>
+                                    <field name="analytic_account_id"/>
+                                    <field name="asset_book_value"/>
+                                    <field name="category_id" readonly="1" force_save="1"/>
+                                    <field name="category_id_to" attrs="{'readonly': [('asset_id_to', '!=', False)]}" force_save="1"/>
+                                    <field name="asset_id_to"/>
+                                    <field name="move_id" attrs="{'column_invisible': [('parent.state', '!=', 'posted')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="asset_reclass_action" model="ir.actions.act_window">
+            <field name="name">Reclass</field>
+            <field name="res_model">account.asset.reclass.table</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="asset_reclass_tree"/>
+<!--            <field name="domain">[('type', '=', 'out_invoice'), ('journal_type', '=', 'asset_sale')]</field>-->
+<!--            <field name="context">{'type':'out_invoice', 'default_asset_sale': 'asset_sale'}</field>-->
+<!--            <field name="search_view_id" ref="asset_sale_filter"/>-->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to record a new asset reclass.
+              </p>
+            </field>
+        </record>
+    </data>
+</odoo>

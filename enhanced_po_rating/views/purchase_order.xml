@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="epor_purchase_view">
+            <field name="name">epor.purchase.view</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="is_shipped" invisible="1"/>
+                    <field name="ratingx"  widget="priority" attrs="{'invisible':[('is_shipped', '=', False)]}"/>
+                </xpath>
+                <!-- <xpath expr="//field[@name='partner_ref']" position="after">
+                    <field name="rfq" widget="many2many_tags"/>
+                </xpath> -->
+                <xpath expr="//field[@name='incoterm_id']" position="before">
+                    <field name="nomor_coa"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook" position="inside">
+                    <page string="Purchase Rental">
+                        <group>
+                            <group>
+                                <field name="to_rent"/>
+                                <field name="rent_date_start"/>
+                                <field name="rent_date_end"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <!-- <xpath expr="//form/sheet/notebook/page[2]" position="after">
+                    <page string="Purchase for Rental">
+                        <field name="to_rent"/>
+                    </page>
+                </xpath> -->
+            </field>
+        </record>
+        <record model="ir.ui.view" id="epor_purchase_tree">
+            <field name="name">epor.purchase.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="ratingx" string="Rating" />
+                </xpath>
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="payment_term_id"/>
+                    <field name="to_rent" invisible="1"/>
+                    <field name="rent_date_end" string="rental end" attrs="{'invisible':[('to_rent', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="epor_purchase_filter">
+            <field name="name">epor.purchase.filter</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='to_approve']" position="after">
+                    <filter name="is_rental" string="Purchase For Rental" domain="[('to_rent','=',True)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

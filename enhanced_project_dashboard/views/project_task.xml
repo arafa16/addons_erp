@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="enhanced_project_dashboard_search_inherit" model="ir.ui.view">
+            <field name="name">enhanced.project.dashboard.search.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='starred']" position="after">
+                    <filter name="on_progress" string="On Progress" domain="['&amp;',('kanban_baru','!=','D'),('stage_id.ready_invoice','=',False)]"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="epv_project_task2_form">
+            <field name="name">epv.project.task2.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="enhanced_project_task_badges.etb_badges_kanban_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='kanban_baru']" position="after">
+                    <field name="pelaksana_kerja"/>
+                    <field attrs="{'invisible':[('pelaksana_kerja', '!=', 'vendor')]}" name="pihak_ke_tiga" domain="[('supplier','=',True)]"/>
+                </xpath>
+            </field>
+        </record>
+        <!-- List View -->
+        <record model="ir.ui.view" id="epv_menu_dashboard_tree">
+            <field name="name">epv.menu.dashboard.tree</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="name" string="Task Description"/>
+                    <field name="pelaksana_kerja"/>
+                    <field name="pihak_ke_tiga"/>
+                    <field name="stage_id"/>
+                    <field name="kanban_baru" string="Status"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Menu Action -->
+        <record model="ir.actions.act_window" id="epv_menu_dashboard_action">
+            <field name="name">List SPK Pekerjaan</field>
+            <field name="context">{'search_default_on_progress':1}</field>
+            <field name="view_id" ref="epv_menu_dashboard_tree"/>
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban,pivot,graph</field>
+        </record>
+        <menuitem 
+            id="epv_menu_dashboard"
+            name="List SPK"
+            parent="project.menu_main_pm"
+            action="epv_menu_dashboard_action"
+            sequence="0"
+        />
+    </data>
+</odoo>

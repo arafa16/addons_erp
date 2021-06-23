@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ehs_field_form">
+            <field name="name">ehs.field.form</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.view_department_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="before">
+                    <field name="adadiSO"/>
+                </xpath>
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="kodeSO" attrs="{'invisible':[('adadiSO','=',False)]}"/>
+                </xpath>
+                <!-- <xpath expr="//form/sheet" position="before">
+                    <header>
+                        <button name="trigger_user"
+                            string="Set Open"
+                            type="object"
+                        />
+                    </header>
+                </xpath> -->
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle 
+ -->
+<odoo>
+
+        <record id="view_dev_picking_cancel_form" model="ir.ui.view">
+            <field name="name">view.dev.picking.cancle.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_cancel']" position="replace">
+                    <button name="action_cancel" states="assigned,confirmed,done,partially_available,draft,waiting" string="Cancel"
+                            type="object" groups="dev_picking_cancel.picking_cancel_button"/>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="after">
+                    <button name="action_set_draft" states="cancel" string="Set To Draft" type="object" />
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

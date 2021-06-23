@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="analytic_account_id" position="replace">
+                    <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}"
+                           attrs="{'readonly': ['|',('analytic_account_id','!=',False),('invoice_count','!=',0),('state','=','sale')]}"
+                           groups="analytic.group_analytic_accounting" force_save="1" options="{'no_create':True, 'no_open':True}"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="enhanced_sales_area_tabel_inherit">
+            <field name="name">enhanced.sales.project.area.inherit</field>
+            <field name="model">enhanced.sales.area</field>
+            <field name="inherit_id" ref="enhanced_sales_project.enhanced_sales_area_tabel_form"/>
+            <field name="arch" type="xml">
+                <field name="urutan" position="after">
+                    <field name="analytic_account_id" options="{'no_create':True, 'no_open':True}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Search View -->
+        <record model="ir.ui.view" id="sprogroup_purchase_request_loa_new_search">
+            <field name="name">sprogroup_purchase.request.loa.new.search</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="sprogroup_purchase_request.view_sprogroup_purchase_request_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="namex" string="Purchase Request Title"/>
+                </xpath>
+            </field> 
+        </record>
+        
+        <record model="ir.ui.view" id="sprogroup_purchase_request_loa_new_tree">
+            <field name="name">sprogroup.purchase.request.loa.new.tree</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="namex"/>
+                    <field name="date_start"/>
+                    <field name="requested_by"/>
+                    <field name="penandatangan2"/>
+                    <field name="penandatangan3"/>
+                    <field name="penandatangan4"/>
+                    <field name="penandatangan5"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="sprogroup_purchase_request_loa_new_action">
+            <field name="name">Purchase Request Level of Approval</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="domain">['&amp;','&amp;',('state', '=', 'leader_request'),('setConfirmLoA','=',True),('bolehConfirm','=',False)]</field>
+            <field name="view_id" ref="sprogroup_purchase_request_loa_new_tree"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="purchase_request_menu_1_3" name="Purchase Request LoA" parent="sprogroup_purchase_request.purchase_request_menu_1" action="enhanced_purchase_request_loa.sprogroup_purchase_request_loa_new_action" sequence="3"/>
+    </data>
+</odoo>

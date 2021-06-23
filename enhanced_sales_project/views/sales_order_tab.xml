@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="esjp_sales_order_tab">
+            <field name="name">esjp.sales.order.tab</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook" position="inside">
+                    <page string="SPK &amp; Project Type"  name="page_info_project">
+                        <group name="page_info_project">
+                            <group string="Project Type" attrs="{'invisible': [('jenis_so', 'not in', ['Project'])]}">
+                                <field name="nojar"/>
+                                <field name="proj_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" />
+                                <field name="ord_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" />
+                                <field name="pek_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" />
+                            </group>
+                            <group string="Trading Type" attrs="{'invisible': [('jenis_so', 'not in', ['datacom'])]}">
+                                <field name="proj_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" string="Jenis Trading"/>
+                            </group>
+                            <group string="Informasi S.P.K" name="info_spk">
+                                <field name="spk_sementara" string="SPK User"/>
+                                <field name="stat_spk" string="Ada PO"/>
+                                <field name="nomor_spk" string="No. PO" attrs="{'readonly':[('stat_spk','=',False)]}"/>
+                                <field name="tgl_spk" string="Tanggal PO" attrs="{'readonly':[('stat_spk','=',False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='att_note']" position="after">
+                    <field name="sales_area_kode" attrs="{'required':[('jenis_so', '=', 'Project')]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="esjp_sales_order_filter">
+            <field name="name">esjp.sales.order.filter</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='analytic_account_id']" position="after">
+                    <field name="nojar"/>
+                </xpath>
+                <xpath expr="//filter[@name='customer']" position="after">
+                    <separator/>
+                    <filter name="projtype" string="Project Type" domain="[]" context="{'group_by':'proj_type'}"/>
+                    <filter name="ordertype" string="Order Type" domain="[]" context="{'group_by':'ord_type'}"/>
+                    <filter name="pekerjaantype" string="Pekerjaan Type" domain="[]" context="{'group_by':'pek_type'}"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="esp_qotation_tree">
+            <field name="name">esp.qotation.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="nojar"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="sales_area_kode"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="esp_order_tree">
+            <field name="name">esp.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="nojar"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

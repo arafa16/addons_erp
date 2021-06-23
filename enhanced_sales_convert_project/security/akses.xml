@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+    <record model="ir.module.category" id="module_category_projectmr_assign">
+        <field name="name">Project Material Requst</field>
+        <field name="parent_id" ref="base.module_category_purchase_management"/>
+        <field name="sequence">11</field>
+    </record>
+    <record id="group_projectmr_assign_user" model="res.groups">
+        <field name="name">User Assign</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="module_category_projectmr_assign"/>
+    </record>
+</data>
+</odoo>

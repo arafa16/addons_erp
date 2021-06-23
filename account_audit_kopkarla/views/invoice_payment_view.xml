@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="purchase_budget_request_tree">
+            <field name="name">sale.invoice.payment.report.tree</field>
+            <field name="model">sale.invoice.payment.report</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Invoice Payment Report" create="false" delete="false">
+                    <field name="invoice_id" invisible="True"/>
+                    <field name="invoice_no"/>
+                    <field name="reference"/>
+                    <field name="date_invoice"/>
+                    <field name="date_due"/>
+                    <field name="partner_id"/>
+                    <field name="sale_id"/>
+                    <field name="sales_person"/>
+                    <field name="faktur_number"/>
+                    <field name="faktur_date"/>
+                    <field name="amount_untaxed"/>
+                    <field name="amount_tax"/>
+                    <field name="amount_total"/>
+                    <field name="currency_id" invisible="True"/>
+                    <field name="accounts"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="description"/>
+                    <field name="payment_id"/>
+                    <field name="payment_date"/>
+                    <field name="payment_currency_id" invisible="True"/>
+                    <field name="move_id"/>
+                    <field name="pph_amount"/>
+                    <field name="payment_amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_purchase_budget_request">
+            <field name="name">Sales Invoice Payment Report</field>
+            <field name="res_model">sale.invoice.payment.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_budget_request_tree"/>
+        </record>
+
+        <menuitem
+            id="audit_report_finance_menu"
+            parent="account.menu_finance_reports"
+            name="Audit Reporting"
+            sequence="102"
+        />
+
+        <menuitem parent="audit_report_finance_menu"
+            id="menu_act_sales_invoice_payment"
+            name="Sales Invoice Payment Report"
+            action="act_purchase_budget_request" sequence="1"
+            groups="account.group_account_user"/>
+    </data>
+</odoo>

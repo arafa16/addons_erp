@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    <data noupdate="0">-->
+    <data>
+        <record id="cash_advance_plan_view_graph_board" model="ir.ui.view">
+            <field name="name">cash.advance.plan.graph.board</field>
+            <field name="model">hr.advance</field>
+            <field name="arch" type="xml">
+                <graph string="Cash Advance Graph" type="bar">
+                    <field name="state"/>
+                    <field name="total_amount_expense" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record id="cash_advance_plan_act_graph_board" model="ir.actions.act_window">
+            <field name="name">Cash Out Plan</field>
+            <field name="res_model">hr.advance</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="hr_expense_kopkarla.cash_advance_plan_view_graph_board"/>
+            <field name="domain">[('state', 'in', ['draft', 'confirm', 'approved_hr_manager'])]</field>
+        </record>
+
+        <record id="cash_advance_plan_view_tree_board" model="ir.ui.view">
+            <field name="name">cash.advance.plan.tree.board</field>
+            <field name="model">hr.advance</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="plan_date"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="total_amount_expense" sum="Total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="cash_advance_plan_act_tree_board" model="ir.actions.act_window">
+            <field name="name">Cash Advance Plan</field>
+            <field name="res_model">hr.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_expense_kopkarla.cash_advance_plan_view_tree_board"/>
+            <field name="domain">[('state', 'in', ['draft', 'confirm', 'approved_hr_manager'])]</field>
+        </record>
+
+        <record id="cash_advance_unsettle_view_tree_board" model="ir.ui.view">
+            <field name="name">cash.advance.plan.tree.board</field>
+            <field name="model">hr.advance</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="plan_date"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="total_amount_expense" sum="Total"/>
+                    <field name="expense_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="cash_advance_unsettle_act_tree_board" model="ir.actions.act_window">
+            <field name="name">Un-settled Cash Advance</field>
+            <field name="res_model">hr.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_expense_kopkarla.cash_advance_unsettle_view_tree_board"/>
+            <field name="domain">[('state', 'in', ['paid'])]</field>
+        </record>
+
+        <record id="expense_plan_view_tree_board" model="ir.ui.view">
+            <field name="name">expense.plan.tree.board</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="report_date"/>
+                    <field name="payment_mode"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="expense_amount" sum="Total"/>
+                    <field name="advance_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="expense_plan_act_tree_board" model="ir.actions.act_window">
+            <field name="name">Expense / Reimbursement / Advance Settlement Plan</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_expense_kopkarla.expense_plan_view_tree_board"/>
+            <field name="domain">[('state', 'in', ['submit', 'approve'])]</field>
+        </record>
+
+        <!--<record model="ir.ui.view" id="dashboard_expense_view">
+            <field name="name">dashboard.expense.view</field>
+            <field name="model">board.board</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard">
+                    <board style="1-1">
+                        <column></column>
+                    </board>
+                </form>
+            </field>
+        </record>
+        <record id="dashboard_expense_custom_view" model="ir.ui.view.custom">
+            <field name="user_id" ref="base.user_root"/>
+            <field name="ref_id" ref="dashboard_expense_view"/>
+            <field name="arch" type="xml">
+                <form string="Dashboard">
+                    <board style="1-1">
+                        <column>
+                            <action string="Plan Cash Advance Tree" name="%(cash_advance_plan_act_tree_board)d"/>
+                            <action string="Plan Cash Advance Graph" name="%(cash_advance_plan_act_graph_board)d"/>
+                        </column>
+                        <column>
+                            <action string="Plan Expense Tree" name="%(expense_plan_act_tree_board)d"/>
+                        </column>
+                    </board>
+                </form>
+            </field>
+        </record>-->
+
+        <record model="ir.ui.view" id="dashboard_expense_view">
+            <field name="name">Dashboard</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="customViewID">dashboard_expense_view</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard">
+                    <board style="1-1">
+                        <column>
+                            <action string="Cash Advance Plan" name="%(cash_advance_plan_act_tree_board)d"/>
+                            <action string="Un-settled Cash Advance" name="%(cash_advance_unsettle_act_tree_board)d"/>
+                        </column>
+                        <column>
+                            <action string="Expense / Reimbursement / Advance Settlement Plan" name="%(expense_plan_act_tree_board)d"/>
+                            <action string="Cash Out" name="%(cash_advance_plan_act_graph_board)d"/>
+                        </column>
+                    </board>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="dashboard_expense_action">
+            <field name="name">Dashboard Expense</field>
+            <field name="res_model">board.board</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="dashboard_expense_view"/>
+        </record>
+
+        <menuitem id="menu_dashboard_expense" name="Dashboard" sequence="1"
+                  parent="hr_expense.menu_hr_expense_root" action="dashboard_expense_action"
+                  groups="account.group_account_manager"/>
+
+        <menuitem id="hr_expense.menu_hr_expense_my_expenses" name="My Expenses" sequence="2"
+                  parent="hr_expense.menu_hr_expense_root" groups="base.group_user"/>
+
+    </data>
+</odoo>

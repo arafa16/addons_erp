@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+        <report id="menu_tender_comparision_report"
+            model="purchase.requisition"
+            string="Tender Report"
+            report_type="qweb-pdf"
+            name="purchase_tender_report.purchasetender_report"
+            file="purchase_tender_report.purchasetender_report"
+            menu="False" />
+
+</odoo>

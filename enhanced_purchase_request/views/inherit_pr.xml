@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_purchase_request_inherit_form">
+            <field name="name">enhanced.purchase.request.inherit.form</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="sprogroup_purchase_request.view_sprogroup_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[1]/field[@name='line_ids']/tree/field[@name='product_uom_id']" position="after">
+                    <field name="cost_product" string="unit price"/>
+                    <field name="subtotal" string="Sub Total"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page[1]/field[@name='line_ids']/tree" position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']" position="after">
+                    <group class="oe_subtotal_footer oe_right" colspan="2">
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="amount_total" />
+                        </div>
+                        <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="epmr_project_task2_form">
+            <field name="name">epmr.project.task2.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='description_page']" position="before">
+                    <page name="material_cost_tab" string="Activity Cost">
+                        <group string="Activity Cost">
+                            <field name="project_costx" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="uom"/>
+                                    <field name="cost"/>
+                                    <field name="sub_total" readonly="1"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2">
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="total_cost" />
+                                </div>
+                                <field name="total_cost" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='description']" position="after">
+                    <field name="data_teknis"/>
+                </xpath>
+                <xpath expr="//field[@name='description']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="epmr_project_task2_search">
+            <field name="name">epmr.project.task2.search</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='unassigned']" position="after">
+                    <filter string="Today Create" name="activities_today_create" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=',datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

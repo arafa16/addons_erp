@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_purchase_biding_purchase_requisition_form">
+            <field name="name">enhanced.purchase.biding.purchase.requisition.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vendor_id']" position="after">
+                    <field name="nomor_pr" readonly="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='action_done']" position="after">
+                    <button name="set_rollback" string="Rollback To Bid Selection" type="object" groups="sprogroup_purchase_request.group_sprogroup_purchase_request_manager" attrs="{'invisible':[('state', '!=', 'done')]}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="after">
+                    <button string="Cancel Biding" name="clear_agrement" type="object" style="color:#FFFFFF; background-color:#b73e65;"
+                        groups="sprogroup_purchase_request.group_purchase_request_eksekutor"  attrs="{'invisible':['|',('state', '!=', 'draft')]}"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

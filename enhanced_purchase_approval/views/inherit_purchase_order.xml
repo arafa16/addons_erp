@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="epa_purchase_order_loa_form">
+            <field name="name">epa.purchase.order.loa.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="setToLoA" invisible="1"/>
+                    <field name="bolehConfirm" invisible="1"/>
+                    <field name="tt" invisible="1"/>
+                    <field name="isOverdue" invisible="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_view_invoice']" position="after">
+                    <button class="widgetbuttonmerah oe_stat_button" type="object" name="press_approval" icon="fa-check" attrs="{'invisible':['|','|',('setToLoA', '=', False),('bolehConfirm', '=', True),('state', 'in', ['cancel','done'])]}">
+                        <field name="apvteks" class="widgetbuttonmerah" widget="statinfo"/>
+                    </button>
+                </xpath>
+                <!-- batas ubah data -->
+                <field name="amount_total" position="after">
+                    <field name="amount_total_base"/>
+                </field>
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="button_action_assman_check"
+                            string="Assman Request Check"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#4b3eb7;"
+                            attrs="{'invisible': [('state', 'not in', ['draft','sent'])]}"
+                    />
+                    <button name="button_action_assman_set_draft"
+                            string="Set to Draft"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#01448b;"
+                            attrs="{'invisible': ['|',('state', 'not in', ['assmancheck']),('isassman','=',False)]}"
+                    />
+                    <button name="button_action_request_loa_confirm"
+                            string="Request LoA"
+                            type="object"
+                            style="color:#FFFFFF; background-color:#3eb763;"
+                            attrs="{'invisible': ['|',('state', 'not in', ['assmancheck']),('isassman','=',False)]}"
+                    />
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]" position="after">
+                    <page string="Level of Approval">
+                        <group>
+                            <group>
+                                <field name="penandatangan1" domain="[('otoritas_purchase.urutan', '=', 1)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
+                                <field name="penandatangan2" domain="[('otoritas_purchase.urutan', '=', 2)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
+                                <field name="penandatangan3" domain="[('otoritas_purchase.urutan', '=', 3)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
+                                <field name="penandatangan4" domain="[('otoritas_purchase.urutan', '=', 4)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
+                                <field name="penandatangan5" domain="[('otoritas_purchase.urutan', '=', 5)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="checker1" required="1" domain="[('checkerPO', '=', True)]" attrs="{'readonly': [('state', 'not in', ['draft','sent'])]}"/>
+                                <field name="isassman" invisible="1"/>
+                                <field name="required1" invisible="1"/>
+                                <field name="required2" invisible="1"/>
+                                <field name="required3" invisible="1"/>
+                                <field name="required4" invisible="1"/>
+                                <field name="required5" invisible="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='partner_ref']" position="after">
+                    <field name="loa_request" readonly="1" attrs="{'invisible':[('state', 'in', ['draft','sent'])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="statusbar_visible">draft,sent,assmancheck,requestloa,loaconfirmed,purchase</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="FakturNomor" attrs="{'readonly': [('state', 'not in', ['draft','sent'])]}"/>
+                    <field name="FakturTanggal" attrs="{'readonly': [('state', 'not in', ['draft','sent'])]}"/>
+                </xpath>
+                <xpath expr="//button[@id='bid_confirm']" position="attributes">
+                    <attribute name="states">sent,loaconfirmed</attribute>
+                    <attribute name="attrs">{'invisible':['|',('bolehConfirm', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                    <attribute name="states">draft</attribute>
+                    <attribute name="attrs">{'invisible':['|',('bolehConfirm', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='picking_type_id']" position="after">
+                    <field name="langsung" attrs="{'readonly': [('state', 'in', ['purchase','done','cancel '])]}"/>
+                    <field name="langsung_alamat" attrs="{'invisible':[('langsung', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//form/sheet/div[1]/button[@name='action_view_picking']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('state', 'in', ('draft','sent','to approve','requestloa','loaconfirmed','assmancheck')),('picking_ids','=',[])]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_view_invoice']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('state', 'in', ('draft','sent','to approve','requestloa','loaconfirmed','assmancheck')),('invoice_ids','=',[])]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="attributes">
+                    <attribute name="states">draft,to approve,sent,purchase,requestloa,loaconfirmed</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="epa_purchase_order_loa_tree">
+            <field name="name">epa.purchase.order.loa.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_status']" position="after">
+                    <field name="isOverdue"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="epa_purchase_order_loa_filter">
+            <field name="name">epa.purchase.order.loa.filter</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='create_uid']" position="after">
+                    <field name="date_order"/>
+                </xpath>
+                <xpath expr="//filter[@name='activities_my']" position="before">
+                    <filter string="Current Month" name="current_month" domain="['&amp;',('date_order','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01')),('date_order','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+157032117430950982,random,model_em_request_product,base.group_user,1,1,1,1
+157032150918989188,random,model_em_request,base.group_user,1,1,1,1
+157032521326594979,random,model_em_onhand,base.group_user,1,1,1,1
+157050817934822481,random,model_em_return_products,base.group_user,1,1,1,1
+157050829036609263,random,model_em_return,base.group_user,1,1,1,1

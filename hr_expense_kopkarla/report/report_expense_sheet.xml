@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--<template id="report_expense_sheet_cc_inherited" inherit_id="hr_expense.report_expense_sheet">
+        <xpath expr="//div[hasclass('page')]/table/thead/tr/th[5]" position="after">
+            <th class="text-left">Cost Center</th>
+        </xpath>
+         <xpath expr="//div[hasclass('page')]/table/tbody/tr/td[5]" position="after">
+            <td class="text-left">
+                <span t-field="line.cost_center_id"/>
+            </td>
+        </xpath>
+    </template>-->
+
+    <template id="report_expense_sheet_kopkarla" inherit_id="hr_expense.report_expense_sheet">
+        <xpath expr="//div[hasclass('page')]/h2" position="replace">
+            <h2>Expenses Report - <span t-field="o.name"/></h2>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]/div/div[2]" position="replace">
+            <div class="col-xs-2">
+                <strong>Date:</strong>
+                <p t-field="o.report_date"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]/div/div[3]" position="replace">
+            <div class="col-xs-3">
+                <strong>Cost Center:</strong>
+                <p t-field="o.cost_center_id"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]/div/div[4]" position="replace">
+            <div class="col-xs-3">
+                <strong>Analytic Account:</strong>
+                <p t-field="o.analytic_account_id"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]/div/div[5]" position="replace"/>
+        <xpath expr="//div[hasclass('page')]/div" position="after">
+            <div class="row mt32 mb32">
+                <div class="col-xs-12">
+                    <strong>Description:</strong>
+                    <p t-field="o.communication"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]/table/tbody/tr/td[2]" position="replace">
+            <td>
+                <span t-field="line.name"/>
+            </td>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]/table/thead/tr/th[3]" position="replace"/>
+        <xpath expr="//div[hasclass('page')]/table/tbody/tr/td[3]" position="replace"/>
+
+        <xpath expr="//div[hasclass('page')]/table/thead/tr/th[2]" position="after">
+            <th class="text-left">Account</th>
+        </xpath>
+         <xpath expr="//div[hasclass('page')]/table/tbody/tr/td[2]" position="after">
+            <td class="text-left">
+                <span t-field="line.product_id.property_account_expense_id"/>
+            </td>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]/p" position="replace">
+            <div style="height: 400px; page-break-inside: avoid;">
+                <div style="padding-top:30px;">
+                    <table class="table" style="widht:100%;height:175px;border: 1px solid black">
+                        <tr class="border-black" style="height:25px;">
+                            <td width="20%">Dibuat,</td>
+                            <td width="20%" style="border: 1px solid">Diperiksa,</td>
+                            <td width="20%" style="border: 1px solid">Mengetahui,</td>
+                            <t t-if="o.done_sign_by">
+                                <td width="20%" style="border: 1px solid">Dilaksanakan,</td>
+                            </t>
+                            <t t-if="o.management_sign_by">
+                                <td width="20%">Pengurus,</td>
+                            </t>
+                        </tr>
+                        <tr class="border-black">
+                            <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.created_sign_by"/></td>
+                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.checked_sign_by"/></td>
+                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.known_sign_by"/></td>
+                            <t t-if="o.done_sign_by">
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.done_sign_by"/></td>
+                            </t>
+                            <t t-if="o.management_sign_by">
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by"/></td>
+                            </t>
+                        </tr>
+                    </table>
+                    <!--<t t-if="o.management_sign_by">
+                        <div class="col-xs-3" style="padding:0px;">
+                            <table style="widht:33.5%;height:175px;border: 1px solid black">
+                                <tr style="height:25px;">
+                                    <td width="33.5%" style="padding-left:5px;padding-top:3px;">Pengurus,</td>
+                                </tr>
+                                <tr class="border-black">
+                                    <td style="text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>-->
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

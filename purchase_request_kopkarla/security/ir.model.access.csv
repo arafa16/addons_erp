@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sprogroup_purchase_request_type_user,sprogroup.purchase.request.type.user,model_purchase_request_type,base.group_user,1,0,0,0
+access_sprogroup_purchase_request_type_setting,sprogroup.purchase.request.type.setting,model_purchase_request_type,group_purchase_request_setting,1,1,1,1
+access_purchase_request_employee_mapping,access_purchase_request_employee_mapping,model_purchase_request_employee_mapping,group_purchase_request_setting,1,1,1,1

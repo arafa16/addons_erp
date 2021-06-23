@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_seles_approval_inherit_ttd_omployee_form">
+            <field name="name">enhanced.seles.approval.inherit.ttd.omployee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="enhanced_sales_ttd.est_ttd_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='ttd_autority']" position="after">
+                    <group string="Otoritas tandatangan Sales" name="ttd_sales_check">
+                        <field name="sales_spv"/>
+                        <field name="sales_assman"/>
+                        <field name="otoritas_sales" widget="many2many_tags"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

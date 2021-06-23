@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sprogroup_purchase_request_loa_tree">
+            <field name="name">sprogroup.purchase.request.loa.tree</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="namex"/>
+                    <field name="date_start"/>
+                    <field name="requested_by"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="sprogroup_purchase_request_loa_action">
+            <field name="name">Purchase Request Level of Approval</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="domain">['&amp;','&amp;',('state', '=', 'draft'),('setConfirmLoA','=',True),('bolehConfirm','=',False)]</field>
+            <field name="view_id" ref="sprogroup_purchase_request_loa_tree"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem 
+            id="sprogroup_purchase_request_loa_menu"
+            name="Purchase Request LoA"
+            parent="purchase.menu_procurement_management"
+            sequence="1"
+            action="sprogroup_purchase_request_loa_action"
+        />
+    </data>
+</odoo>

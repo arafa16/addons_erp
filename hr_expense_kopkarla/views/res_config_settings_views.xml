@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.expense</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="hr_expense.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_sale_management']/../.." position="after">
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Open cash advance">
+                        <div class="o_setting_right_pane">
+                            <label for="eam_journal_id"/><field name="eam_journal_id"/>
+                            <div class="text-muted">
+                                Default journal of expense and advance payable.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Return cash advance journal">
+                        <div class="o_setting_right_pane">
+                            <label for="ret_journal_id"/><field name="ret_journal_id"/>
+                            <div class="text-muted">
+                                Default journal of return cash advance.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Default payment journal">
+                        <div class="o_setting_right_pane">
+                            <label for="default_payment_id"/><field name="default_payment_id"/>
+                            <div class="text-muted">
+                                Default journal for payment to employee.
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='module_sale_management']/../../.." position="after">
+                    <h2>Cash Advance</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Open cash advance">
+                            <div class="o_setting_left_pane">
+                                <field name="multi_cash_advance"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="multi_cash_advance"/>
+                                <div class="text-muted">
+                                    Allow multiple open cash advance.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="default_expense_partner_id"/><field name="default_expense_partner_id"/>
+                            <div class="text-muted">
+                                Default partner for expense and advance.
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Default Sign By</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Sign By">
+                            <div class="o_setting_right_pane">
+                                <label string="Default pembuat" for="default_exp_created_sign_by"/>
+                                <div class="text-muted">
+                                    Dibuat
+                                </div>
+                                <div class="text-muted">
+                                    <field name="default_exp_created_sign_by"/>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Default approval" for="default_exp_known_sign_by"/>
+                                <div class="text-muted">
+                                    Mengetahui
+                                </div>
+                                <div class="text-muted">
+                                    <field name="default_exp_known_sign_by"/>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Default pengurus" for="default_exp_management_sign_by"/>
+                                <div class="text-muted">
+                                    Pengurus
+                                </div>
+                                <div class="text-muted">
+                                    <field name="default_exp_management_sign_by"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Account for over payment.">
+                            <div class="o_setting_right_pane">
+                                <label string="Default pemeriksa" for="default_exp_checked_sign_by"/>
+                                <div class="text-muted">
+                                    Pemeriksa
+                                </div>
+                                <div class="text-muted">
+                                    <field name="default_exp_checked_sign_by"/>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Default pelaksana" for="default_exp_done_sign_by"/>
+                                <div class="text-muted">
+                                    Pelaksana
+                                </div>
+                                <div class="text-muted">
+                                    <field name="default_exp_done_sign_by"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

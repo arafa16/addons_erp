@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Show Data -->
+        <record model="ir.ui.view" id="em_return_show_form">
+            <field name="name">em.return.show.form</field>
+            <field name="model">em.return</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="stat" readonly="1" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="gudang_return" domain="[('usage','=','internal')]" options="{'no_open': True, 'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="tanggal"/>
+                                <field name="task_idx" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Material Return">
+                                <field name="return_ids" attrs="{'readonly': [('stat', '!=', 'draft')]}">
+                                    <tree editable="bottom" create="false" delete="false">
+                                        <field name="barang_id" readonly="1"/>
+                                        <field name="ret_pros"/>
+                                        <field name="ret_done"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button name="write"
+                            string="Simpan"
+                            type="object"
+                            icon="fa-save" class="btn-primary"
+                            attrs="{'invisible':[('stat', '!=', 'draft')]}"
+                        />
+                        <button name="set_proses"
+                            string="Approve" icon="fa-check"
+                            type="object" class="buttonsimpan"
+                            attrs="{'invisible':[('stat', '!=', 'draft')]}"
+                            groups="enhanced_sales_convert_project.group_projectmr_assign_user"
+                        />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- show wizard -->
+        <record model="ir.ui.view" id="em_return_wizard_form">
+            <field name="name">em.return.show.form</field>
+            <field name="model">em.return</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="stat" readonly="1" widget="statusbar"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="gudang_return" domain="[('usage','=','internal')]" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="tanggal"/>
+                            <field name="task_idx" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Material">
+                            <field name="material_ids">
+                                <tree editable="bottom" create="false" write="false" delete="false">
+                                    <field name="barang_id" readonly="1" clickable="False"/>
+                                    <field name="quantity" readonly="1"/>
+                                    <field name="ret" readonly="1"/>
+                                    <field name="ret_pros"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="process_return" string="Save" type="object" icon="fa-save" class="btn-primary"/>
+                        <button  string="Cancel" icon="fa-times" special="cancel" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="em_return_action">
+            <field name="view_id" ref="em_return_show_form"/>
+            <field name="name">Material Return</field>
+            <field name="res_model">em.return</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- <menuitem 
+            action="em_return_action"
+            id="enhanced_material_return_menu" 
+            name="Material Return" 
+            parent="project.menu_project_config" sequence="10"/> -->
+    </data>
+</odoo>

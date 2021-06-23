@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_purchases" model="res.config.settings">
+        <field name="group_analytic_account_for_purchases" eval="1"/>
+    </record>
+    <function model="res.config.settings" name="execute">
+        <!-- ids = -->        <value eval="[ref('res_config_settings_purchases')]"/>
+        <!-- context = -->    <value eval="{}"/>
+    </function>
+</odoo>

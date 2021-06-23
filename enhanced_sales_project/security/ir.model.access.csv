@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+156921065572224243,random,model_enhanced_sales_project_tabel,base.group_user,1,0,0,0
+156922012398914822,random,model_enhanced_sales_jenis_tabel,base.group_user,1,0,0,0
+156922071896729738,random,model_enhanced_sales_pekerjaan_tabel,base.group_user,1,0,0,0
+158091839627202266,random,model_enhanced_sales_area,base.group_user,1,0,0,0

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="epm_stock_move_tree">
+            <field name="name">epm.stock.move.tree</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="before">
+                    <field name="kategorix"/>
+                    <field name="price_unit"/>
+                    <field name="jumlahx"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="epmx_stock_move_filter" model="ir.ui.view">
+            <field name="name">epmx.stock.move.filter</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_search" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='by_product']" position="after">
+                    <filter string="Category Product" name="by_Category_product" context="{'group_by':'kategorix'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

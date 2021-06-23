@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_asset_disposal,amodel.account.asset.disposal,model_account_asset_disposal,account.group_account_manager,1,1,1,1
+access_account_asset_disposal_line,amodel.account.asset.disposal.line,model_account_asset_disposal_line,account.group_account_manager,1,1,1,1
+access_account_asset_reclass_table,amodel.account.asset.reclass.table,model_account_asset_reclass_table,account.group_account_manager,1,1,1,1
+access_account_asset_reclass_line,amodel.account.asset.reclass.line,model_account_asset_reclass_line,account.group_account_manager,1,1,1,1
+access_account_asset_revaluation,amodel.account.asset.revaluation,model_account_asset_revaluation,account.group_account_manager,1,1,1,1
+access_account_asset_revaluation_line,amodel.account.asset.revaluation.line,model_account_asset_revaluation_line,account.group_account_manager,1,1,1,1
+access_account_asset_depreciation,amodel.account.asset.depreciation,model_account_asset_depreciation,account.group_account_manager,1,1,1,1

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- action window -->
+        <record model="ir.actions.act_window" id="sprogroup_purchase_request_assman_action">
+            <field name="name">Purchase Request Assman Check</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['&amp;',('state','=', 'assman_check'),('assman.user_id','=',uid)]</field>
+        </record>
+        <menuitem id="purchase_request_menu_1_4" name="PR Assman Check" parent="sprogroup_purchase_request.purchase_request_menu_1" action="enhanced_purchase_request_loa.sprogroup_purchase_request_assman_action" sequence="4"/>
+    </data>
+</odoo>

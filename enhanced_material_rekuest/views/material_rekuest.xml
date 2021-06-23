@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="material_rekuest_tree">
+            <field name="name">material.rekuest.tree</field>
+            <field name="model">material.rekuest</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form View -->
+        <record model="ir.ui.view" id="material_rekuest_form">
+            <field name="name">material.rekuest.tree</field>
+            <field name="model">material.rekuest</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1"/>
+                                <field name="approval" required="1"/>
+                            </group>
+                            <group>
+                                <field name="date_permintaan"/>
+                                <field name="date_end"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="List Barang">
+                                <field name="line_ids">
+                                    <tree editable="bottom">
+                                        <field name="produk_id" domain="[('type', 'in', ['product'])]"/>
+                                        <field name="stock_location" domain="[('gudang_ga', '=', True)]"/>
+                                        <field name="stockAvailable"/>
+                                        <field name="permintaan"/>
+                                        <field name="permintaan_done" readonly="1"/>
+                                        <field name="opration_id" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Description">
+                                <label for="description"/>
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="material_rekuest_action">
+            <field name="name">Material Requests</field>
+            <field name="res_model">material.rekuest</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban,pivot</field>
+        </record>
+
+        <menuitem 
+            id="material_rekuest_menu"
+            name="Material Request"
+            sequence="6"
+            web_icon="enhanced_material_rekuest,static/description/icon.png"
+        />
+        <menuitem 
+            id="material_rekuest_menu_1"
+            name="Material Requests"
+            parent="material_rekuest_menu"
+            sequence="1"
+        />
+
+        <menuitem 
+            id="material_rekuest_menu_1_1"
+            name="Material Requests"
+            parent="material_rekuest_menu_1"
+            sequence="1"
+            action="material_rekuest_action"
+        />
+
+    </data>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sprogroup_purchase_request_buyer_tree">
+            <field name="name">sprogroup.purchase.request.buyer.tree</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="namex"/>
+                    <field name="nomor_po_m2o" widget="many2many_tags"/>
+                    <field name="date_start"/>
+                    <field name="requested_by"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="sprogroup_purchase_request_buyer_action">
+            <field name="name">Purchase Request Buyer Approval</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <!-- <field name="context">{"search_default_state":"manager_approved"}</field> -->
+            <field name="domain">[('state', 'in', ['leader_approved','done'])]</field>
+            <field name="view_id" ref="sprogroup_purchase_request_buyer_tree"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem 
+            id="sprogroup_purchase_request_buyer_menu"
+            name="Buyer Waiting List"
+            parent="purchase.menu_procurement_management"
+            sequence="3"
+            action="sprogroup_purchase_request_buyer_action"
+        />
+    </data>
+</odoo>

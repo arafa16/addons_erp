@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_routing_list_tender">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="page">
+                                <h3 style="text-align:center;">
+                                    <span>Routing List  #</span> <span t-field="doc.name"/>
+                                </h3>
+                                <div class="row mt32 mb32">
+                                    <div class="col-xs-8">
+                                        <table style="border:none;" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="font-weight:bold; width:180px; padding:2px;">Agreement Deadline</td>
+                                                <td style="padding: 2px 5px;">:</td>
+                                                <td style="padding: 2px;"><span t-field="doc.date_end"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold; width:180px; padding:2px;">Delivery Date</td>
+                                                <td style="padding: 2px 5px;">:</td>
+                                                <td style="padding: 2px;"><span t-field="doc.schedule_date"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold; width:180px; padding:2px;">Source Document</td>
+                                                <td style="padding: 2px 5px;">:</td>
+                                                <td style="padding: 2px;"><span t-field="doc.origin"/></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <table style="border:none;" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="font-weight:bold; width:120px; padding:2px;">Responsible</td>
+                                                <td style="padding: 2px 5px;">:</td>
+                                                <td style="padding: 2px;"><span t-field="doc.user_id"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold; width:120px; padding:2px;">Nomor PR</td>
+                                                <td style="padding: 2px 5px;">:</td>
+                                                <td style="padding: 2px;"><span t-field="doc.nomor_pr"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold; width:120px; padding:2px;">Total RFQ</td>
+                                                <td style="padding: 2px 5px;">:</td>
+                                                <td style="padding: 2px;"><span t-field="doc.order_count"/></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row mt16 mb16">
+                                    <div class="col-xs-12">
+                                        <t t-foreach="doc.listVendorbarang()" t-as="produk">
+                                            <div style="padding-bottom:15px;">
+                                                <div style="padding-bottom:5px;">
+                                                    <table style="width:100%;" cellpadding="0" cellspacing="0">
+                                                        <tr style="font-size:13px;">
+                                                            <td style="font-weight:bold;">
+                                                                <span t-esc="produk['product_id']"/>
+                                                            </td>
+                                                            <td style="font-weight:bold; width:250px; text-align:right;">
+                                                                <span t-esc="produk['product_qty']"/> <span t-esc="produk['product_uom_id']"/> [@ <span t-esc="produk['price_unit']" 
+                                                                t-options='{"widget": "monetary", "display_currency": produk["currency_id"]}' />]
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <table class="table table-condensed table-bordered table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <td style="font-size:11px; font-weight:bold;">Vendor</td>
+                                                            <td style="font-size:11px; font-weight:bold;">Reference</td>
+                                                            <td style="font-size:11px; font-weight:bold;">Schedule Date</td>
+                                                            <td style="font-size:11px; font-weight:bold;">Vendor Date</td>
+                                                            <td style="font-size:11px; font-weight:bold;">Quantity</td>
+                                                            <td style="font-size:11px; font-weight:bold;">Unit Price</td>
+                                                            <td style="font-size:11px; font-weight:bold;">Status</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="sale_tbody">
+                                                        <t t-foreach="produk['vendor']" t-as="vendorx">
+                                                            <tr>
+                                                                <td style="font-size:11px; padding:4px 2px;"><span t-esc="vendorx['vendor']"/></td>
+                                                                <td style="font-size:11px; padding:4px 2px;"><span t-esc="vendorx['reference']"/></td>
+                                                                <td style="font-size:11px; padding:4px 2px;"><span t-esc="produk['schedule_date']" t-options='{"widget": "date"}'/></td>
+                                                                <td style="font-size:11px; padding:4px 2px;"><span t-esc="vendorx['vendor_date']" t-options='{"widget": "date"}'/></td>
+                                                                <td style="font-size:11px; padding:4px 2px;"><span t-esc="vendorx['product_qty']"/></td>
+                                                                <td style="font-size:11px; padding:4px 2px;" class="text-right"><span t-esc="vendorx['price_unit']" t-options='{"widget": "monetary", "display_currency": produk["currency_id"]}'/></td>
+                                                                <td style="font-size:11px; padding:4px 2px;"><span t-esc="vendorx['stat']"/></td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <report 
+            string="Document Routing List" 
+            id="action_report_routing_list" 
+            model="purchase.requisition" 
+            report_type="qweb-pdf"
+            name="enhanced_bidding_routinglist.report_routing_list_tender" 
+            file="enhanced_bidding_routinglist.report_routing_list_tender"
+            print_report_name="'Document Routing List - %s' % (object.name)"
+        />
+    </data>
+</odoo>

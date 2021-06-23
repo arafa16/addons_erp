@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_cust_contract_product_form">
+            <field name="name">enhanced.cust.contract.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='barcode']" position="after">
+                    <field name="to_analytic"/>
+                    <field name="product_revese"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

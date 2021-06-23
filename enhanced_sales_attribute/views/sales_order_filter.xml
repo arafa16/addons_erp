@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="ess_search_spk_inherit" model="ir.ui.view">
+            <field name="name">ess.search.spk.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_shipping_id"/>
+                </xpath>
+                <xpath expr="//field[@name='analytic_account_id']" position="after">
+                    <field name="spk_sementara"/>
+                </xpath>
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="General Order" domain="[('jenis_so','=','common')]"/>
+                    <filter string="Rental Order" domain="[('jenis_so','=','rental')]"/>
+                    <filter string="Project Order" domain="[('jenis_so','=','Project')]"/>
+                    <separator/>
+                    <filter string="Ada SPK" domain="[('stat_spk','=',True)]"/>
+                    <filter string="Tidak ada SPK" domain="[('stat_spk','=',False)]"/>
+                    <separator/>
+                    <filter string="Approval By User" domain="[('pegawai_ttd','=',uid)]"/>
+                </xpath>
+                <xpath expr="//filter[@name='customer']" position="after">
+                    <separator/>
+                    <filter name="JenisOrder" string="Jenis Order" domain="[]" context="{'group_by':'jenis_so'}"/>
+                    <filter name="salesChannelGroupby" string="Sales Channel" domain="[]" context="{'group_by':'team_id'}"/>
+                    <filter name="salesdeptGroupby" string="Sales Departement" domain="[]" context="{'group_by':'so_bagian'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

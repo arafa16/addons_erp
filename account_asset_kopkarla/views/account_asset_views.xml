@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_account_asset_asset_purchase_tree_inherit">
+            <field name="name">account.asset.asset.purchase.tree.inherit</field>
+            <field name="model">account.asset.asset</field>
+            <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
+            <field name="arch" type="xml">
+                <field name="date" position="replace">
+                    <field name="date_acq"/>
+                </field>
+                <field name="name" position="after">
+                    <field name="code"/>
+                </field>
+                <field name="partner_id" position="replace"/>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_account_asset_asset_inherit">
+            <field name="name">account.asset.asset.inherit</field>
+            <field name="model">account.asset.asset</field>
+            <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
+            <field name="arch" type="xml">
+                <xpath  expr="//header" position="inside">
+                    <field name="allow_reclass" invisible="1" />
+                    <button name="%(action_account_asset_reclass)d" string="Reclass Asset" type="action"
+                            attrs="{'invisible': True}" class="oe_highlight"/>
+                </xpath>
+                <button name="open_entries" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+                <field name="date" position="replace">
+                    <field name="date_acq"/>
+                    <field name="date" invisible="1"/>
+                    <field name="cost_center_id"/>
+                </field>
+                <xpath  expr="//notebook" position="inside">
+                    <page string="Other Information" groups="account.group_account_user">
+                        <group>
+                            <group string="Reclass information">
+                                <field name="reclass_date"/>
+                                <field name="reclass_to_asset_id"/>
+                                <field name="reclass_move_id"/>
+                            </group>
+                            <group string="Disposal information">
+                                <field name="disposal_date"/>
+                                <field name="disposal_move_id"/>
+                            </group>
+                            <group string="Sale information">
+                                <field name="sale_date"/>
+                                <field name="sale_move_id"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Journal Entries" groups="account.group_account_user">
+                        <field name="account_move_line_ids" nolabel="1"/>
+                    </page>
+                </xpath>
+
+                <button name="set_to_close" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </button>
+                <!--<button name="set_to_close" position="after">
+                    <button name="action_disposal"
+                            states="open,close"
+                            string="Dispose"
+                            type="object"
+                            class="oe_highlight"
+                    />
+                    <button name="action_disposal_undo"
+                            states="disposed"
+                            string="Undo disposal"
+                            type="object"
+                            class="oe_highlight"
+                    />
+                </button>-->
+            </field>
+        </record>
+    </data>
+</odoo>

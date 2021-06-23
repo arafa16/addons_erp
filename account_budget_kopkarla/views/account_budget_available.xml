@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_budget_available_tree" model="ir.ui.view">
+            <field name="name">account.budget.available.tree</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Available Budgets" create="false" edit="false" delete="false"
+                      decoration-danger="state=='draft'"
+                      decoration-info="state=='ready'"
+                      decoration-muted="state=='close'">
+                    <field name="state" invisible="1"/>
+                    <field name="group_id"/>
+                    <field name="general_budget_id" invisible="1"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="restrict_allow"/>
+                    <field name="planned_amount_sum" widget="monetary" sum="Total Plan Amount"/>
+                    <field name="requested_amount" widget="monetary" sum="Total Request Amount"/>
+                    <field name="avail_req_amount" widget="monetary" sum="Total Available Amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_budget_available_form" model="ir.ui.view">
+            <field name="name">account.budget.available.form</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="arch" type="xml">
+                <form string="Available Budget" create="false" edit="false" delete="false">
+                    <header>
+                        <button string="Select Budget" name="action_budget_to_adjust" states="ready" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet string="Budget Details">
+                        <group colspan="2">
+                            <group string="Budget Information">
+                                <field name="crossovered_budget_id"/>
+                                <field name="general_budget_id"/>
+                                <field name="cost_center_id"/>
+                                <field name="analytic_account_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="restrict_allow"/>
+                            </group>
+                            <group string="Planning Amount">
+                                <field name="planned_amount"/>
+                                <field name="planned_changes_amount"/>
+                                <field name="planned_amount_sum"/>
+                            </group>
+                            <group string="Requested Amount">
+                                <field name="requested_amount"/>
+                                <field name="avail_req_amount"/>
+                            </group>
+                            <group string="Realisasi Amount">
+                                <field name="practical_amount"/>
+                                <field name="theoritical_amount"/>
+                                <field name="percentage"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Requested Budgets">
+                                <field name="budget_request_ids">
+                                    <tree string="Requested Budgets" decoration-danger="state=='draft'">
+                                        <field name="budget_request_id"/>
+                                        <field name="purchase_request_line_ids" widget="many2many_tags"/>
+                                        <field name="budget_account_id"/>
+                                        <field name="cost_center_id"/>
+                                        <field name="analytic_account_id"/>
+                                        <field name="requested_amount"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_budget_available_search" model="ir.ui.view">
+           <field name="name">account.budget.available.search1</field>
+           <field name="model">crossovered.budget.lines</field>
+           <field name="arch" type="xml">
+                <search string="Budget search">
+                    <field name="general_budget_id"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>
+                    <filter string="Type Allow" domain="[('restrict_allow','=','allow')]" help="No restriction"/>
+                    <filter string="Type Warning" domain="[('restrict_allow','=','warn')]" help="Warning control"/>
+                    <filter string="Type Restricted" domain="[('restrict_allow','=','restrict')]" help="Restricted"/>
+                    <separator/>
+                    <filter string="Draft" domain="[('state','=','draft')]"/>
+                    <filter string="Ready" domain="[('state','=','ready')]"/>
+                    <filter string="Closed" domain="[('state','=','close')]"/>
+                    <group string="Group by .." expand="0">
+                        <filter name="crossovered_budget_id" string="Budget" domain="[]" context="{'group_by':'crossovered_budget_id'}"/>
+                        <filter name="general_budget_id" string="Budgetary Position" domain="[]" context="{'group_by':'general_budget_id'}"/>
+                        <filter name="group_id" string="Budgetary Group" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter name="cost_center_id" string="Cost Center" domain="[]" context="{'group_by':'cost_center_id'}"/>
+                        <filter name="analytic_account_id" string="Analytic Account" domain="[]" context="{'group_by':'analytic_account_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_budget_available_view_tree">
+            <field name="name">Available Budgets</field>
+            <field name="res_model">crossovered.budget.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_budget_available_tree"/>
+            <field name="search_view_id" ref="view_account_budget_available_search"/>
+            <field name="domain">[('state', '=', 'ready')]</field>
+            <!--<field name="context">{'search_default_general_budget_id': True}</field>-->
+        </record>
+
+        <menuitem parent="menu_budget_master_data"
+            id="menu_act_budget_available_view"
+            name="Available Budgets"
+            action="act_budget_available_view_tree" sequence="2"
+            groups="account.group_account_user"/>
+    </data>
+</odoo>

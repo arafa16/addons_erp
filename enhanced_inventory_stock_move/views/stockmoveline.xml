@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="eism_stock_move_search">
+            <field name="name">eism.stock.move.search</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='by_state']" position="after">
+                    <filter string="Product Category" name="by_prod_cat" domain="[]" context="{'group_by':'produk_category'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

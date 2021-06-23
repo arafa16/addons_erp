@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="purchase_request_email_template" model="mail.template">
+            <field name="name">Purchase Request e-mail template</field>
+            <field name="email_from">${object.requested_by.email or ''}</field>
+            <field name="subject">Purchase Request ${object.namex}</field>
+            <field name="email_to">${object.assigned_to.email|safe}</field>
+            <field name="lang">${object.requested_by.lang}</field>
+            <field name="model_id" ref="sprogroup_purchase_request.model_sprogroup_purchase_request"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                    <p><br/><br/>
+                    Purchase Request status: ${(object.namex)}
+                    <br/>
+                    <table>
+                    <tr><td>State</td><td>:</td><td><h3><strong>${(object.state)}</strong></h3></td></tr>
+                    <tr><td></td><td></td><td></td></tr>
+                    <tr><td>Requested by</td><td>:</td><td>${(object.requested_by.name)}</td></tr>
+                    </table>
+                    <br/>
+                    Regards,<br/>
+                    </p>
+                ]]>
+            </field>
+        </record>
+    </data>
+
+
+</odoo>

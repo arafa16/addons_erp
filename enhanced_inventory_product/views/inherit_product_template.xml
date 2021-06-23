@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- untuk price dan cost -->
+        <!-- <record model="ir.ui.view" id="enhanced_inventory_product_inherit_form">
+            <field name="name">enhanced_inventory_product_inherit_form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//ul/li[1]" position="after">
+                    <li>
+                        Cost :
+                    </li>
+                </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>

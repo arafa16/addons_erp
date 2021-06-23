@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="num_to_words_inherit_custom_report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@t-if='o.comment']" position="after">
+            <t t-if="'o.pegawai_ttd' in o.fields_get()">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <strong>( <span t-field="o.pegawai_ttd"/> )</strong>
+            </t>
+        </xpath>
+    </template>
+</odoo>

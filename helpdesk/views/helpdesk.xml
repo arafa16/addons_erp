@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="enhanced_helpdesk_tree">
+            <field name="name">enhanced.helpdesk.tree</field>
+            <field name="model">enhanced.helpdesk</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="pegawai_id"/>
+                    <field name="prioritas"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Search View -->
+        <record model="ir.ui.view" id="enhanced_helpdesk_search">
+            <field name="name">enhanced.helpdesk.search</field>
+            <field name="model">enhanced.helpdesk</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <filter name="aktif_task" string="Aktif Task" domain="[('state', 'in', ['draft','state1','state2','state3','state5'])]"/>
+                    <filter name="close_task" string="Close Task" domain="[('state', '=', 'state6')]"/>
+                    <filter name="reject_task" string="Reject Task" domain="[('state', '=', 'state4')]"/>
+                    <group>
+                        <filter name="groupby_state" string="Status" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="enhanced_helpdesk_from">
+            <field name="name">enhanced.helpdesk.from</field>
+            <field name="model">enhanced.helpdesk</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="set_to_approval"
+                            string="Request Approval"
+                            type="object"
+                            class="btn btn-sm btn-primary"
+                            attrs="{'invisible':[('state', '!=', 'draft')]}"
+                        />
+                        <button name="action_approved"
+                            string="Approve"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#4CAF50;"
+                            attrs="{'invisible':[('state', '!=', 'state1')]}"
+                        />
+                        <button name="action_rejected"
+                            string="Reject Approval"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#d9534f;"
+                            attrs="{'invisible':[('state', '!=', 'state1')]}"
+                        />
+                        <button name="action_developer_receive"
+                            string="Developer Approve"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#4CAF50;"
+                            attrs="{'invisible':[('state', '!=', 'state2')]}"
+                            groups="helpdesk.modul_helpdesk_developer"
+                        />
+                        <button name="test_function"
+                            string="TEST FUNCTION"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#990000;"
+                            groups="helpdesk.modul_helpdesk_developer"
+                        />
+                        <button name="action_developer_rejected"
+                            string="Reject"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#d9534f;"
+                            attrs="{'invisible':[('state', '!=', 'state2')]}"
+                            groups="helpdesk.modul_helpdesk_developer"
+                        />
+                        <button name="action_developer_reopen"
+                            string="Re-Open"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#00796B;"
+                            attrs="{'invisible':[('state', '!=', 'state4')]}"
+                        />
+                        <button name="action_developer_done"
+                            string="Done"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#4CAF50;"
+                            attrs="{'invisible':[('state', '!=', 'state3')]}"
+                            groups="helpdesk.modul_helpdesk_developer"
+                        />
+                        <button name="action_user_backtodeveloper"
+                            string="Back to Developer"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#00796B;"
+                            attrs="{'invisible':[('state', '!=', 'state5')]}"
+                        />
+                        <button name="action_user_close"
+                            string="Close"
+                            type="object"
+                            class="btn btn-sm"
+                            style="color:#FFFFFF; background-color:#4CAF50;"
+                            attrs="{'invisible':[('state', '!=', 'state5')]}"
+                        />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="pegawai_id" readonly="1"/>
+                                <field required="1" name="name" attrs="{'readonly':[('state', 'in', ['state3','state4','state5','state6'])]}"/>
+                            </group>
+                            <group>
+                                <field name="approval_1" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                <field name="prioritas" attrs="{'readonly': [('state', 'in', ['state4','state5','state6'])]}"/>
+                                <field name="terkait" attrs="{'readonly':[('state', 'in', ['state3','state4','state5','state6'])]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Permintaan">
+                                <field name="permintaan" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </page>
+                            <page string="Tindak Lanjut">
+                                <field name="tindaklanjut" attrs="{'readonly': [('state', 'in', ['draft','state1','state2','state4','state5','state6'])]}"/>
+                            </page>
+                            <page string="Response User">
+                                <field name="responseUser" attrs="{'readonly': [('state', 'in', ['draft','state1','state2','state3','state6'])]}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="enhanced_helpdesk_action">
+            <field name="name">Helpdesk</field>
+            <field name="res_model">enhanced.helpdesk</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_aktif_task":1}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="enhanced_helpdesk_root" name="Helpdesk" sequence="3" web_icon="helpdesk,static/description/icon.png"/>
+            <menuitem id="enhanced_helpdesk_menu_1" name="Helpdesk" parent="helpdesk.enhanced_helpdesk_root" sequence="1" action="helpdesk.enhanced_helpdesk_action"/>
+    </data>
+</odoo>

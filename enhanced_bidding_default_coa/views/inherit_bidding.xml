@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_purchase_biding_default_coa_form">
+            <field name="name">enhanced.purchase.biding.default.coa.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vendor_id']" position="after">
+                    <field name="related_coa" invisible="1"/>
+                </xpath>
+                <xpath expr="//form/header/button[1]" position="attributes">
+                    <attribute name="context">{'default_order':related_coa}</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[2]" position="attributes">
+                    <attribute name="context">{'default_nomor_coa':related_coa}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

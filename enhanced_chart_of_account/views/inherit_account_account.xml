@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="tabel_manual_chart_of_account_menu"
+            name="Chart of Accounts"
+            parent="account.account_account_menu"
+            action="account.action_account_form"
+            sequence="4"/>
+        <record model="ir.ui.view" id="enhanced_chart_of_account_inherit_coa_tree">
+            <field name="name">enhanced.chart.of.account.inherit.coa.tree</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_type_id']" position="after">
+                    <field name="parent_id"/>
+                    <field name="internal_type"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="enhanced_chart_of_account_inherit_coa_form">
+            <field name="name">enhanced.chart.of.account.inherit.coa.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='group_id']" position="after">
+                    <field name="parent_id" domain="[('id', 'not in', [active_id])]"/>
+                    <field name="child_ids">
+                       <tree>
+                        <field name="code"/>
+                        <field name="name"/>
+                       </tree>
+                    </field>
+                </xpath>
+                <xpath expr="//field[@name='internal_type']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

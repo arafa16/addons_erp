@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_dms_type_tree" model="ir.ui.view">
+        <field name="name">cost.center.tree</field>
+        <field name="model">cost.center</field>
+            <field name="arch" type="xml">
+                <tree string="Types" editable="top">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_cost_center" model="ir.actions.act_window">
+            <field name="name">Cost Centers</field>
+            <field name="res_model">cost.center</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new cost center.
+                </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_cost_center" name="Cost Centers" parent="account.menu_analytic_accounting"
+              action="action_cost_center"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,19 @@
+.o_report_layout_tanpabg {
+    font-family: 'Lato';
+    color: @gray;
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    min-height: 620px;
+    thead tr th, h2 {
+        color: @odoo-brand-primary;
+    }
+    tbody {
+        color: @gray;
+        tr:nth-child(odd) {
+            background-color: rgba(184, 171, 180, 0.2);
+        }
+        tr td {
+            border-top: none;
+        }
+    }

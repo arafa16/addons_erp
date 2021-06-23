@@ -1,0 +1,24 @@
+.title-area {
+  height: 100px;
+  position: relative;
+  border: 0px solid green;
+}
+
+.title-area h3 {
+  margin: 0;
+  position: absolute;
+  bottom: 0px;
+  left: 44%;
+  transform: translate(-50%, -50%);
+}
+
+.title-area img {
+    position: absolute;
+    right: 0px;
+    margin: 0px;
+}
+
+.table-border-outside {
+  border: 1px solid black;
+  border-collapse: collapse;
+}

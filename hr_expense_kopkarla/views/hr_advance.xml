@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="employee_advance_expense_form_view" model="ir.ui.view">
+            <field name="name">hr.advance.form.view</field>
+            <field name="model">hr.advance</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="Confirm" name="get_confirm" states="draft" type="object" class="oe_highlight"
+                                groups="base.group_user"/>
+                        <button string="Approve" name="get_apprv_hr_manager" states="confirm" type="object"
+                                groups="hr_expense.group_hr_expense_user" class="oe_highlight"/>
+                        <button string="Pay" name="action_sheet_move_advance" states="approved_hr_manager" type="object"
+                                invisible="1"
+                                groups="account.group_account_user" class="oe_highlight o_expense_sheet_approve"/>
+                        <button string="Done" class="oe_highlight" name="get_done" states="paid" type="object"
+                                invisible="1"
+                                groups="hr_expense.group_hr_expense_user,account.group_account_user"/>
+                        <button name="%(hr_expense_kopkarla.hr_cash_advance_register_payment_wizard_action)d" type="action"
+                                string="Register Payment" class="oe_highlight o_expense_sheet_pay"
+                                attrs="{'invisible': [('state', '!=', 'approved_hr_manager')]}"
+                                context="{'default_journal_id': journal_id, 'default_communication': reason_for_advance,
+                                          'default_advance_id': id, 'default_employee_id': employee_id,
+                                          'default_payment_date': accounting_date,
+                                          'default_amount': total_amount_expense, 'default_partner_id': partner_id}"
+                                groups="account.group_account_manager"/>
+                        <button string="Reject" name="get_reject" states="confirm,approved_hr_manager" type="object"
+                                groups="hr_expense.group_hr_expense_user"/>
+                        <button string="Cancel" name="exit_cancel" states="draft,paid" type="object"
+                                groups="hr_expense.group_hr_expense_user"/>
+                        <button string="Set to Draft" name="request_set" states="reject,cancel" type="object"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,confirm,approved_hr_manager,paid,done" colspan="2"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object"
+                                    name="show_journal" string="Journal" icon="fa-bars"
+                                    attrs="{'invisible': [('state', 'not in', ['paid', 'done'])]}">
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="name" readonly="1"/>
+                                </h1>
+                            </div>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="employee_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="plan_date"/>
+                                <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="total_amount_expense" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <group string="Charge To" attrs="{'invisible': [('employee_id', '=', False)]}">
+                                <field name="order_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('request_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>
+                                <field name="request_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': ['|',('order_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>
+                                <field name="department_id_charge_to" string="Department" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('order_id', '!=', False),('request_id', '!=', False)]}"/>
+                                <field name="reason_for_advance" string="Description"
+                                       attrs="{'readonly': [('state', 'in', ['done','paid','confirm','approved_hr_manager'])]}"
+                                       placeholder="Reason for Advance............."/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="advance" string="Advance Expense Lines">
+                                <field name="advance_line_ids" attrs="{'readonly': [('state', 'not in', ['draft'])]}">
+                                    <tree editable='bottom'>
+                                        <field name="product_id" options="{'no_create': True, 'no_open':True}"/>
+                                        <field name="description"/>
+                                        <field name="unit_amount" required="1" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}"/>
+                                        <field name="quantity"/>
+                                        <field name="product_uom_id" string="Unit of Measure" groups="product.group_uom"
+                                               readonly="1"/>
+                                        <field name="currency_id"/>
+                                        <field name="total_amount" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <group string="Comment">
+                                    <field name="comment" attrs="{'readonly': [('state', 'in', ['done','paid'])]}"
+                                           nolabel="1" placeholder="Add Comment"/>
+                                </group>
+                            </page>
+                            <page name="accounting" string="Accounting Information" groups="account.group_account_user">
+                                <group>
+                                    <group>
+                                        <field name="journal_id" groups="account.group_account_user"
+                                               domain="[('type', 'in', ['cash', 'bank'])]"
+                                               options="{'no_open': True, 'no_create': True}"
+                                               attrs="{'invisible': ['|', '|', '|', '|', ('state', '=', 'cancel'), ('state', '=', 'reject'), ('state', '=', 'draft'), ('state', '=', 'confirm'), ('state', '=', 'approved_hr_manager')],
+                                                        'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')],}"/>
+                                        <field name="accounting_date" groups="account.group_account_user"
+                                               attrs="{'invisible': ['|', '|', '|', '|', ('state', '=', 'cancel'), ('state', '=', 'reject'), ('state', '=', 'draft'), ('state', '=', 'confirm'), ('state', '=', 'approved_hr_manager')],
+                                                        'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')],}"/>
+                                        <field name="partner_id" groups="account.group_account_user" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                                        <!--<field name="account_id" groups="account.group_account_user" readonly="1"/>-->
+                                        <field name="cost_center_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
+                                        <field name="analytic_account_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
+                                        <field name="is_paid" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="paid_in_currency" groups="account.group_account_user" invisible="1"/>
+                                        <field name="paid_amount" groups="account.group_account_user" widget="monetary"
+                                               options="{'currency_field': 'paid_in_currency'}"
+                                               attrs="{'invisible': ['|', '|', '|', '|', ('state', '=', 'cancel'), ('state', '=', 'reject'), ('state', '=', 'draft'), ('state', '=', 'confirm'), ('state', '=', 'approved_hr_manager')]}"/>
+                                        <field name="move_id" groups="account.group_account_user"
+                                               attrs="{'invisible': ['|', '|', '|', '|', ('state', '=', 'cancel'), ('state', '=', 'reject'), ('state', '=', 'draft'), ('state', '=', 'confirm'), ('state', '=', 'approved_hr_manager')]}"/>
+                                        <field name="payment_id" groups="account.group_account_user"
+                                               attrs="{'invisible': ['|', '|', '|', '|', ('state', '=', 'cancel'), ('state', '=', 'reject'), ('state', '=', 'draft'), ('state', '=', 'confirm'), ('state', '=', 'approved_hr_manager')]}"/>
+                                        <field name="expense_id" groups="account.group_account_user"
+                                               attrs="{'invisible': ['|', '|', '|', '|', ('state', '=', 'cancel'), ('state', '=', 'reject'), ('state', '=', 'draft'), ('state', '=', 'confirm'), ('state', '=', 'approved_hr_manager')]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="general" string="Log Information">
+                                <group>
+                                    <group>
+                                        <field name="job_id" readonly="1" force_save="1"/>
+                                        <field name="department_id" readonly="1" force_save="1"/>
+                                        <field name="company_id" groups="base.group_multi_company"/>
+                                    </group>
+                                    <group>
+                                        <field name="user_id"/>
+                                        <field name="request_date"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="confirm_date"/>
+                                        <field name="hr_validate_date"/>
+                                        <field name="account_validate_date"/>
+                                    </group>
+                                    <group>
+                                        <field name="confirm_by_id"/>
+                                        <field name="hr_manager_by_id"/>
+                                        <field name="account_by_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Sign By">
+                                <group>
+                                    <group>
+                                        <field name="created_sign_by"/>
+                                        <field name="checked_sign_by"/>
+                                        <field name="known_sign_by"/>
+                                        <field name="done_sign_by"/>
+                                        <field name="management_sign_by"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_advance_expense_tree_view" model="ir.ui.view">
+            <field name="name">hr.advance.tree.view</field>
+            <field name="model">hr.advance</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="request_date"/>
+                    <field name="currency_id"/>
+                    <field name="total_amount_expense"/>
+                    <field name="paid_amount"/>
+                    <field name="journal_id"/>
+                    <field name="accounting_date"/>
+                    <field name="aging_days"/>
+                    <field name="expense_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="employee_advance_expense_search_view" model="ir.ui.view">
+            <field name="name">hr.advance.search.view</field>
+            <field name="model">hr.advance</field>
+            <field name="arch" type="xml">
+                <search string="Employee Advance Expense">
+                    <field name="employee_id"/>
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                    <field name="state"/>
+                    <field name="company_id"/>
+                    <field name="request_date"/>
+                    <field name="confirm_date"/>
+                    <field name="hr_validate_date"/>
+                    <field name="account_validate_date"/>
+                    <field name="confirm_by_id"/>
+                    <field name="hr_manager_by_id"/>
+                    <field name="account_by_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" context="{'group_by':'employee_id'}"/>
+                        <filter string="State" context="{'group_by':'state'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}"/>
+                        <filter string="Name" context="{'group_by':'name'}"/>
+                        <filter string="Request Date" context="{'group_by':'request_date'}"/>
+                        <filter string="Confirm Date" context="{'group_by':'confirm_date'}"/>
+                        <filter string="Approved Date" context="{'group_by':'hr_validate_date'}"/>
+                        <filter string="Payment Journal" context="{'group_by':'journal_id'}"/>
+                        <filter string="Payment Date" context="{'group_by':'accounting_date'}"/>
+                        <filter string="Confirm By" context="{'group_by':'confirm_by_id'}"/>
+                        <filter string="Approved By" context="{'group_by':'hr_manager_by_id'}"/>
+                        <filter string="Paid By" context="{'group_by':'account_by_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_employee_advance">
+            <field name="name">Cash Advance Requests</field>
+            <field name="res_model">hr.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="employee_advance_expense_tree_view"/>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_employee_advance_approve">
+            <field name="name">Expense Advance Requests</field>
+            <field name="res_model">hr.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state', '=', 'confirm')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_employee_advance_paid">
+            <field name="name">Expense Advance Requests</field>
+            <field name="res_model">hr.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state', '=', 'approved_hr_manager')]</field>
+        </record>
+
+        <menuitem name="Cash Advance" id="menu_hr_advance"
+                  parent="hr_expense.menu_hr_expense_root" sequence="3" groups="base.group_user"/>
+        <menuitem name="Cash Advance Entry" id="menu_cash_advance_request"
+                  action="action_employee_advance" parent="menu_hr_advance" sequence="1"/>
+        <!--<menuitem name="Cash Advance Requests" id="menu_cash_advance_request"
+                  action="action_employee_advance" parent="menu_hr_advance" sequence="1"/>-->
+        <!--<menuitem name="Advance to Approve" id="menu_advance_expense_approved"
+                  action="action_employee_advance_approve" parent="menu_hr_advance" sequence="2"
+                  groups="hr_expense.group_hr_expense_user"/>-->
+        <!--<menuitem name="Advance to Pay" id="menu_advance_expense_paid" action="action_employee_advance_paid"
+                  parent="menu_hr_advance" sequence="3" groups="account.group_account_user"/>-->
+    </data>
+</odoo>

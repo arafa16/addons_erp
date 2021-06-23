@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='purchased_tender_compr_wizard'>
+        <field name='name'>tender.report</field>
+        <field name='model'>tender.report</field>
+        <field name='arch' type='xml'>
+            <form string='Purchase Report'>
+                <group>
+                    <field name='condition' widget="radio" />
+                </group>
+                <footer>
+                    <button name="print_pdf" string="_PDF" type="object"
+                        class="oe_highlight" icon="fa-file" />
+                    or
+                    <button string="_Cancel" type="object" icon="fa-remove"
+                        special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id='action_tender_compr_report' model='ir.actions.act_window'>
+        <field name='name'>Tender Report</field>
+        <field name='res_model'>tender.report</field>
+        <field name='view_type'>form</field>
+        <field name='view_mode'>form</field>
+        <field name='target'>new</field>
+    </record>
+
+    <act_window id="act_tender_compr_report" name="Tender Report"
+        key2="client_print_multi" res_model="tender.report" src_model="purchase.requisition"
+        view_mode="form" target="new" view_type="form" />
+
+</odoo>

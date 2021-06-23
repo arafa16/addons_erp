@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record model="ir.ui.view" id="enhanced_master_ttd_sales_tree">
+            <field name="name">enhanced.master.ttd.sales.tree</field>
+            <field name="model">tabel.ttd.sales</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="urutan"/>
+                    <field name="name"/>
+                    <field name="next_step"/>
+                    <field name="batas_bawah"/>
+                    <field name="batas_atas"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="enhanced_master_ttd_sales_action">
+            <field name="name">Master LOA Sales</field>
+            <field name="res_model">tabel.ttd.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="tabel_rujukan_ttd_sales_menu"
+            name="Master LOA Sales"
+            parent="sale.menu_sale_config"
+            action="enhanced_master_ttd_sales_action"
+            sequence="3"/>
+    </data>
+</odoo>

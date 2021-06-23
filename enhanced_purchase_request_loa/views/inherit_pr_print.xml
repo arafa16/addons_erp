@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="template_purchase_request_dokumen_inherit_loa_print" inherit_id="enhanced_purchase_request.template_purchase_request_dokumen">
+            <xpath expr="//div[@name='kolomttd']" position="inside">
+                <div t-if="doc.required1" class="col-xs-3">
+                    <div style="padding-bottom:90px; text-align:center;">
+                        Asisten Manager
+                    </div>
+                    <div style=" text-align:center;">
+                        (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="doc.penandatangan1"/></span> )
+                    </div>
+                </div>
+                <div t-if="doc.required2" class="col-xs-3">
+                    <div style="padding-bottom:90px; text-align:center;">
+                        Manager
+                    </div>
+                    <div style=" text-align:center;">
+                        (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="doc.penandatangan2"/></span> )
+                    </div>
+                </div>
+                <div t-if="doc.required3" class="col-xs-3">
+                    <div style="padding-bottom:90px; text-align:center;">
+                        General Manager
+                    </div>
+                    <div style=" text-align:center;">
+                        (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="doc.penandatangan3"/></span> )
+                    </div>
+                </div>
+                <div t-if="doc.required4" class="col-xs-3">
+                    <div style="padding-bottom:90px; text-align:center;">
+                        Pengurus/Direktur
+                    </div>
+                    <div style=" text-align:center;">
+                        (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="doc.penandatangan4"/></span> )
+                    </div>
+                </div>
+                <div t-if="doc.required5" class="col-xs-3">
+                    <div style="padding-bottom:90px; text-align:center;">
+                        Ketua Pengurus
+                    </div>
+                    <div style=" text-align:center;">
+                        (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="doc.penandatangan5"/></span> )
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//td[@name='tempatcoa']" position="inside">
+                <span t-field="doc.account_id"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
