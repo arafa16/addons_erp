@@ -833,6 +833,7 @@ class MisReport(models.Model):
         get_additional_query_filter=None,
         locals_dict=None,
         no_auto_expand_accounts=False,
+        budget="",
     ):
         """ Evaluate a report for a given period, populating a KpiMatrix.
 
@@ -884,7 +885,13 @@ class MisReport(models.Model):
         )
 
         # use AEP to do the accounting queries
-        expression_evaluator.aep_do_queries()
+        # expression_evaluator.aep_do_queries()
+        if budget == "budgets":
+            expression_evaluator.aep_do_queries_budget()
+        elif budget == "achievement":
+            expression_evaluator.aep_do_queries_achievement()
+        else:
+            expression_evaluator.aep_do_queries()
 
         self._declare_and_compute_col(
             expression_evaluator,

@@ -26,6 +26,8 @@ class ExpressionEvaluator(object):
         self.additional_move_line_filter = additional_move_line_filter
         self.aml_model = aml_model
         self._aep_queries_done = False
+        self._aep_queries_budget_done = False
+        self._aep_queries_achievement_done = False
 
     def aep_do_queries(self):
         if self.aep and not self._aep_queries_done:
@@ -37,6 +39,28 @@ class ExpressionEvaluator(object):
                 self.aml_model,
             )
             self._aep_queries_done = True
+
+    def aep_do_queries_budget(self):
+        if self.aep and not self._aep_queries_budget_done:
+            self.aep.do_queries_budget(
+                self.date_from,
+                self.date_to,
+                self.target_move,
+                self.additional_move_line_filter,
+                self.aml_model,
+            )
+            self._aep_queries_budget_done = True
+
+    def aep_do_queries_achievement(self):
+        if self.aep and not self._aep_queries_achievement_done:
+            self.aep.do_queries_achievement(
+                self.date_from,
+                self.date_to,
+                self.target_move,
+                self.additional_move_line_filter,
+                self.aml_model,
+            )
+            self._aep_queries_achievement_done = True
 
     def eval_expressions(self, expressions, locals_dict):
         vals = []

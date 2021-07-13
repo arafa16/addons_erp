@@ -375,6 +375,169 @@ class AccountingExpressionProcessor(object):
                 )
                 self._data[key][account_id] = (di + dv, ci + cv)
 
+    def do_queries_budget(
+        self,
+        date_from,
+        date_to,
+        target_move="posted",
+        additional_move_line_filter=None,
+        aml_model=None,
+    ):
+        """Query sums of debit and credit and budget for all accounts and domains
+        used in expressions.
+
+        This method must be executed after done_parsing().
+        """
+        if not aml_model:
+            aml_model = self.env["account.move.line"]
+        else:
+            aml_model = self.env[aml_model]
+        aml_model = aml_model.with_context(active_test=False)
+        company_rates = self._get_company_rates(date_to)
+        # {(domain, mode): {account_id: (debit, credit)}}
+        self._data = defaultdict(dict)
+        domain_by_mode = {}
+        ends = []
+        for key in self._map_account_ids:
+            domain, mode = key
+            if mode == self.MODE_END and self.smart_end:
+                # postpone computation of ending balance
+                ends.append((domain, mode))
+                continue
+            if mode not in domain_by_mode:
+                domain_by_mode[mode] = self.get_aml_domain_for_dates(
+                    date_from, date_to, mode, target_move
+                )
+            domain = list(domain) + domain_by_mode[mode]
+            domain.append(("account_id", "in", self._map_account_ids[key]))
+            if additional_move_line_filter:
+                domain.extend(additional_move_line_filter)
+            # fetch sum of debit/credit, grouped by account_id
+            accs = aml_model.read_group(
+                domain,
+                ["debit", "credit", "account_id", "company_id"],
+                ["account_id", "company_id"],
+                lazy=False,
+            )
+            for acc in accs:
+                rate, dp = company_rates[acc["company_id"][0]]
+                debit = acc["debit"] or 0.0
+                credit = acc["credit"] or 0.0
+                if mode in (self.MODE_INITIAL, self.MODE_UNALLOCATED) and float_is_zero(
+                    debit - credit, precision_digits=self.dp
+                ):
+                    # in initial mode, ignore accounts with 0 balance
+                    continue
+                # self._data[key][acc["account_id"][0]] = (debit * rate, credit * rate, self._get_budget(acc["account_id"][0], date_from, date_to))
+                budget = self._get_budget(acc["account_id"][0], date_from, date_to)
+                self._data[key][acc["account_id"][0]] = (budget > 0 and -budget or 0, budget < 0 and budget or 0)
+        # compute ending balances by summing initial and variation
+        for key in ends:
+            domain, mode = key
+            initial_data = self._data[(domain, self.MODE_INITIAL)]
+            variation_data = self._data[(domain, self.MODE_VARIATION)]
+            account_ids = set(initial_data.keys()) | set(variation_data.keys())
+            for account_id in account_ids:
+                di, ci = initial_data.get(account_id, (AccountingNone, AccountingNone))
+                dv, cv = variation_data.get(
+                    account_id, (AccountingNone, AccountingNone)
+                )
+                self._data[key][account_id] = (di + dv, ci + cv)
+
+    def do_queries_achievement(
+        self,
+        date_from,
+        date_to,
+        target_move="posted",
+        additional_move_line_filter=None,
+        aml_model=None,
+    ):
+        """Query sums of debit and credit and budget for all accounts and domains
+        used in expressions.
+
+        This method must be executed after done_parsing().
+        """
+        if not aml_model:
+            aml_model = self.env["account.move.line"]
+        else:
+            aml_model = self.env[aml_model]
+        aml_model = aml_model.with_context(active_test=False)
+        company_rates = self._get_company_rates(date_to)
+        # {(domain, mode): {account_id: (debit, credit)}}
+        self._data = defaultdict(dict)
+        domain_by_mode = {}
+        ends = []
+        for key in self._map_account_ids:
+            domain, mode = key
+            if mode == self.MODE_END and self.smart_end:
+                # postpone computation of ending balance
+                ends.append((domain, mode))
+                continue
+            if mode not in domain_by_mode:
+                domain_by_mode[mode] = self.get_aml_domain_for_dates(
+                    date_from, date_to, mode, target_move
+                )
+            domain = list(domain) + domain_by_mode[mode]
+            domain.append(("account_id", "in", self._map_account_ids[key]))
+            if additional_move_line_filter:
+                domain.extend(additional_move_line_filter)
+            # fetch sum of debit/credit, grouped by account_id
+            accs = aml_model.read_group(
+                domain,
+                ["debit", "credit", "account_id", "company_id"],
+                ["account_id", "company_id"],
+                lazy=False,
+            )
+            for acc in accs:
+                rate, dp = company_rates[acc["company_id"][0]]
+                debit = acc["debit"] or 0.0
+                credit = acc["credit"] or 0.0
+                if mode in (self.MODE_INITIAL, self.MODE_UNALLOCATED) and float_is_zero(
+                    debit - credit, precision_digits=self.dp
+                ):
+                    # in initial mode, ignore accounts with 0 balance
+                    continue
+                budget = self._get_budget(acc["account_id"][0], date_from, date_to)
+                actual = debit * rate - credit * rate
+                achievement = budget and actual / budget * 100 or 0
+                self._data[key][acc["account_id"][0]] = (actual > 0 and -achievement or 0, actual < 0 and -achievement or 0)
+                # self._data[key][acc["account_id"][0]] = (budget and (debit * rate - credit * rate) / budget or 0, 0)
+        # compute ending balances by summing initial and variation
+        for key in ends:
+            domain, mode = key
+            initial_data = self._data[(domain, self.MODE_INITIAL)]
+            variation_data = self._data[(domain, self.MODE_VARIATION)]
+            account_ids = set(initial_data.keys()) | set(variation_data.keys())
+            for account_id in account_ids:
+                di, ci = initial_data.get(account_id, (AccountingNone, AccountingNone))
+                dv, cv = variation_data.get(
+                    account_id, (AccountingNone, AccountingNone)
+                )
+                self._data[key][account_id] = (di + dv, ci + cv)
+
+    def _get_budget(
+            self,
+            account_id,
+            date_from,
+            date_to,
+    ):
+        query = """
+            select sum(b.planned_amount) budget
+            from account_budget_post bp
+                inner join account_budget_rel rel on bp.id = rel.budget_id
+                inner join crossovered_budget_lines b on bp.id = b.general_budget_id
+            where rel.account_id = %s and b.date_from >= %s and b.date_to <= %s
+        """
+        # b.cost_center_id, b.analytic_account_id,
+        # , b.cost_center_id, b.analytic_account_id
+        cr = self.env.cr
+        params = (account_id, date_from, date_to)
+        cr.execute(query, params)
+        res = cr.fetchall()
+        for r in res:
+            return r[0] != None and r[0] or 0
+        return 0
+
     def replace_expr(self, expr):
         """Replace accounting variables in an expression by their amount.
 

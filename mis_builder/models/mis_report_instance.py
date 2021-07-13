@@ -729,7 +729,8 @@ class MisReportInstance(models.Model):
             "target": "current",
         }
 
-    def _add_column_move_lines(self, aep, kpi_matrix, period, label, description):
+    def _add_column_move_lines(self, aep, kpi_matrix, period, label, description, budget=""):
+    # def _add_column_move_lines(self, aep, kpi_matrix, period, label, description):
         if not period.date_from or not period.date_to:
             raise UserError(
                 _("Column %s with move lines source must have from/to dates.")
@@ -752,6 +753,7 @@ class MisReportInstance(models.Model):
             period.subkpi_ids,
             period._get_additional_query_filter,
             no_auto_expand_accounts=self.no_auto_expand_accounts,
+            budget=budget,
         )
 
     def _add_column_sumcol(self, aep, kpi_matrix, period, label, description):

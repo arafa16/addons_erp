@@ -487,8 +487,20 @@ class KpiMatrix(object):
         return self._account_names[account_id]
 
     def as_dict(self):
+        """
+            Untuk achievement budget sementara di hardcode jika column title = 'Achievement' maka compare antar baris
+            Achievement = Actual / Budget * 100
+            Actual --> par[0]
+            Budget --> par[1]
+            Achievement --> par[2]
+        """
         header = [{"cols": []}, {"cols": []}]
+        i = col_actual = col_budget = col_achievement = 0
         for col in self.iter_cols():
+            if col.label == 'Actual': col_actual = i
+            elif col.label == 'Budget': col_budget = i
+            elif col.label == 'Achievement': col_achievement = i
+            i += 1
             header[0]["cols"].append(
                 {
                     "label": col.label,
@@ -519,6 +531,7 @@ class KpiMatrix(object):
                 "style": self._style_model.to_css_style(row.style_props),
                 "cells": [],
             }
+            i = actual = budget = 0
             for cell in row.iter_cells():
                 if cell is None:
                     # TODO use subcol style here
@@ -527,7 +540,21 @@ class KpiMatrix(object):
                     if cell.val is AccountingNone or isinstance(cell.val, DataError):
                         val = None
                     else:
-                        val = cell.val
+                        if col_actual + col_budget + col_achievement == 3:
+                            if i == col_achievement:
+                                if budget == 0:
+                                    val = 0
+                                else:
+                                    val = actual / budget * 100
+                                    cell.val_rendered = "%s %%" % '{:,}'.format(round(val, 2))
+                            else:
+                                val = cell.val
+                                if i == col_actual:
+                                    actual = val;
+                                else:
+                                    budget = val;
+                        else:
+                            val = cell.val
                     col_data = {
                         "val": val,
                         "val_r": cell.val_rendered,
@@ -539,6 +566,8 @@ class KpiMatrix(object):
                     if cell.drilldown_arg:
                         col_data["drilldown_arg"] = cell.drilldown_arg
                     row_data["cells"].append(col_data)
+                i += 1
+
             body.append(row_data)
 
         return {"header": header, "body": body}
