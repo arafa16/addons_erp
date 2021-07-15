@@ -23,9 +23,9 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_open(self):
-        to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
-        if to_open_invoices.filtered(lambda inv: float_compare(inv.amount_total, 0.0, precision_rounding=inv.currency_id.rounding) == 0.0):
-            raise UserError(_("You cannot validate an invoice with a zero total amount."))
+        # to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
+        # if to_open_invoices.filtered(lambda inv: float_compare(inv.amount_total, 0.0, precision_rounding=inv.currency_id.rounding) == 0.0):
+        #     raise UserError(_("You cannot validate an invoice with a zero total amount."))
         return super(AccountInvoice, self).action_invoice_open()
 
     @api.multi
