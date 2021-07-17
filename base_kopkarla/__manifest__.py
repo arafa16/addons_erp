@@ -22,6 +22,7 @@ Menyesuaikan informasi company untuk Indonesia.
         'ir/ir_sequence_view.xml',
         # 'module/module_view.xml',
         # 'res/res_partner_view.xml',
+        'res/res_bank_view.xml',
     ],
     'demo': [],
     'installable': True,

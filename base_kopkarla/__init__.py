@@ -8,5 +8,5 @@
 
 from . import ir
 # from . import module
-# from . import res
+from . import res
 
