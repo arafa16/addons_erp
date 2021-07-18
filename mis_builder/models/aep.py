@@ -419,18 +419,22 @@ class AccountingExpressionProcessor(object):
                 ["account_id", "company_id"],
                 lazy=False,
             )
-            for acc in accs:
-                rate, dp = company_rates[acc["company_id"][0]]
-                debit = acc["debit"] or 0.0
-                credit = acc["credit"] or 0.0
-                if mode in (self.MODE_INITIAL, self.MODE_UNALLOCATED) and float_is_zero(
-                    debit - credit, precision_digits=self.dp
-                ):
-                    # in initial mode, ignore accounts with 0 balance
-                    continue
-                # self._data[key][acc["account_id"][0]] = (debit * rate, credit * rate, self._get_budget(acc["account_id"][0], date_from, date_to))
-                budget = self._get_budget(acc["account_id"][0], date_from, date_to)
-                self._data[key][acc["account_id"][0]] = (budget > 0 and -budget or 0, budget < 0 and budget or 0)
+            budgets = self._get_budget_all(date_from, date_to)
+            for budget in budgets:
+                self._data[key][budget[0]] = (budget[1] > 0 and -budget[1] or 0, budget[1] < 0 and budget[1] or 0)
+
+            # for acc in accs:
+            #     rate, dp = company_rates[acc["company_id"][0]]
+            #     debit = acc["debit"] or 0.0
+            #     credit = acc["credit"] or 0.0
+            #     if mode in (self.MODE_INITIAL, self.MODE_UNALLOCATED) and float_is_zero(
+            #         debit - credit, precision_digits=self.dp
+            #     ):
+            #         # in initial mode, ignore accounts with 0 balance
+            #         continue
+            #     # self._data[key][acc["account_id"][0]] = (debit * rate, credit * rate, self._get_budget(acc["account_id"][0], date_from, date_to))
+            #     budget = self._get_budget(acc["account_id"][0], date_from, date_to)
+            #     self._data[key][acc["account_id"][0]] = (budget > 0 and -budget or 0, budget < 0 and budget or 0)
         # compute ending balances by summing initial and variation
         for key in ends:
             domain, mode = key
@@ -537,6 +541,30 @@ class AccountingExpressionProcessor(object):
         for r in res:
             return r[0] != None and r[0] or 0
         return 0
+
+    def _get_budget_all(
+            self,
+            date_from,
+            date_to,
+    ):
+        query = """
+            select rel.account_id, sum(b.planned_amount) budget
+            from account_budget_post bp
+                inner join account_budget_rel rel on bp.id = rel.budget_id
+                inner join crossovered_budget_lines b on bp.id = b.general_budget_id
+            where b.date_from >= %s and b.date_to <= %s
+            group by rel.account_id
+        """
+        # b.cost_center_id, b.analytic_account_id,
+        # , b.cost_center_id, b.analytic_account_id
+        cr = self.env.cr
+        params = (date_from, date_to)
+        cr.execute(query, params)
+        res = cr.fetchall()
+        return res
+        # for r in res:
+        #     return r[0] != None and r[0] or 0
+        # return 0
 
     def replace_expr(self, expr):
         """Replace accounting variables in an expression by their amount.
