@@ -27,6 +27,13 @@
                         attrs="{'invisible': [('invoice_count', '=', 0)]}">
                         <field name="invoice_count" widget="statinfo" string="Invoices"/>
                     </button>
+                    <button name="action_view_purchase" groups="account.group_account_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-random"
+                        attrs="{'invisible': [('purchase_amount', '=', 0)]}">
+                        <field name="purchase_amount" widget="statinfo" string="Purchases"/>
+                    </button>
                 </button>
                 <!--<button name="action_cancel" position="replace">
                     <button name="action_cancel" groups="dev_picking_cancel.picking_cancel_button"

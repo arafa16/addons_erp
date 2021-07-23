@@ -22,7 +22,7 @@
     'depends': ['project',
                 'enhanced_sales_convert_project',
                 'sale','sales_team',
-                # 'account_analytic_enhanced'
+                'sprogroup_purchase_request'
                 ],
     'data': [
         'views/project_tabel.xml',

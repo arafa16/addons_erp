@@ -8,6 +8,9 @@ class EnhancedSalesArea(models.Model):
     partner_invoice_name = fields.Char(string='Customer Invoice', related='partner_invoice_id.name', store=True)
     bast_no = fields.Char(string='BAST No.')
     bast_date = fields.Date(string='BAST Date')
+    purchase_count = fields.Integer(string='# of Purchases', compute='_get_purchased', readonly=True)
+    purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True)
+    purchase_ids = fields.Many2many("purchase.order", string='Purchases', compute="_get_purchased", readonly=True, copy=False)
 
     @api.multi
     def convert_to_project(self):
@@ -110,6 +113,41 @@ class EnhancedSalesArea(models.Model):
             'kanban_baru': 'A'
         }
         self.task_id = self.env['project.task'].create(isiTask)
+
+    # @api.depends('state', 'order_line.invoice_status')
+    @api.multi
+    def _get_purchased(self):
+        for order in self:
+            purchase_request_ids = self.env['sprogroup.purchase.request'].sudo().search([('salesorder_id', '=', order.id)])
+            po_ids = []
+            for pr in purchase_request_ids:
+                for po in pr.nomor_po_m2o:
+                    if po.id not in po_ids:
+                        po_ids.append(po.id)
+            purchase_order = self.env['purchase.order'].sudo().search([('id', 'in', po_ids), ('state', '!=', 'cancel')])
+            po_amount = po_count = 0
+            for po in purchase_order:
+                po_amount += po.amount_untaxed
+                po_count += 1
+
+            order.update({
+                'purchase_count': po_count,
+                'purchase_amount': po_amount,
+                'purchase_ids': po_ids,
+            })
+
+    @api.multi
+    def action_view_purchase(self):
+        purchases = self.mapped('purchase_ids')
+        action = self.env.ref('purchase.purchase_form_action').read()[0]
+        if len(purchases) > 1:
+            action['domain'] = [('id', 'in', purchases.ids)]
+        elif len(purchases) == 1:
+            action['views'] = [(self.env.ref('purchase.purchase_order_form').id, 'form')]
+            action['res_id'] = purchases.ids[0]
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
 
 
 class SaleOrderLine(models.Model):
