@@ -85,7 +85,7 @@ class PaymentBankBatch(models.Model):
         fo = open('export.csv', "rb")
         self.export_file = base64.b64encode(fo.read())
         fo.close()
-        self.export_filename = 'export.csv'
+        self.export_filename = '%s - %s - %s.csv' % (datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.name, self.journal_id.bank_id.name) #'export.csv'
         self.state = 'export'
         self.export
 
