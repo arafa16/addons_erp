@@ -22,3 +22,12 @@ class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
     acc_name = fields.Char('Account Name')
+
+    @api.multi
+    @api.depends('bank_name','acc_number')
+    def name_get(self):
+        result = []
+        for bank in self:
+            name = bank.bank_name + (bank.acc_number and (' - ' + bank.acc_number) or '')
+            result.append((bank.id, name))
+        return result

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_payment_journal_payable_form_ib" model="ir.ui.view">
+            <field name="name">payment.journal.form.ib</field>
+            <field name="model">payment.journal</field>
+            <field name="inherit_id" ref="account_kopkarla.view_payment_journal_payable_form"/>
+            <field name="arch" type="xml">
+                <button name="action_draft" position="replace">
+                    <button name="action_draft" states="confirm,cancelled" string="Set To Draft" type="object"/>
+                </button>
+                <button name="post" position="replace">
+                    <button name="confirm" states="draft" string="Confirm" type="object"/>
+                    <button name="post" class="oe_highlight" states="confirm" string="Validate" type="object"/>
+                </button>
+                <field name="state" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,posted"/>
+                </field>
+                <field name="move_id" position="before">
+                    <field name="partner_bank_id" options="{'no_open': True, 'no_create': True}"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_payment_journal_search_ib" model="ir.ui.view">
+            <field name="name">payment.journal.search.ib</field>
+            <field name="model">payment.journal</field>
+            <field name="inherit_id" ref="account_kopkarla.view_payment_journal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='state_draft']" position="after">
+                    <filter string="Confirm" domain="[('state','=','confirm')]" name='state_confirmed'/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

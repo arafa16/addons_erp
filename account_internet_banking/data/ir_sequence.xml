@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="seq_payment_bank_batch" model="ir.sequence">
+            <field name="name">Payment Bank Batch</field>
+            <field name="code">payment.bank.batch</field>
+            <field name="prefix">BATCH-</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,137 @@
+import base64
+import csv
+import odoo.tools
+import datetime
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+
+
+class PaymentBankBatch(models.Model):
+    _name = "payment.bank.batch"
+    _order = 'date desc, name desc'
+
+    name = fields.Char(readonly=True, copy=False, size=32,) # The name is attributed upon post()
+    date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    # bank_id = fields.Many2one('res.bank', string='Bank', required=True)
+    line_ids = fields.One2many('payment.bank.batch.line', 'batch_id', 'Lines')
+    state = fields.Selection([('draft', 'Draft'), ('export', 'Exported'), ('post', 'Posted'), ('cancel', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
+    export_file = fields.Binary(string="Exported File",)
+    export_filename = fields.Char(string="Exported File",)
+
+    @api.onchange("journal_id")
+    def _onchange_journal_id(self):
+        for batch in self:
+            line_ids = []
+            for payment_id in self.env["payment.journal"].sudo().search([('journal_id','=',batch.journal_id.id),('state','=','confirm')]):
+                line_ids.append((0, 0, {'payment_id': payment_id.id,
+                                        'partner_id': payment_id.partner_id,
+                                        'partner_bank_id': payment_id.partner_bank_id,
+                                        'currency_id': payment_id.currency_id,
+                                        'amount': payment_id.amount}))
+            batch.line_ids = len(line_ids) and line_ids or False
+
+    @api.model
+    def create(self, vals):
+        vals['name'] = self.env['ir.sequence'].next_by_code('payment.bank.batch')
+        result = super(PaymentBankBatch, self).create(vals)
+        return result
+
+    @api.multi
+    def unlink(self):
+        for batch in self:
+            if batch.state not in ['draft']:
+                raise UserError(_('You cannot delete a document is in %s state.') % (batch.state,))
+            for payment in batch.line_ids:
+                payment.unlink()
+        return super(PaymentBankBatch, self).unlink()
+
+    @api.multi
+    def export(self):
+        return {
+            'name': "Export Batch %s%s" % (self.name, ' Complete' if self.state != 'draft' else ''),
+            'type': 'ir.actions.act_window',
+            'res_model': 'payment.bank.batch',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_id': self.id,
+            'view_id': self.env.ref('account_internet_banking.view_payment_bank_batch_export_wizard').id,
+            'target': 'new',
+        }
+
+    @api.multi
+    def export_confirm(self):
+        batch_line = self.line_ids.read_group(domain=[], fields=['amount'], groupby=[])
+        with open('export.csv', mode='w') as file:
+            writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            # create a row contains heading of each column
+            writer.writerow(['P', datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.journal_id.bank_account_id.acc_number, batch_line[0]['__count'], batch_line[0]['amount']])
+            # fetch products and write respective data.
+            for line in self.line_ids:
+                writer.writerow([line.partner_bank_id.acc_number, line.partner_id.name,
+                                 '', '', '',
+                                 line.currency_id.name, line.amount, line.payment_id.line_ids[0].invoice_id.name,
+                                 '',
+                                 'LBU' if line.partner_bank_id.bank_id != self.journal_id.bank_id else 'IBU',
+                                 line.partner_bank_id.bank_id.bic if line.partner_bank_id.bank_id != self.journal_id.bank_id else '',
+                                 line.partner_bank_id.bank_id.name, 'Jakarta',
+                                 '', '', '',
+                                 'Y', line.partner_id.email,
+                                 '', '', '', '', '', '', '', '', '', '', '',
+                                 '', '', '', '', '', '', '', '', '', '', '',
+                                 line.payment_id.line_ids[0].invoice_id.name
+                                ])
+        # file.close()
+        fo = open('export.csv', "rb")
+        self.export_file = base64.b64encode(fo.read())
+        fo.close()
+        self.export_filename = 'export.csv'
+        self.state = 'export'
+        self.export
+
+    @api.multi
+    def post(self):
+        for batch in self:
+            for payment in batch.line_ids:
+                payment.payment_id.payment_date = batch.date
+                payment.payment_id.post()
+            batch.state = 'post'
+
+    @api.multi
+    def action_cancel(self):
+        for batch in self:
+            if batch.state == 'post':
+                for payment in batch.line_ids:
+                    payment.payment_id.action_cancel()
+                    payment.payment_id.state = 'sent'
+            batch.export_file = False
+            batch.export_filename = False
+            # batch.state = 'cancel'
+            batch.state = 'draft'
+
+    @api.multi
+    def action_draft(self):
+        self.state = 'draft'
+
+
+class PaymentBankBatchLine(models.Model):
+    _name = "payment.bank.batch.line"
+    _order = 'payment_id desc'
+
+    batch_id = fields.Many2one('payment.bank.batch', string="Batch", required=True, ondelete="cascade", index=True)
+    payment_id = fields.Many2one('payment.journal', string="Payment Journal", required=True, ondelete="restrict", readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', required=True, ondelete="restrict", readonly=True)
+    partner_bank_id = fields.Many2one('res.partner.bank', string='Bank', domain="[('partner_id', '=', partner_id)]")
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    amount = fields.Float(string='Amount', required=True, readonly=True)
+
+    @api.model
+    def create(self, vals):
+        self.env["payment.journal"].sudo().browse(vals['payment_id']).update({'state': 'sent'})
+        return super(PaymentBankBatchLine, self).create(vals)
+
+    @api.multi
+    def unlink(self):
+        for payment in self:
+            payment.payment_id.state = 'confirm'
+        return super(PaymentBankBatchLine, self).unlink()
