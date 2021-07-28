@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_batch_payment_document">
+            <t t-call="web.external_layout">
+                <!--<t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />-->
+                <div class="page">
+                    <div>
+                        <h3 class="text-center">
+                            <div>DAFTAR PEMBAYARAN</div>
+                            <span t-field="o.name"/>
+                        </h3>
+                    </div>
+                    <div class="row mt32 mb32" style="padding-left:20px;padding-top:0px;">
+                        <table style="width:100%;">
+                            <tr height="20px">
+                                <td>Payment Date</td><td>:</td><td><span t-field="o.date" t-field-options='{"format": "dd-MMM-yyyy"}'/></td>
+                                <td style="width:200px"/>
+                                <td style="width:120px">Bank</td><td style="width:20px">:</td><td><t t-esc="o.journal_id.bank_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td>Payment Amount</td><td>:</td><td><span t-field="o.amount" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="padding-top:0px;">
+                        <table class="table table-condensed" name="payment_journal_line_table">
+                            <thead>
+                                <tr>
+                                    <th>Nama &amp;nbsp; No. Rekening</th>
+                                    <th class="text-right">Jumlah</th>
+                                    <th>Terbilang</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <!--<tbody class="invoice_tbody">
+                                <t t-set="balance_amount" t-value="0"/>
+                                <t t-set="tax_amount" t-value="0"/>
+                                <t t-set="total_amount" t-value="0"/>
+                                <tr t-foreach="o.line_ids" t-as="l">
+                                    <td><span t-field="l.invoice_id.number"/><br/><span t-field="l.invoice_id.reference"/></td>
+                                    <td><span t-field="l.date_invoice" t-field-options='{"format": "dd-MMM-yyyy"}'/></td>
+                                    <td><span t-field="l.date_due" t-field-options='{"format": "dd-MMM-yyyy"}'/></td>
+                                    <td><span t-field="l.invoice_id.name"/></td>
+                                    <td class="text-right"><t t-set="balance_amount" t-value="balance_amount+l.balance_amt"/><span t-field="l.balance_amt" t-field-options='{"widget": "monetary", "display_currency": "l.currency_id"}'/></td>
+                                    <td class="text-right"><t t-set="tax_amount" t-value="tax_amount+l.tax_amt"/><span t-field="l.tax_amt" t-field-options='{"widget": "monetary", "display_currency": "l.currency_id"}'/></td>
+                                    <td class="text-right"><t t-set="total_amount" t-value="total_amount+l.total_amt"/><span t-field="l.total_amt" t-field-options='{"widget": "monetary", "display_currency": "l.currency_id"}'/></td>
+                                </tr>
+                                <tr style="font-weight:bold;">
+                                    <td>&amp;nbsp;</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right">Total</td>
+                                    <td class="text-right"><span t-esc="balance_amount" t-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
+                                    <td class="text-right"><span t-esc="tax_amount" t-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
+                                    <td class="text-right"><span t-esc="total_amount" t-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
+                                </tr>
+                            </tbody>-->
+                        </table>
+                    </div>
+                    <div style="padding-top:30px; page-break-inside: avoid;">
+                        <table class="table" style="widht:100%;height:175px;">
+                            <tr style="height:25px;">
+                                <td width="20%"></td>
+                                <td width="20%">Menyetujui,</td>
+                                <td width="20%"></td>
+                                <td width="20%"></td>
+                                <!--<td width="20%" style="border: 1px solid"></td>-->
+                                <td width="20%"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><!--<span t-field="o.created_sign_by"/>--></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;">(LISTA DEWI S.)</td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;">(M. SULWAN RISAN)</td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"></td>
+                            </tr>
+                            <!--<tr class="border-black" style="height:30px;">
+                                <td style="text-align: left; vertical-align: bottom;">Tanggal:</td>
+                                <td style="text-align: left; vertical-align: bottom; border: 1px solid">Tanggal:</td>
+                                <td style="text-align: left; vertical-align: bottom; border: 1px solid">Tanggal:</td>
+                                <td style="text-align: left; vertical-align: bottom; border: 1px solid">Tanggal:</td>
+                                <td style="text-align: left; vertical-align: bottom;">Tanggal:</td>
+                            </tr>-->
+                        </table>
+                        <!--<div class="col-xs-3" style="padding:0px;">
+                            <table class="table" style="height:175px;border: 1px solid black">
+                                <tr class="border-black" style="height:25px;">
+                                    <td width="33.5%" style="padding-left:5px;padding-top:3px;">Pengurus,</td>
+                                </tr>
+                                <tr class="border-black">
+                                    <td style="text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by"/></td>
+                                </tr>
+                                <tr class="border-black" style="height:30px;">
+                                    <td style="text-align: left; vertical-align: bottom;">Tanggal:</td>
+                                </tr>
+                            </table>
+                        </div>-->
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="batch_payment_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account_internet_banking.report_batch_payment_document"/>
+                </t>
+            </t>
+        </template>
+
+        <report
+            id="batch_payment_report"
+            model="payment.bank.batch"
+            string="Payment List"
+            report_type="qweb-pdf"
+            name="account_internet_banking.batch_payment_report_template"
+            file="account_internet_banking.batch_payment_report_template"
+        />
+    </data>
+</odoo>

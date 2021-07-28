@@ -15,10 +15,17 @@ class PaymentBankBatch(models.Model):
     date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     # bank_id = fields.Many2one('res.bank', string='Bank', required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', related='journal_id.bank_account_id.currency_id', readonly=True)
+    amount = fields.Monetary(string='Payment Amount', compute='_calculate_total_payment', readonly=True)
     line_ids = fields.One2many('payment.bank.batch.line', 'batch_id', 'Lines')
     state = fields.Selection([('draft', 'Draft'), ('export', 'Exported'), ('post', 'Posted'), ('cancel', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
     export_file = fields.Binary(string="Exported File",)
     export_filename = fields.Char(string="Exported File",)
+
+    @api.one
+    @api.depends('line_ids.amount')
+    def _calculate_total_payment(self):
+        self.amount = self.line_ids.read_group(domain=[], fields=['amount'], groupby=[])[0]['amount']
 
     @api.onchange("journal_id")
     def _onchange_journal_id(self):
