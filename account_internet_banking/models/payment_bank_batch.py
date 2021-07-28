@@ -1,4 +1,5 @@
 import base64
+import re
 import csv
 import odoo.tools
 import datetime
@@ -68,24 +69,27 @@ class PaymentBankBatch(models.Model):
             writer.writerow(['P', datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.journal_id.bank_account_id.acc_number, batch_line[0]['__count'], batch_line[0]['amount']])
             # fetch products and write respective data.
             for line in self.line_ids:
-                writer.writerow([line.partner_bank_id.acc_number, line.partner_id.name,
+                desc = re.sub('[`~!@#$%^&*()-+,.<>/?;:\'\"{}|]', ' ',
+                                " ".join([i.invoice_id.origin if i.invoice_id.origin else (
+                                          i.invoice_id.reference if i.invoice_id.reference else i.invoice_id.name)
+                                        for i in line.payment_id.line_ids])[:20])
+                writer.writerow([line.partner_bank_id.acc_number, line.partner_bank_id.acc_name,
                                  '', '', '',
-                                 line.currency_id.name, line.amount, line.payment_id.line_ids[0].invoice_id.name,
+                                 line.currency_id.name, line.amount, desc,
                                  '',
                                  'LBU' if line.partner_bank_id.bank_id != self.journal_id.bank_id else 'IBU',
                                  line.partner_bank_id.bank_id.bic if line.partner_bank_id.bank_id != self.journal_id.bank_id else '',
                                  line.partner_bank_id.bank_id.name, 'Jakarta',
                                  '', '', '',
-                                 'Y', line.partner_id.email,
+                                 'Y', line.partner_id.email if line.partner_id.email else 'dwi.istianingsih@kopkarla.co.id',
                                  '', '', '', '', '', '', '', '', '', '', '',
-                                 '', '', '', '', '', '', '', '', '', '', '',
-                                 line.payment_id.line_ids[0].invoice_id.name
+                                 '', '', '', '', '', '', '', '', '', '', '', desc
                                 ])
         # file.close()
         fo = open('export.csv', "rb")
         self.export_file = base64.b64encode(fo.read())
         fo.close()
-        self.export_filename = '%s - %s - %s.csv' % (datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.name, self.journal_id.bank_id.name) #'export.csv'
+        self.export_filename = '%s - %s - %s.csv' % (self.journal_id.bank_id.name, datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.name) #'export.csv'
         self.state = 'export'
         self.export
 
