@@ -70,7 +70,8 @@
                                         <field name="payment_id" force_save="1"/>
                                         <field name="partner_id" force_save="1"/>
                                         <field name="partner_bank_id" options="{'no_create': True, 'no_open': True}"/>
-                                        <field name="currency_id" force_save="1"/>
+                                        <field name="currency_id" force_save="1" invisible="1"/>
+                                        <field name="description" force_save="1"/>
                                         <field name="amount" force_save="1"/>
                                     </tree>
                                 </field>

@@ -14,52 +14,49 @@
                     <div class="row mt32 mb32" style="padding-left:20px;padding-top:0px;">
                         <table style="width:100%;">
                             <tr height="20px">
-                                <td>Payment Date</td><td>:</td><td><span t-field="o.date" t-field-options='{"format": "dd-MMM-yyyy"}'/></td>
-                                <td style="width:200px"/>
                                 <td style="width:120px">Bank</td><td style="width:20px">:</td><td><t t-esc="o.journal_id.bank_id.name"/></td>
+                                <td style="width:200px"/>
+                                <td>Payment Date</td><td style="width:20px">:</td><td><span t-field="o.date" t-field-options='{"format": "dd-MMM-yyyy"}'/></td>
                             </tr>
                             <tr>
                                 <td>Payment Amount</td><td>:</td><td><span t-field="o.amount" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
+                                <!--<td style="width:200px"/>-->
+                            </tr>
+                            <tr height="20px">
+                                <td>Terbilang</td><td>:</td><td colspan="4"><span t-field="o.text_amount"/></td>
                             </tr>
                         </table>
                     </div>
                     <div style="padding-top:0px;">
+                        <div style="border-top: 1px solid;"/>
                         <table class="table table-condensed" name="payment_journal_line_table">
                             <thead>
-                                <tr>
-                                    <th>Nama &amp;nbsp; No. Rekening</th>
+                                <tr style="border-bottom: 1px solid;">
+                                    <th>No.</th>
+                                    <th>Nama &amp; No. Rekening</th>
                                     <th class="text-right">Jumlah</th>
                                     <th>Terbilang</th>
                                     <th>Keterangan</th>
                                 </tr>
                             </thead>
-                            <!--<tbody class="invoice_tbody">
-                                <t t-set="balance_amount" t-value="0"/>
+                            <tbody class="invoice_tbody">
+                                <!--<t t-set="balance_amount" t-value="0"/>
                                 <t t-set="tax_amount" t-value="0"/>
-                                <t t-set="total_amount" t-value="0"/>
+                                <t t-set="total_amount" t-value="0"/>-->
+                                <t t-set="i" t-value="1" />
                                 <tr t-foreach="o.line_ids" t-as="l">
-                                    <td><span t-field="l.invoice_id.number"/><br/><span t-field="l.invoice_id.reference"/></td>
-                                    <td><span t-field="l.date_invoice" t-field-options='{"format": "dd-MMM-yyyy"}'/></td>
-                                    <td><span t-field="l.date_due" t-field-options='{"format": "dd-MMM-yyyy"}'/></td>
-                                    <td><span t-field="l.invoice_id.name"/></td>
-                                    <td class="text-right"><t t-set="balance_amount" t-value="balance_amount+l.balance_amt"/><span t-field="l.balance_amt" t-field-options='{"widget": "monetary", "display_currency": "l.currency_id"}'/></td>
-                                    <td class="text-right"><t t-set="tax_amount" t-value="tax_amount+l.tax_amt"/><span t-field="l.tax_amt" t-field-options='{"widget": "monetary", "display_currency": "l.currency_id"}'/></td>
-                                    <td class="text-right"><t t-set="total_amount" t-value="total_amount+l.total_amt"/><span t-field="l.total_amt" t-field-options='{"widget": "monetary", "display_currency": "l.currency_id"}'/></td>
+                                    <td><span t-esc="i"/><t t-set="i" t-value="i+1"/></td>
+                                    <td><span t-field="l.partner_id.name"/><br/><span t-field="l.partner_bank_id.bank_id.name"/><br/>Acc: <span t-field="l.partner_bank_id.acc_number"/></td>
+                                    <td class="text-right"><span t-field="l.amount" t-field-options='{"widget": "monetary", "display_currency": "l.currency_id"}'/></td>
+                                    <td><span t-field="l.payment_id[0].text_amount"/></td>
+                                    <td><span t-field="l.description"/></td>
                                 </tr>
-                                <tr style="font-weight:bold;">
-                                    <td>&amp;nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-right">Total</td>
-                                    <td class="text-right"><span t-esc="balance_amount" t-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
-                                    <td class="text-right"><span t-esc="tax_amount" t-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
-                                    <td class="text-right"><span t-esc="total_amount" t-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
-                                </tr>
-                            </tbody>-->
+                            </tbody>
                         </table>
+                        <div style="border-top: 1px solid;"/>
                     </div>
                     <div style="padding-top:30px; page-break-inside: avoid;">
-                        <table class="table" style="widht:100%;height:175px;">
+                        <table style="widht:100%;height:175px;">
                             <tr style="height:25px;">
                                 <td width="20%"></td>
                                 <td width="20%">Menyetujui,</td>
@@ -69,11 +66,11 @@
                                 <td width="20%"></td>
                             </tr>
                             <tr>
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><!--<span t-field="o.created_sign_by"/>--></td>
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;">(LISTA DEWI S.)</td>
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"></td>
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;">(M. SULWAN RISAN)</td>
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"></td>
+                                <td style="vertical-align: bottom;"><!--<span t-field="o.created_sign_by"/>--></td>
+                                <td style="vertical-align: bottom;">(LISTA DEWI S.)</td>
+                                <td style="vertical-align: bottom;"></td>
+                                <td style="vertical-align: bottom;">(M. SULWAN RISAN)</td>
+                                <td style="vertical-align: bottom;"></td>
                             </tr>
                             <!--<tr class="border-black" style="height:30px;">
                                 <td style="text-align: left; vertical-align: bottom;">Tanggal:</td>
@@ -97,6 +94,9 @@
                             </table>
                         </div>-->
                     </div>
+                </div>
+                <div class="footer">
+                    <div class="text-left" style="font-size: 11px;">LDS/MSR/DPN/dis</div>
                 </div>
             </t>
         </template>

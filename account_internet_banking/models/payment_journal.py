@@ -1,5 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from num2words import num2words
+import re
 
 
 class PaymentJournal(models.Model):
@@ -10,6 +12,21 @@ class PaymentJournal(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('sent', 'Sent'), ('posted', 'Posted'),
                               # ('reconciled', 'Reconciled'),
                               ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
+    text_amount = fields.Char(string="Terbilang", required=False, compute="amount_to_words")
+
+    def titlecase(self, s):
+        return re.sub(r"[A-Za-z]+('[A-Za-z]+)?", lambda mo: mo.group(0)[0].upper() + mo.group(0)[1:].lower(), s)
+
+    @api.depends('amount')
+    def amount_to_words(self):
+        if self.company_id.text_amount_language_currency:
+            i_amount_total = int(self.amount)
+            if (float(i_amount_total) < self.amount):
+                self.text_amount = self.titlecase(num2words(self.amount, to='currency',
+                                                            lang=self.company_id.text_amount_language_currency))
+            elif (float(i_amount_total) == self.amount):
+                self.text_amount = self.titlecase(num2words(i_amount_total, to='currency',
+                                                            lang=self.company_id.text_amount_language_currency))
 
     @api.multi
     @api.onchange('partner_id')

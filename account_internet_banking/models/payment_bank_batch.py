@@ -5,6 +5,7 @@ import odoo.tools
 import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from num2words import num2words
 
 
 class PaymentBankBatch(models.Model):
@@ -21,6 +22,22 @@ class PaymentBankBatch(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('export', 'Exported'), ('post', 'Posted'), ('cancel', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
     export_file = fields.Binary(string="Exported File",)
     export_filename = fields.Char(string="Exported File",)
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True, store=True)
+    text_amount = fields.Char(string="Terbilang", required=False, compute="amount_to_words")
+
+    def titlecase(self, s):
+        return re.sub(r"[A-Za-z]+('[A-Za-z]+)?", lambda mo: mo.group(0)[0].upper() + mo.group(0)[1:].lower(), s)
+
+    @api.depends('amount')
+    def amount_to_words(self):
+        if self.company_id.text_amount_language_currency:
+            i_amount_total = int(self.amount)
+            if (float(i_amount_total) < self.amount):
+                self.text_amount = self.titlecase(num2words(self.amount, to='currency',
+                                                            lang=self.company_id.text_amount_language_currency))
+            elif (float(i_amount_total) == self.amount):
+                self.text_amount = self.titlecase(num2words(i_amount_total, to='currency',
+                                                            lang=self.company_id.text_amount_language_currency))
 
     @api.one
     @api.depends('line_ids.amount')
@@ -32,11 +49,16 @@ class PaymentBankBatch(models.Model):
         for batch in self:
             line_ids = []
             for payment_id in self.env["payment.journal"].sudo().search([('journal_id','=',batch.journal_id.id),('state','=','confirm')]):
+                desc = re.sub('[`~!@#$%^&*()-+,.<>/?;:\'\"{}|]', ' ',
+                              " ".join([i.invoice_id.origin if i.invoice_id.origin else (
+                                  i.invoice_id.reference if i.invoice_id.reference else i.invoice_id.name)
+                                        for i in payment_id.line_ids])[:32])
                 line_ids.append((0, 0, {'payment_id': payment_id.id,
                                         'partner_id': payment_id.partner_id,
                                         'partner_bank_id': payment_id.partner_bank_id,
                                         'currency_id': payment_id.currency_id,
-                                        'amount': payment_id.amount}))
+                                        'amount': payment_id.amount,
+                                        'description': desc}))
             batch.line_ids = len(line_ids) and line_ids or False
 
     @api.model
@@ -76,13 +98,13 @@ class PaymentBankBatch(models.Model):
             writer.writerow(['P', datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.journal_id.bank_account_id.acc_number, batch_line[0]['__count'], batch_line[0]['amount']])
             # fetch products and write respective data.
             for line in self.line_ids:
-                desc = re.sub('[`~!@#$%^&*()-+,.<>/?;:\'\"{}|]', ' ',
-                                " ".join([i.invoice_id.origin if i.invoice_id.origin else (
-                                          i.invoice_id.reference if i.invoice_id.reference else i.invoice_id.name)
-                                        for i in line.payment_id.line_ids])[:20])
+                # desc = re.sub('[`~!@#$%^&*()-+,.<>/?;:\'\"{}|]', ' ',
+                #                 " ".join([i.invoice_id.origin if i.invoice_id.origin else (
+                #                           i.invoice_id.reference if i.invoice_id.reference else i.invoice_id.name)
+                #                         for i in line.payment_id.line_ids])[:20])
                 writer.writerow([line.partner_bank_id.acc_number, line.partner_bank_id.acc_name,
                                  '', '', '',
-                                 line.currency_id.name, line.amount, desc,
+                                 line.currency_id.name, line.amount, line.description[:20],
                                  '',
                                  'LBU' if line.partner_bank_id.bank_id != self.journal_id.bank_id else 'IBU',
                                  line.partner_bank_id.bank_id.bic if line.partner_bank_id.bank_id != self.journal_id.bank_id else '',
@@ -90,7 +112,7 @@ class PaymentBankBatch(models.Model):
                                  '', '', '',
                                  'Y', line.partner_id.email if line.partner_id.email else 'dwi.istianingsih@kopkarla.co.id',
                                  '', '', '', '', '', '', '', '', '', '', '',
-                                 '', '', '', '', '', '', '', '', '', '', '', desc
+                                 '', '', '', '', '', '', '', '', '', '', '', line.description[:20]
                                 ])
         # file.close()
         fo = open('export.csv', "rb")
@@ -134,7 +156,8 @@ class PaymentBankBatchLine(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, ondelete="restrict", readonly=True)
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank', domain="[('partner_id', '=', partner_id)]")
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    amount = fields.Float(string='Amount', required=True, readonly=True)
+    amount = fields.Monetary(string='Amount', required=True, readonly=True)
+    description = fields.Char(readonly=True, copy=False, size=32,)
 
     @api.model
     def create(self, vals):
