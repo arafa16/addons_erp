@@ -96,7 +96,7 @@
                 <!--<div class="footer" style="height: 300px;">-->
                 <div style="height: 400px; page-break-inside: avoid;">
                     <div class="text-center" style="border-top: 1px solid black;">
-                        <p t-if='o.text_amount' class="pull-left">
+                        <p t-if='o.text_amount' style="text-align: left; width: 100%;">
                             <strong>Terbilang:</strong>
                             <span t-field="o.text_amount"/>
                         </p>
@@ -131,7 +131,7 @@
                                     <td style="width:49%;">
                                         <table style="width: 100%;">
                                             <tr>
-                                                <td style="padding-left:10px; padding-top:10px; padding-bottom:5px; width: 50%">Total sebelum pajak</td>
+                                                <td style="padding-left:10px; padding-top:10px; padding-bottom:5px; width: 60%">Total sebelum pajak</td>
                                                 <td>:</td>
                                                 <td class="text-right" style="padding-right:10px;">
                                                     <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
@@ -181,7 +181,7 @@
                                                     <td></td>
                                                 </tr>
                                             </t>
-                                            <tr style="border-top: 2px solid #dddddd; border-bottom: 2px solid black">
+                                            <tr style="border-top: 2px solid #dddddd; border-bottom: 2px solid black;">
                                                 <td style="padding-left:10px; padding-top:5px; padding-bottom:5px;"><strong>Total yang harus dibayar</strong></td>
                                                 <td>:</td>
                                                 <td class="text-right" style="padding-right:10px;">
