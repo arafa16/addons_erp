@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_bank_batch,payment.bank.batch,model_payment_bank_batch,account.group_account_invoice,1,1,1,1
+access_payment_bank_batch_line,payment.bank.batch.line,model_payment_bank_batch_line,account.group_account_invoice,1,1,1,1
