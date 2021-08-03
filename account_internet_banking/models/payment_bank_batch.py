@@ -92,7 +92,7 @@ class PaymentBankBatch(models.Model):
     @api.multi
     def export_confirm(self):
         batch_line = self.line_ids.read_group(domain=[], fields=['amount'], groupby=[])
-        with open('export.csv', mode='w') as file:
+        with open('/tmp/export.csv', mode='w') as file:
             writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             # create a row contains heading of each column
             writer.writerow(['P', datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.journal_id.bank_account_id.acc_number, batch_line[0]['__count'], batch_line[0]['amount']])
@@ -115,7 +115,7 @@ class PaymentBankBatch(models.Model):
                                  '', '', '', '', '', '', '', '', '', '', '', line.description[:20]
                                 ])
         # file.close()
-        fo = open('export.csv', "rb")
+        fo = open('/tmp/export.csv', "rb")
         self.export_file = base64.b64encode(fo.read())
         fo.close()
         self.export_filename = '%s - %s - %s.csv' % (self.journal_id.bank_id.name, datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.name) #'export.csv'
