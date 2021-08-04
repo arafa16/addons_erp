@@ -43,7 +43,7 @@ class PaymentBankBatch(models.Model):
     @api.one
     @api.depends('line_ids.amount')
     def _calculate_total_payment(self):
-        self.amount = self.line_ids.read_group(domain=[], fields=['amount'], groupby=[])[0]['amount']
+        self.amount = self.line_ids.read_group(domain=[('batch_id','=',self.id)], fields=['amount'], groupby=[])[0]['amount']
 
     @api.onchange("journal_id")
     def _onchange_journal_id(self):
