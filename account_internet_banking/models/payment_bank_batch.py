@@ -14,9 +14,10 @@ class PaymentBankBatch(models.Model):
     _order = 'date desc, name desc'
 
     name = fields.Char(readonly=True, copy=False, size=32,) # The name is attributed upon post()
-    date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True)
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
-    # bank_id = fields.Many2one('res.bank', string='Bank', required=True)
+    date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True,
+                                 states={'post': [('readonly', True)]})
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))],
+                                 readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', related='journal_id.bank_account_id.currency_id', readonly=True)
     amount = fields.Monetary(string='Payment Amount', compute='_calculate_total_payment', readonly=True)
     line_ids = fields.One2many('payment.bank.batch.line', 'batch_id', 'Lines')
@@ -49,7 +50,9 @@ class PaymentBankBatch(models.Model):
     def _onchange_journal_id(self):
         for batch in self:
             line_ids = []
+            amount_total = 0
             for payment_id in self.env["payment.journal"].sudo().search([('journal_id','=',batch.journal_id.id),('state','=','confirm')]):
+                amount = math.ceil(payment_id.amount)
                 desc = re.sub('[`~!@#$%^&*()-+,.<>/?;:\'\"{}|]', ' ',
                               " ".join([i.invoice_id.origin if i.invoice_id.origin else (
                                   i.invoice_id.reference if i.invoice_id.reference else i.invoice_id.name)
@@ -58,9 +61,11 @@ class PaymentBankBatch(models.Model):
                                         'partner_id': payment_id.partner_id,
                                         'partner_bank_id': payment_id.partner_bank_id,
                                         'currency_id': payment_id.currency_id,
-                                        'amount': math.ceil(payment_id.amount),
+                                        'amount': amount,
                                         'description': desc}))
+                amount_total += amount
             batch.line_ids = len(line_ids) and line_ids or False
+            batch.amount = amount_total
 
     @api.model
     def create(self, vals):
@@ -99,10 +104,6 @@ class PaymentBankBatch(models.Model):
             writer.writerow(['P', datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.journal_id.bank_account_id.acc_number, batch_line[0]['__count'], batch_line[0]['amount']])
             # fetch products and write respective data.
             for line in self.line_ids:
-                # desc = re.sub('[`~!@#$%^&*()-+,.<>/?;:\'\"{}|]', ' ',
-                #                 " ".join([i.invoice_id.origin if i.invoice_id.origin else (
-                #                           i.invoice_id.reference if i.invoice_id.reference else i.invoice_id.name)
-                #                         for i in line.payment_id.line_ids])[:20])
                 writer.writerow([line.partner_bank_id.acc_number, line.partner_bank_id.acc_name,
                                  '', '', '',
                                  line.currency_id.name, line.amount, line.description[:20],
