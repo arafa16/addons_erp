@@ -3,6 +3,7 @@ import re
 import csv
 import odoo.tools
 import datetime
+import math
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from num2words import num2words
@@ -57,7 +58,7 @@ class PaymentBankBatch(models.Model):
                                         'partner_id': payment_id.partner_id,
                                         'partner_bank_id': payment_id.partner_bank_id,
                                         'currency_id': payment_id.currency_id,
-                                        'amount': payment_id.amount,
+                                        'amount': math.ceil(payment_id.amount),
                                         'description': desc}))
             batch.line_ids = len(line_ids) and line_ids or False
 
