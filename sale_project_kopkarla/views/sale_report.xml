@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="enhanced_sales_approval_print_tenure" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//table/thead/tr/th[4]" position="after">
+                <t t-if="doc.jenis_so=='rental'">
+                    <th class="text-right">Tenure</th>
+                </t>
+            </xpath>
+            <xpath expr="//table/tbody/t/t[2]/tr/td[4]" position="after">
+                <t t-if="doc.jenis_so=='rental'">
+                    <td class="text-right">
+                        <span t-esc="l.rental_tenure" t-options='{"widget": "integer"}'/>
+                        <span t-field="l.rental_uom_id" groups="product.group_uom"/>
+                    </td>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

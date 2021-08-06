@@ -27,6 +27,7 @@
     'data': [
         'views/project_tabel.xml',
         'views/sale_view.xml',
+        'views/sale_report.xml',
     ],
     'images': ['static/description/poster_image.png'],
     'installable': True,
