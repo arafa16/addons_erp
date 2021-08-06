@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
 <odoo>
     <template id="report_contract_document" inherit_id="contract.report_contract_document">
+        <xpath expr="//div[@id='invoice_info']/div/table/thead/tr/th[4]" position="replace">
+            <th class="text-right"><strong>Price/Month</strong></th>
+        </xpath>
         <xpath expr="//div[@id='invoice_info']/div[2]" position="replace">
             <div class="col-xs-12">
                 <div style="font-weight:bold; text-decoration:underline;">
