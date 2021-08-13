@@ -97,7 +97,7 @@ class PaymentBankBatch(models.Model):
 
     @api.multi
     def export_confirm(self):
-        batch_line = self.line_ids.read_group(domain=[], fields=['amount'], groupby=[])
+        batch_line = self.line_ids.read_group(domain=[('batch_id', '=', self.id)], fields=['amount'], groupby=[])
         with open('/tmp/export.csv', mode='w') as file:
             writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             # create a row contains heading of each column
