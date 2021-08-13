@@ -101,12 +101,12 @@ class PaymentBankBatch(models.Model):
         with open('/tmp/export.csv', mode='w') as file:
             writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             # create a row contains heading of each column
-            writer.writerow(['P', datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.journal_id.bank_account_id.acc_number, batch_line[0]['__count'], batch_line[0]['amount']])
+            writer.writerow(['P', datetime.datetime.strptime(self.date, '%Y-%m-%d').strftime('%Y%m%d'), self.journal_id.bank_account_id.acc_number, batch_line[0]['__count'], int(batch_line[0]['amount'])])
             # fetch products and write respective data.
             for line in self.line_ids:
                 writer.writerow([line.partner_bank_id.acc_number, line.partner_bank_id.acc_name,
                                  '', '', '',
-                                 line.currency_id.name, line.amount, line.description[:20],
+                                 line.currency_id.name, int(line.amount), line.description[:20],
                                  '',
                                  'LBU' if line.partner_bank_id.bank_id != self.journal_id.bank_id else 'IBU',
                                  line.partner_bank_id.bank_id.bic if line.partner_bank_id.bank_id != self.journal_id.bank_id else '',
