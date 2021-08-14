@@ -147,18 +147,21 @@ class PurchaseOrder(models.Model):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         # if context is None:
         #     context = {'emp_id': 1}
-        emp_id = self.env['hr.employee'].sudo().search([('user_id','=',self.env.uid)])[0]['id']
         res = super(PurchaseOrder, self).fields_view_get(cr, uid)
         doc = etree.XML(res['arch'])
+        employee = self.env['hr.employee'].sudo().search([('user_id','=',self.env.uid)])
         for node in doc.xpath("//filter[@name='manager_approval']"):
-            # if uid in [1, 2, 3]:  # ID of the users for whom page should be invisible
-            #     node.set('domain', "['|','|','|', [('state','=','assmancheck')],('state','=','requestloa'),('state','=','loaconfirmed'),('state','=','to approve')]")
-            #     node.set('domain', """['&','|','&',
-            #                            ('state','=','assmancheck'),('checker1','=',%s),
-            #                            ('state','=','requestloa'),
-            #                            '&',('penandatangan2','=',%s),('loa_request','=',2)
-            #                            ]""" % (emp_id,emp_id))
-            node.set('domain', "[('state','=','requestloa'),('loa_request','=',2),('penandatangan2','=',%s)]" % (emp_id))
+            if employee:
+                # if uid in [1, 2, 3]:  # ID of the users for whom page should be invisible
+                #     node.set('domain', "['|','|','|', [('state','=','assmancheck')],('state','=','requestloa'),('state','=','loaconfirmed'),('state','=','to approve')]")
+                #     node.set('domain', """['&','|','&',
+                #                            ('state','=','assmancheck'),('checker1','=',%s),
+                #                            ('state','=','requestloa'),
+                #                            '&',('penandatangan2','=',%s),('loa_request','=',2)
+                #                            ]""" % (emp_id,emp_id))
+                node.set('domain', "[('state','=','requestloa'),('loa_request','=',2),('penandatangan2','=',%s)]" % (employee[0].id))
+            else:
+                node.set('domain', "[('state','=',False)]")
         res['arch'] = etree.tostring(doc)
         return res
 
