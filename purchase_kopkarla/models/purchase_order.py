@@ -2,6 +2,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons import decimal_precision as dp
+from lxml import etree
+
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
@@ -140,6 +142,26 @@ class PurchaseOrder(models.Model):
                 values={'self': invoice, 'origin': references[invoice]},
                 subtype_id=self.env.ref('mail.mt_note').id)
         return [inv.id for inv in invoices.values()]
+
+    @api.model
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        # if context is None:
+        #     context = {'emp_id': 1}
+        emp_id = self.env['hr.employee'].sudo().search([('user_id','=',self.env.uid)])[0]['id']
+        res = super(PurchaseOrder, self).fields_view_get(cr, uid)
+        doc = etree.XML(res['arch'])
+        for node in doc.xpath("//filter[@name='manager_approval']"):
+            # if uid in [1, 2, 3]:  # ID of the users for whom page should be invisible
+            #     node.set('domain', "['|','|','|', [('state','=','assmancheck')],('state','=','requestloa'),('state','=','loaconfirmed'),('state','=','to approve')]")
+            #     node.set('domain', """['&','|','&',
+            #                            ('state','=','assmancheck'),('checker1','=',%s),
+            #                            ('state','=','requestloa'),
+            #                            '&',('penandatangan2','=',%s),('loa_request','=',2)
+            #                            ]""" % (emp_id,emp_id))
+            node.set('domain', "[('state','=','requestloa'),('loa_request','=',2),('penandatangan2','=',%s)]" % (emp_id))
+        res['arch'] = etree.tostring(doc)
+        return res
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'

@@ -1,78 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="purchase_order_view_form" model="ir.ui.view">
-        <field name="name">purchase.order.form</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_rfq_send']" position="before">
-                <button name="%(action_view_purchase_advance_payment_inv)d" string="Create Invoice"
-                    type="action" class="btn-primary" groups="account.group_account_invoice"
-                    attrs="{'invisible': ['|', ('invoice_status', '=', 'invoiced'), ('state', '!=', 'purchase')]}"/>
-                <button name="action_set_waiting_bills" string="Set Waiting Bills"
-                    type="object" class="btn-primary" groups="purchase_kopkarla.group_purchase_controller"
-                    attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'purchase')]}"/>
-                <!--<button name="action_view_invoice" position="replace">
-                    <button type="object"  name="action_view_invoice"
-                        class="oe_stat_button" groups="account.group_account_invoice"
-                        icon="fa-pencil-square-o" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}">
-                        <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
-                        <field name='invoice_ids' invisible="1"/>
-                    </button>
+    <data>
+        <record id="purchase_order_view_form" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_rfq_send']" position="before">
+                    <button name="%(action_view_purchase_advance_payment_inv)d" string="Create Invoice"
+                        type="action" class="btn-primary" groups="account.group_account_invoice"
+                        attrs="{'invisible': ['|', ('invoice_status', '=', 'invoiced'), ('state', '!=', 'purchase')]}"/>
+                    <button name="action_set_waiting_bills" string="Set Waiting Bills"
+                        type="object" class="btn-primary" groups="purchase_kopkarla.group_purchase_controller"
+                        attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'purchase')]}"/>
+                    <!--<button name="action_view_invoice" position="replace">
+                        <button type="object"  name="action_view_invoice"
+                            class="oe_stat_button" groups="account.group_account_invoice"
+                            icon="fa-pencil-square-o" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}">
+                            <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
+                            <field name='invoice_ids' invisible="1"/>
+                        </button>
+                    </button>-->
+                </xpath>
+                <!--<div name="button_box" position="replace">
+                    <div class="oe_button_box" name="button_box" groups="account.group_account_invoice">
+                        <button type="object"
+                            name="action_view_picking"
+                            class="oe_stat_button"
+                            icon="fa-truck" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('picking_ids','=',[])]}">
+                            <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
+                            <field name="picking_ids" invisible="1"/>
+                        </button>
+                        <button type="object"  name="action_view_invoice"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}">
+                            <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
+                            <field name='invoice_ids' invisible="1"/>
+                        </button>
+                    </div>
+                </div>-->
+                <!--<button name="button_cancel" position="replace">
+                    <button name="button_cancel" groups="account.group_account_invoice"
+                            states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                 </button>-->
-            </xpath>
-            <!--<div name="button_box" position="replace">
-                <div class="oe_button_box" name="button_box" groups="account.group_account_invoice">
-                    <button type="object"
-                        name="action_view_picking"
-                        class="oe_stat_button"
-                        icon="fa-truck" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('picking_ids','=',[])]}">
-                        <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
-                        <field name="picking_ids" invisible="1"/>
-                    </button>
-                    <button type="object"  name="action_view_invoice"
-                        class="oe_stat_button"
-                        icon="fa-pencil-square-o" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}">
-                        <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
-                        <field name='invoice_ids' invisible="1"/>
-                    </button>
-                </div>
-            </div>-->
-            <!--<button name="button_cancel" position="replace">
-                <button name="button_cancel" groups="account.group_account_invoice"
-                        states="draft,to approve,sent,purchase" string="Cancel" type="object" />
-            </button>-->
-            <field name="FakturNomor" position="replace"/>
-            <field name="FakturTanggal" position="replace"/>
-            <field name="taxes_id" position="replace">
-                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'),('tax_group_id','=','VAT')]" context="{'default_type_tax_use': 'purchase'}" options="{'no_create': True}"/>
-            </field>
-            <field name="partner_id" position="replace">
-                <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}"
-                       domain="[('supplier','=',True)]" options="{'no_create': True, 'no_open': True}"/>
-            </field>
-            <field name="currency_id" position="replace">
-                <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True, 'no_open': True}"/>
-            </field>
-            <field name="product_id" position="replace">
-                <field name="product_id" attrs="{'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))]}" options="{'no_create': True, 'no_open': True}"
-                       context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}" force_save="1"/>
-            </field>
-            <field name="product_uom" position="replace">
-                <field name="product_uom" groups="product.group_uom" options="{'no_create': True, 'no_open': True}"
-                       attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}" force_save="1"/>
-            </field>
-            <field name="picking_type_id" position="replace">
-                <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True, 'no_open': True}"
-                       groups="stock.group_stock_multi_locations"/>
-            </field>
-            <field name="nomor_coa" position="attributes">
-                <attributes name="invisible">1</attributes>
-            </field>
+                <field name="FakturNomor" position="replace"/>
+                <field name="FakturTanggal" position="replace"/>
+                <field name="taxes_id" position="replace">
+                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'),('tax_group_id','=','VAT')]" context="{'default_type_tax_use': 'purchase'}" options="{'no_create': True}"/>
+                </field>
+                <field name="partner_id" position="replace">
+                    <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}"
+                           domain="[('supplier','=',True)]" options="{'no_create': True, 'no_open': True}"/>
+                </field>
+                <field name="currency_id" position="replace">
+                    <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True, 'no_open': True}"/>
+                </field>
+                <field name="product_id" position="replace">
+                    <field name="product_id" attrs="{'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))]}" options="{'no_create': True, 'no_open': True}"
+                           context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}" force_save="1"/>
+                </field>
+                <field name="product_uom" position="replace">
+                    <field name="product_uom" groups="product.group_uom" options="{'no_create': True, 'no_open': True}"
+                           attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}" force_save="1"/>
+                </field>
+                <field name="picking_type_id" position="replace">
+                    <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True, 'no_open': True}"
+                           groups="stock.group_stock_multi_locations"/>
+                </field>
+                <field name="nomor_coa" position="attributes">
+                    <attributes name="invisible">1</attributes>
+                </field>
 
-            <field name="origin" position="after">
-                <field name="invoice_status" readonly="0" groups="purchase_kopkarla.group_purchase_controller"/>
+                <field name="origin" position="after">
+                    <field name="invoice_status" readonly="0" groups="purchase_kopkarla.group_purchase_controller"/>
+                </field>
             </field>
-        </field>
-    </record>
+        </record>
+
+        <record id="view_purchase_order_filter_kopkarla" model="ir.ui.view">
+            <field name="name">request.quotation.select.kopkarla</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='to_approve']" position="after">
+                    <filter name="manager_approval" string="Manager Approval"
+                            domain="[('state','=','requestloa')]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<record id="request_loa_confirm_kopkarla" model="ir.actions.server">
+            <field name="name">Request LoA</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">
+for rec in records:
+    if rec.state == 'assmancheck':
+        rec.button_action_request_loa_confirm()
+            </field>
+        </record>-->
+        <record id="manager_approval_loa" model="ir.actions.server">
+            <field name="name">Manager Approval</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">
+for rec in records:
+    if rec.state == 'requestloa' and rec.loa_request == 2:
+        rec.press_approval()
+            </field>
+        </record>
+    </data>
 </odoo>
