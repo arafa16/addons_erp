@@ -84,7 +84,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='to_approve']" position="after">
                     <filter name="manager_approval" string="Manager Approval"
-                            domain="[('state','=','requestloa')]"/>
+                            domain="[('state','=','requestloa'),('loa_request','=',2)]"/>
                 </xpath>
             </field>
         </record>

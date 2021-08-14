@@ -346,7 +346,7 @@ class PurchaseOrderInherit(models.Model):
                 tujuan.append(self.penandatangan2.user_id.email)
         if self.loa_request == 2:
             curent = self.penandatangan2
-            if self.required3 == True:
+            if self[0].required3 == True:
                 nextLoa = True
                 idlanjut = 3
                 tail = 'General Manager'
