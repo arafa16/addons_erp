@@ -3,6 +3,7 @@
 import time
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 
 class InventoryAdjustment(models.Model):
@@ -18,6 +19,24 @@ class StockPicking(models.Model):
 
 class StockMove(models.Model):
 	_inherit = 'stock.move'
+
+	@api.multi
+	def _check_lock_date(self, move):
+		if move:
+			lock_date = max(move.company_id.period_lock_date or '0000-00-00',
+							move.company_id.fiscalyear_lock_date or '0000-00-00')
+			if self.user_has_groups('account.group_account_manager'):
+				lock_date = move.company_id.fiscalyear_lock_date
+			if move.date <= (lock_date or '0000-00-00'):
+				if self.user_has_groups('account.group_account_manager'):
+					message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % (
+						lock_date)
+				else:
+					message = _(
+						"You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role") % (
+								  lock_date)
+				raise UserError(message)
+		return True
 
 	def _action_done(self):
 		force_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -55,7 +74,7 @@ class StockMove(models.Model):
 					if move.account_move_ids:
 						for account_move in move.account_move_ids:
 							account_move.write({'date':force_date})
+							self._check_lock_date(account_move)
 							if move.inventory_id:
 								account_move.write({'ref':move.inventory_id.name})
-
 		return res
