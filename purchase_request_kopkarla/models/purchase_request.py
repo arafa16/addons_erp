@@ -155,11 +155,13 @@ class SprogroupPurchaseRequest(models.Model):
 class SprogroupPurchaseRequestLine(models.Model):
     _inherit = "sprogroup.purchase.request.line"
 
-    account_id = fields.Many2one('account.account', 'Account Ledger', store=True, compute='_get_account_id') #, required=True)
+    account_id = fields.Many2one('account.account', 'Account Ledger', store=True, compute='_get_account_id',
+                                 domain="[('code','in',['5100-01','5100-02','5100-03'])]") #, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[('purchase_ok', '=', True)], required=True,
         track_visibility='onchange')
+    salesorder_id = fields.Many2one('sale.order', related="request_id.salesorder_id")
 
     @api.onchange('product_id')
     def _get_account_id(self):
