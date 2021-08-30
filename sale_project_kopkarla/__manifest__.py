@@ -28,6 +28,7 @@
         'views/project_tabel.xml',
         'views/sale_view.xml',
         'views/sale_report.xml',
+        'reports/sale_report_margin_views.xml',
     ],
     'images': ['static/description/poster_image.png'],
     'installable': True,

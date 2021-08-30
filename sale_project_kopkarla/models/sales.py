@@ -9,7 +9,7 @@ class EnhancedSalesArea(models.Model):
     bast_no = fields.Char(string='BAST No.')
     bast_date = fields.Date(string='BAST Date')
     purchase_count = fields.Integer(string='# of Purchases', compute='_get_purchased', readonly=True)
-    purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True)
+    purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True, store=True)
     purchase_ids = fields.Many2many("purchase.order", string='Purchases', compute="_get_purchased", readonly=True, copy=False)
 
     @api.multi

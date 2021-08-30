@@ -55,7 +55,7 @@ class HRAdvance(models.Model):
         # account_id = self.employee_id.address_home_id.property_account_receivable_id.id
         return self.env['res.partner'].browse(int(partner_id))
 
-    name = fields.Char(string='Number', default='New') # ,readonly=True)
+    name = fields.Char(string='Number', default='New', copy=False) # ,readonly=True)
     employee_id = fields.Many2one('hr.employee', required=True, readonly=True, string="Employee",default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1), states={'draft': [('readonly', False)]})
     request_date = fields.Date(string='Requested Date', default=fields.Date.today(), readonly=True, states={'draft': [('readonly', False)]})
     plan_date = fields.Date(string='Plan Date', default=fields.Date.today(), readonly=True, states={'draft': [('readonly', False)]})
