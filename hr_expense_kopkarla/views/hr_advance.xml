@@ -24,7 +24,7 @@
                                           'default_advance_id': id, 'default_employee_id': employee_id,
                                           'default_payment_date': accounting_date,
                                           'default_amount': total_amount_expense, 'default_partner_id': partner_id}"
-                                groups="account.group_account_manager"/>
+                                groups="account.group_account_manager,account.group_account_invoice"/>
                         <button string="Reject" name="get_reject" states="confirm,approved_hr_manager" type="object"
                                 groups="hr_expense.group_hr_expense_user"/>
                         <button string="Cancel" name="exit_cancel" states="draft,paid" type="object"

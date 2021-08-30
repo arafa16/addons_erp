@@ -23,7 +23,7 @@
                                   'default_amount': total_amount,
                                   'default_partner_id': partner_id,
                                   'default_communication': communication,}"
-                        groups="account.group_account_manager"/>
+                        groups="account.group_account_manager,account.group_account_invoice"/>
                 </xpath>
                 <xpath expr="//button[@name='%(hr_expense.hr_expense_refuse_wizard_action)d']" position="after">
                     <button string="Cancel" name="cancel" states="post,done" type="object"
@@ -257,6 +257,6 @@
 
         <menuitem id="hr_expense.menu_hr_expense_root" name="Expenses" sequence="100"
                   web_icon="hr_expense,static/description/icon.png"
-                  groups="account.group_account_user,account.group_account_manager"/>
+                  groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"/>
     </data>
 </odoo>
