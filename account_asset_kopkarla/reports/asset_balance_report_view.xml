@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="asset_balance_report_tree">
+            <field name="name">purchase.budget.request.tree</field>
+            <field name="model">asset.balance.report</field>
+            <field name="arch" type="xml">
+                <tree string="Asset Balance" create="false" delete="false">
+                    <field name="asset_id"/>
+                    <field name="acquisition_amount"/>
+                    <field name="total_last_depre"/>
+                    <field name="jan"/>
+                    <field name="feb"/>
+                    <field name="mar"/>
+                    <field name="apr"/>
+                    <field name="may"/>
+                    <field name="jun"/>
+                    <field name="jul"/>
+                    <field name="aug"/>
+                    <field name="sep"/>
+                    <field name="oct"/>
+                    <field name="nov"/>
+                    <field name="dec"/>
+                    <field name="this_year_depre"/>
+                    <field name="book_value"/>
+                    <field name="category_id"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="account_id"/>
+                    <field name="acquisition_date"/>
+                    <field name="sale_date"/>
+                    <field name="disposal_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="asset_balance_report_search" model="ir.ui.view">
+            <field name="name">asset.balance.report.search</field>
+            <field name="model">asset.balance.report</field>
+            <field name="arch" type="xml">
+                <search string="Search Asset Balance">
+                    <field name="asset_id" string="Asset"/>
+                    <field name="category_id" string="Category"/>
+                    <field name="account_id" string="Account"/>
+                    <field name="cost_center_id" string="Cost Center"/>
+                    <field name="analytic_account_id" string="Analytic Account"/>
+
+                    <filter name="draft_asset" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="running_asset" string="Running" domain="[('state','=','open')]"/>
+                    <filter name="sale_asset" string="Sale" domain="[('state','=','sale')]"/>
+                    <!--<separator/>-->
+                    <group expand="0" string="Group By...">
+                        <filter name="category" string="Category" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'category_id'}"/>
+                        <filter name="cost_center" string="Cost Center" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'cost_center_id'}"/>
+                        <filter name="analytic_account" string="Analytic Account" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'analytic_account_id'}"/>
+                        <filter name="state" string="Status" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_asset_balance_report">
+            <field name="name">Asset Balance</field>
+            <field name="res_model">asset.balance.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="asset_balance_report_tree"/>
+            <field name="search_view_id" ref="asset_balance_report_search"/>
+            <field name="context"><!--{ 'search_default_category':True,
+                                    'search_default_cost_center':True,
+                                    'search_default_analytic_account':True,}--></field>
+        </record>
+
+        <menuitem parent="account_asset_kopkarla.menu_asset_reports"
+            id="menu_act_asset_balance_report"
+            name="Asset Balance"
+            action="act_asset_balance_report" sequence="22"
+            groups="account.group_account_user"/>
+    </data>
+</odoo>

@@ -6,3 +6,4 @@ access_account_asset_reclass_line,amodel.account.asset.reclass.line,model_accoun
 access_account_asset_revaluation,amodel.account.asset.revaluation,model_account_asset_revaluation,account.group_account_manager,1,1,1,1
 access_account_asset_revaluation_line,amodel.account.asset.revaluation.line,model_account_asset_revaluation_line,account.group_account_manager,1,1,1,1
 access_account_asset_depreciation,amodel.account.asset.depreciation,model_account_asset_depreciation,account.group_account_manager,1,1,1,1
+access_asset_balance_report,access_asset_balance_report,model_asset_balance_report,base.group_user,1,1,1,1

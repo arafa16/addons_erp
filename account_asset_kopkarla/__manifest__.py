@@ -45,6 +45,7 @@ Support following feature:
         "views/account_asset_depreciation_views.xml",
         "views/account_asset_reclass_views.xml",
         "views/account_asset_menus.xml",
+        "reports/asset_balance_report_view.xml",
         # "data/sequences.xml",
         "security/ir.model.access.csv"
     ],
