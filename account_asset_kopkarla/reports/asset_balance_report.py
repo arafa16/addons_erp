@@ -170,6 +170,7 @@ class AssetBalanceReport(models.Model):
             from account_asset_asset a
                  inner join account_asset_category c on a.category_id = c.id
                  left join account_asset_depreciation_line d on a.id = d.asset_id and d.depreciation_date <= '31 Dec 2020'
+            where a.active = true
             group by a.id, a.category_id, a.cost_center_id, a.analytic_account_id, c.account_asset_id, a.date_acq, a.value, a.state
         """
         cr = self.env.cr
