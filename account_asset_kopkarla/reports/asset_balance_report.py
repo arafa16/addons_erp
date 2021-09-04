@@ -13,7 +13,7 @@ class AssetBalanceReport(models.Model):
     # _order = "date desc, id desc"
 
     asset_id = fields.Many2one('account.asset.asset', 'Asset')
-    code = fields.Char(string='Reference', size=32)
+    code = fields.Char(string='Reference')
     category_id = fields.Many2one('account.asset.category', string='Category')
     cost_center_id = fields.Many2one("cost.center", string='Cost Center')
     analytic_account_id = fields.Many2one(comodel_name='account.analytic.account', string='Analytic Account')
@@ -37,6 +37,7 @@ class AssetBalanceReport(models.Model):
     dec = fields.Float(string='Dec', digits=0)
     this_year_depre = fields.Float(string='Total Year Depreciation', digits=0)
     book_value = fields.Float(string='Book Value', digits=0)
+    close_date = fields.Date(string="Close date")
     sale_date = fields.Date(string="Sale date")
     disposal_date = fields.Date(string="Disposal date")
 
@@ -167,7 +168,7 @@ class AssetBalanceReport(models.Model):
                 (a.value - sum(d.amount) - (select sum(amount) from account_asset_depreciation_line
                  where asset_id = a.id and depreciation_date between '1 Jan 2021' and '31 Dec 2021'
                         and move_check = True and move_posted_check = True)) as book_value,
-                a.sale_date, a.disposal_date, a.code
+                a.sale_date, a.disposal_date, a.code, max(d.depreciation_date) as close_date
             from account_asset_asset a
                  inner join account_asset_category c on a.category_id = c.id
                  left join account_asset_depreciation_line d on a.id = d.asset_id and d.depreciation_date <= '31 Dec 2020'
@@ -214,5 +215,6 @@ class AssetBalanceReport(models.Model):
                 'book_value': r[22],
                 'sale_date': r[23],
                 'disposal_date': r[24],
-                'code': r[25]
+                'code': r[25],
+                'close_date': r[26]
             })

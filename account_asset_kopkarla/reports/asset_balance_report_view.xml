@@ -29,6 +29,7 @@
                     <field name="analytic_account_id"/>
                     <field name="account_id"/>
                     <field name="acquisition_date"/>
+                    <field name="close_date"/>
                     <field name="sale_date"/>
                     <field name="disposal_date"/>
                     <field name="state"/>
