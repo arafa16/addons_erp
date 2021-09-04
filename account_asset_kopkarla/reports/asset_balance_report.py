@@ -14,6 +14,7 @@ class AssetBalanceReport(models.Model):
 
     asset_id = fields.Many2one('account.asset.asset', 'Asset')
     code = fields.Char(string='Reference')
+    ref = fields.Char(string='Asset Code')
     category_id = fields.Many2one('account.asset.category', string='Category')
     cost_center_id = fields.Many2one("cost.center", string='Cost Center')
     analytic_account_id = fields.Many2one(comodel_name='account.analytic.account', string='Analytic Account')
@@ -216,5 +217,6 @@ class AssetBalanceReport(models.Model):
                 'sale_date': r[23],
                 'disposal_date': r[24],
                 'code': r[25],
-                'close_date': r[26]
+                'ref': r[25],
+                'close_date': r[7] == 'close' and r[26] or False
             })

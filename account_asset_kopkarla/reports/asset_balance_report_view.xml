@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <tree string="Asset Balance" create="false" delete="false">
                     <field name="code"/>
+                    <field name="ref"/>
                     <field name="asset_id"/>
                     <field name="acquisition_amount"/>
                     <field name="total_last_depre"/>
