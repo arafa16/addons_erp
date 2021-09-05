@@ -40,6 +40,9 @@ class AssetBalanceReport(models.Model):
     close_date = fields.Date(string="Close date")
     sale_date = fields.Date(string="Sale date")
     disposal_date = fields.Date(string="Disposal date")
+    method_number = fields.Integer(string='Number of Depreciations')
+    depreciation_count = fields.Integer(string='Depreciations Count')
+    depreciation_count_done = fields.Integer(string='Depreciations Count Done')
 
     # @api.multi
     # def budget_request_approve_action(self):
@@ -171,7 +174,15 @@ class AssetBalanceReport(models.Model):
                 a.sale_date, a.disposal_date, a.code,
                 (select max(depreciation_date)
                  from account_asset_depreciation_line
-                 where account_asset_depreciation_line.asset_id = a.id) as close_date
+                 where account_asset_depreciation_line.asset_id = a.id) as close_date,
+                a.method_number,                
+                (select count(*)
+                 from account_asset_depreciation_line
+                 where account_asset_depreciation_line.asset_id = a.id) as depreciation_count, 
+                (select count(*)
+                 from account_asset_depreciation_line
+                 where account_asset_depreciation_line.asset_id = a.id 
+                       and move_check = true and move_posted_check = true) as depreciation_count_done
             from account_asset_asset a
                  inner join account_asset_category c on a.category_id = c.id
                  left join account_asset_depreciation_line d on a.id = d.asset_id and d.depreciation_date <= '31 Dec 2020'
@@ -219,5 +230,8 @@ class AssetBalanceReport(models.Model):
                 'sale_date': r[23],
                 'disposal_date': r[24],
                 'code': r[25],
-                'close_date': r[7] == 'close' and r[26] or False
+                'close_date': r[7] == 'close' and r[26] or False,
+                'method_number': r[27],
+                'depreciation_count': r[28],
+                'depreciation_count_done': r[29]
             })
