@@ -31,6 +31,7 @@ It gives each transaction a cost center and an analytic account.
         'wizard/purchase_make_invoice_advance_views.xml',
         'views/purchase_views.xml',
         'views/res_config_settings_views.xml',
+        'views/payment_term_view.xml',
     ],
     'demo': [],
     'test': [],
