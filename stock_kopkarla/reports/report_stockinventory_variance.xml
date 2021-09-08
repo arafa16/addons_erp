@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_inventory_variance">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Stock Inventory Variance</h2>
+
+                            <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th><strong>Inventory</strong></th>
+                                    <th><strong>Date</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-field="o.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.date"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+
+                            <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <!--<th groups="stock.group_stock_multi_locations"><strong>Location</strong></th>-->
+                                        <th><strong>Product</strong></th>
+                                        <!--<th groups="stock.group_production_lot"><strong>Production Lot</strong></th>-->
+                                        <!--<th groups="stock.group_tracking_lot"><strong>Package</strong></th>-->
+                                        <th class="text-right"><strong>Qty Odoo</strong></th>
+                                        <th class="text-right"><strong>Qty Actual</strong></th>
+                                        <th class="text-right"><strong>Variance</strong></th>
+                                        <th class="text-right"><strong>Price</strong></th>
+                                        <th class="text-right"><strong>Total</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total" t-value="0"/>
+                                    <t t-foreach="locations" t-as="location">
+                                        <tr groups="stock.group_stock_multi_locations">
+                                            <td groups="stock.group_stock_multi_locations"><strong>Location</strong></td>
+                                            <td colspan="2"><strong t-esc="location.display_name"/></td>
+                                            <!--<td groups="stock.group_production_lot"></td>
+                                            <td groups="stock.group_tracking_lot"></td>-->
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id)" t-as="line">
+                                            <t t-if="line.theoretical_qty != line.product_qty">
+                                                <!--<td groups="stock.group_stock_multi_locations"></td>-->
+                                                <td><span t-field="line.product_id"/></td>
+                                                <!--<td groups="stock.group_production_lot"><span t-field="line.prod_lot_id"/></td>-->
+                                                <!--<td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>-->
+                                                <td class="text-right"><span t-field="line.theoretical_qty"/> <span t-field="line.product_uom_id" groups="product.group_uom"/></td>
+                                                <td class="text-right"><span t-field="line.product_qty"/> <span t-field="line.product_uom_id" groups="product.group_uom"/></td>
+                                                <td class="text-right"><span t-esc="line.product_qty - line.theoretical_qty"/> <span t-field="line.product_uom_id" groups="product.group_uom"/></td>
+                                                <td class="text-right"><span t-esc="line.unit_price" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
+                                                <td class="text-right"><span t-esc="(line.product_qty - line.theoretical_qty) * line.unit_price" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
+                                                <t t-set="total" t-value="total + (line.product_qty - line.theoretical_qty) * line.unit_price"/>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!--<t t-if="total != 'product' and o.product_id">-->
+                            <div class="row">
+                                <div class="col-xs-3 pull-right">
+                                    <table class="table table-condensed">
+                                        <tr class="border-black">
+                                            <td><strong>Total</strong></td>
+                                            <td class="text-right">
+                                                <strong><span t-esc="total" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></strong>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <!--</t>-->
+                        </div>
+                    </t>
+                 </t>
+             </t>
+        </template>
+
+        <report
+            string="Variance"
+            id="action_report_inventory_variance"
+            model="stock.inventory"
+            report_type="qweb-pdf"
+            name="stock_kopkarla.report_inventory_variance"
+            file="stock_kopkarla.report_inventory_variance"
+            print_report_name="'Inventory - %s' % (object.name)"
+        />
+    </data>
+</odoo>

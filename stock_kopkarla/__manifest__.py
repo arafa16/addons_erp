@@ -30,6 +30,7 @@
         'views/setting.xml',
         'views/stock_picking_view.xml',
         'views/stock_inventory_views.xml',
+        'reports/report_stockinventory_variance.xml',
     ],
     'images': ['static/description/poster_image.png'],
     'installable': True,
