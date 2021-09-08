@@ -64,9 +64,9 @@
                                                 <td class="text-right"><span t-field="line.theoretical_qty"/> <span t-field="line.product_uom_id" groups="product.group_uom"/></td>
                                                 <td class="text-right"><span t-field="line.product_qty"/> <span t-field="line.product_uom_id" groups="product.group_uom"/></td>
                                                 <td class="text-right"><span t-esc="line.product_qty - line.theoretical_qty"/> <span t-field="line.product_uom_id" groups="product.group_uom"/></td>
-                                                <td class="text-right"><span t-esc="line.product_id.standard_price" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
-                                                <td class="text-right"><span t-esc="(line.product_qty - line.theoretical_qty) * line.product_id.standard_price" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
-                                                <t t-set="total" t-value="total + (line.product_qty - line.theoretical_qty) * line.product_id.standard_price"/>
+                                                <td class="text-right"><span t-esc="line.unit_price" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
+                                                <td class="text-right"><span t-esc="(line.product_qty - line.theoretical_qty) * line.unit_price" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
+                                                <t t-set="total" t-value="total + (line.product_qty - line.theoretical_qty) * line.unit_price"/>
                                             </t>
                                         </tr>
                                     </t>
