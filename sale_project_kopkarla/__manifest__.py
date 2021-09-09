@@ -22,7 +22,8 @@
     'depends': ['project',
                 'enhanced_sales_convert_project',
                 'sale','sales_team',
-                'sprogroup_purchase_request'
+                'sprogroup_purchase_request',
+                'cost_centers_kopkarla',
                 ],
     'data': [
         'views/project_tabel.xml',
