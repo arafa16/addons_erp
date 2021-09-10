@@ -149,6 +149,14 @@ class EnhancedSalesArea(models.Model):
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
+    @api.multi
+    def copy(self, default=None):
+        new_so = super(EnhancedSalesArea, self).copy(default=default)
+        for line in new_so.order_line:
+            if not line.product_id.active:
+                line.unlink()
+        return new_so
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'

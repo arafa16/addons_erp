@@ -143,6 +143,14 @@ class PurchaseOrder(models.Model):
                 subtype_id=self.env.ref('mail.mt_note').id)
         return [inv.id for inv in invoices.values()]
 
+    @api.multi
+    def copy(self, default=None):
+        new_po = super(PurchaseOrder, self).copy(default=default)
+        for line in new_po.order_line:
+            if not line.product_id.active:
+                line.unlink()
+        return new_po
+
     # @api.model
     # def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     #     # if context is None:
