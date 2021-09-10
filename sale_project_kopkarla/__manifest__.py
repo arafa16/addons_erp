@@ -24,11 +24,13 @@
                 'sale','sales_team',
                 'sprogroup_purchase_request',
                 'cost_centers_kopkarla',
+                'account'
                 ],
     'data': [
         'views/project_tabel.xml',
         'views/sale_view.xml',
         'views/sale_report.xml',
+        'views/account_invoice_view.xml',
         'reports/sale_report_margin_views.xml',
         'security/ir.model.access.csv',
     ],
