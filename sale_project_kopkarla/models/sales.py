@@ -11,6 +11,8 @@ class EnhancedSalesArea(models.Model):
     purchase_count = fields.Integer(string='# of Purchases', compute='_get_purchased', readonly=True)
     purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True, store=True)
     purchase_ids = fields.Many2many("purchase.order", string='Purchases', compute="_get_purchased", readonly=True, copy=False)
+    advance_amount = fields.Float(string='# of Advances', compute='_get_advance', readonly=True, store=True)
+    expense_amount = fields.Float(string='# of Expenses', compute='_get_expense', readonly=True, store=True)
 
     @api.multi
     def convert_to_project(self):
@@ -134,6 +136,28 @@ class EnhancedSalesArea(models.Model):
                 'purchase_count': po_count,
                 'purchase_amount': po_amount,
                 'purchase_ids': po_ids,
+            })
+
+    @api.multi
+    def _get_advance(self):
+        for order in self:
+            adv_amount = 0
+            for adv in self.env['hr.advance'].sudo().search([('order_id', '=', order.id),('state', '=', 'paid')]):
+                adv_amount += adv.total_amount_expense
+
+            order.update({
+                'advance_amount': adv_amount,
+            })
+
+    @api.multi
+    def _get_expense(self):
+        for order in self:
+            exp_amount = 0
+            for exp in self.env['hr.expense.sheet'].sudo().search([('order_id', '=', order.id),('state', '=', 'done')]):
+                exp_amount += exp.expense_amount
+
+            order.update({
+                'expense_amount': exp_amount,
             })
 
     @api.multi

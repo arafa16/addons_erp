@@ -142,9 +142,9 @@
                         <page string="Charge To">
                             <group>
                                 <group>
-                                    <field name="order_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('request_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>
-                                    <field name="request_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': ['|',('order_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>
-                                    <field name="department_id_charge_to" string="Department" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('order_id', '!=', False),('request_id', '!=', False)]}"/>
+                                    <field name="order_id" options="{'no_open': True, 'no_create': True}"/> <!--attrs="{'invisible': ['|',('request_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
+                                    <field name="request_id" options="{'no_create': True, 'no_open': True}"/> <!--attrs="{'invisible': ['|',('order_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
+                                    <field name="department_id_charge_to" string="Department" options="{'no_open': True, 'no_create': True}"/> <!--attrs="{'invisible': ['|',('order_id', '!=', False),('request_id', '!=', False)]}"/>-->
                                 </group>
                                 <group>
                                     <field name="cost_center_id" options="{'no_open': True, 'no_create': True}"

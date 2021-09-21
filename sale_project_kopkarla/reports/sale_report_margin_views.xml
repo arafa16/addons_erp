@@ -10,6 +10,8 @@
                  <field name="confirmation_date" interval="month" type="row"/>
                  <field name="amount_untaxed" type="measure"/>
                  <field name="purchase_amount" type="measure"/>
+                 <field name="advance_amount" type="measure"/>
+                 <field name="expense_amount" type="measure"/>
                  <field name="margin_amount" type="measure"/>
              </pivot>
          </field>

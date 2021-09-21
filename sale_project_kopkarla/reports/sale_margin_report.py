@@ -22,6 +22,8 @@ class SaleMarginReport(models.Model):
     # amount_tax = fields.Float('Tax Total', readonly=True)
     # amount_total = fields.Float('Total', readonly=True)
     purchase_amount = fields.Float('Purchase Total', readonly=True)
+    advance_amount = fields.Float('Advance Total', readonly=True)
+    expense_amount = fields.Float('Expense Total', readonly=True)
     margin_amount = fields.Float('Margin Total', readonly=True)
     nbr = fields.Integer('# of Sales', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
@@ -44,7 +46,9 @@ class SaleMarginReport(models.Model):
              SELECT s.id,
                     s.amount_untaxed,
                     s.purchase_amount,
-                    (s.amount_untaxed - s.purchase_amount) as margin_amount,
+                    s.advance_amount,
+                    s.expense_amount,
+                    (s.amount_untaxed - s.purchase_amount - s.advance_amount - s.expense_amount) as margin_amount,
                     count(*) as nbr,
                     s.name as name,
                     s.date_order as date,
