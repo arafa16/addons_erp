@@ -120,9 +120,11 @@ class HRAdvance(models.Model):
         if self.request_id.id:
             self.cost_center_id = self.request_id.cost_center_id.id
             self.analytic_account_id = self.request_id.analytic_account_id.id
+            self.order_id = self.request_id.salesorder_id.id
         else:
             self.cost_center_id = self.employee_id.cost_center_id.id
             self.analytic_account_id = self.employee_id.analytic_account_id.id
+            self.order_id = False
 
     @api.onchange('department_id_charge_to')
     def _onchange_department_id_charge_to(self):
