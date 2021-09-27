@@ -9,7 +9,8 @@
                 <field name="analytic_account_id" position="replace">
                     <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}"
                            attrs="{'readonly': ['|',('analytic_account_id','!=',False),('invoice_count','!=',0),('state','=','sale')]}"
-                           groups="analytic.group_analytic_accounting" force_save="1" options="{'no_create':True, 'no_open':True}"/>
+                           groups="analytic.group_analytic_accounting" force_save="1" options="{'no_create':True, 'no_open':True}"
+                           required="True"/>
                 </field>
             </field>
         </record>

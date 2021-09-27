@@ -11,7 +11,8 @@
                     <!--<xpath expr="//form/sheet/group/group[2]/field[@name='pricelist_id']" position="after">-->
                     <field name="client_order_ref" position="after">
                         <field name="cost_center_id" string="Cost Center"
-                               options="{'no_create_edit':True, 'no_open': True}"/>
+                               options="{'no_create_edit':True, 'no_open': True}"
+                               required="True"/>
                     </field>
 
                     <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom']"
