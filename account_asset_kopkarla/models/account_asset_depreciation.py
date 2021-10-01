@@ -223,6 +223,8 @@ class AssetDepreciation(models.Model):
         for depreciation in self:
             if depreciation.state in ['posted']:
                 raise UserError(_('You cannot delete a document is in %s state.') % (depreciation.state,))
+            for line in depreciation.depreciation_line_ids:
+                line.move_check = False
         return super(AssetDepreciation, self).unlink()
 
     @api.multi
