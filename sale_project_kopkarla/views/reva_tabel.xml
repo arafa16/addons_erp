@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="enhanced_reva_group_tabel_tree">
+            <field name="name">enhanced.reva.group.tabel.tree</field>
+            <field name="model">enhanced.reva.group.tabel</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="urutan"/>
+                    <field name="sale_reva_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="enhanced_reva_group_tabel_form">
+            <field name="name">enhanced.reva.group.tabel.form</field>
+            <field name="model">enhanced.reva.group.tabel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="urutan"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Reva Detail">
+                                <field name="sale_reva_ids"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="enhanced_reva_group_tabel_action">
+            <field name="name">Master Reva Group</field>
+            <field name="res_model">enhanced.reva.group.tabel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="tabel_master_reva_group"
+            name="Data Master Reva Group"
+            parent="sale.menu_sale_config"
+            action="enhanced_reva_group_tabel_action"
+            sequence="3"/>
+
+        <record model="ir.ui.view" id="enhanced_reva_tabel_tree_inherit">
+            <field name="name">enhanced.reva.tabel.tree</field>
+            <field name="model">enhanced.reva.tabel</field>
+            <field name="inherit_id" ref="enhanced_sales_attribute.enhanced_reva_tabel_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="reva_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
