@@ -24,11 +24,12 @@ class SaleRevaReport(models.Model):
     # purchase_amount = fields.Float('Purchase Total', readonly=True)
     # advance_amount = fields.Float('Advance Total', readonly=True)
     # expense_amount = fields.Float('Expense Total', readonly=True)
-    price_total = fields.Float('Total', readonly=True)
+    price_total = fields.Float('Amount Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
     amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
     amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
-    sales_total = fields.Float('Sales Amount', readonly=True)
+    amt_cancel = fields.Float('Amount Canceled', readonly=True)
+    # sales_total = fields.Float('Sales Amount', readonly=True)
     nbr = fields.Integer('# of Sales', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     cost_center_id = fields.Many2one("cost.center", string="Cost Center", readonly=True)
@@ -50,7 +51,6 @@ class SaleRevaReport(models.Model):
 
     def _select(self):
         select_str = """
-            WITH currency_rate as (%s)
              SELECT s.id,
                     s.jenis_so,
                     rg.id as reva_group_id,
@@ -64,7 +64,8 @@ class SaleRevaReport(models.Model):
                     sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_subtotal,
                     sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_to_invoice,
                     sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
-                    s.amount_total as sales_total,
+                    0 as amt_cancel,
+                    -- s.amount_total as sales_total,
                     count(*) as nbr,
                     s.name as name,
                     s.date_order as date,
@@ -80,7 +81,37 @@ class SaleRevaReport(models.Model):
                     -- s.team_id as team_id,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id
-        """ % self.env['res.currency']._select_companies_rates()
+        """
+        return select_str
+
+    def _select_cancel(self):
+        select_str = """
+             SELECT s.id,
+                    s.jenis_so,
+                    rg.id as reva_group_id,
+                    CONCAT(s.type_reva, ' ', r.name) AS reva_status,
+                    0 as price_total,
+                    0 as price_subtotal,
+                    0 as amt_to_invoice,
+                    0 as amt_invoiced,
+                    sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_cancel,
+                    -- 0 as sales_total,
+                    count(*) as nbr,
+                    s.name as name,
+                    s.date_order as date,
+                    s.confirmation_date as confirmation_date,
+                    s.state as state,
+                    s.partner_id as partner_id,
+                    s.user_id as user_id,
+                    s.company_id as company_id,
+                    extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
+                    s.pricelist_id as pricelist_id,
+                    s.cost_center_id as cost_center_id,
+                    s.analytic_account_id as analytic_account_id,
+                    -- s.team_id as team_id,
+                    partner.country_id as country_id,
+                    partner.commercial_partner_id as commercial_partner_id
+        """
         return select_str
 
     def _from(self):
@@ -99,11 +130,17 @@ class SaleRevaReport(models.Model):
         return from_str
 
     def _where(self):
-        # where_str = """
-        #     WHERE invoice_status NOT IN ('invoiced') --state = 'sale' AND
-        # """
-        # return where_str
-        return ""
+        where_str = """
+            WHERE s.state not in ('cancel')
+        """
+        return where_str
+        # return ""
+
+    def _where_cancel(self):
+        where_str = """
+            WHERE s.state in ('cancel')
+        """
+        return where_str
 
     def _group_by(self):
         group_by_str = """
@@ -131,9 +168,17 @@ class SaleRevaReport(models.Model):
         # self._table = sale_report
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
+            WITH currency_rate as (%s)
             %s
             FROM ( %s )
             %s
             %s
-            )""" % (self._table, self._select(), self._from(), self._where(), self._group_by()))
+            UNION
+            %s
+            FROM ( %s )
+            %s
+            %s
+            )""" % (self._table, self.env['res.currency']._select_companies_rates(),
+                    self._select(), self._from(), self._where(), self._group_by(),
+                    self._select_cancel(), self._from(), self._where_cancel(), self._group_by()))
 
