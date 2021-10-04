@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_invoice_weekly_report_account_manager,account.invoice.weekly.report,model_account_invoice_weekly_report,account.group_account_manager,1,1,1,1
+access_invoice_weekly_report_account_billing,account.invoice.weekly.report,model_account_invoice_weekly_report,account.group_account_invoice,1,1,1,1

@@ -25,6 +25,7 @@ Weekly Invoice Report Status
     ],
     'data': [
         'reports/account_invoice_weekly_report_view.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'auto_install': False,
