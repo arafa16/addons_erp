@@ -30,8 +30,8 @@ class InventoryValueationEnhanced(models.TransientModel):
         style0 = xlwt.easyxf('font: bold True, color black; align: horiz center;')
         style1 = xlwt.easyxf('font: bold True, color black; borders: top_color black, bottom_color black, right_color black, left_color black, left thin, right thin, top thin, bottom thin; pattern: pattern solid, fore_color green; align: horiz center;')
         style2 = xlwt.easyxf('font: bold off, color black; borders: top_color black, bottom_color black, right_color black, left_color black, left thin, right thin, top thin, bottom thin; pattern: pattern solid, fore_color white;')
-        namakolom = ['No','WAKTU','NOMOR PR','PEMBUAT PR','DIVISI','NO PO','NAMA BARANG','JUMLAH','SATUAN','HARGA SATUAN','TOTAL HARGA BELI','STATUS','REFERENCE']
-        lebarkolom = [10,15,12,15,20,12,60,12,20,25,25,20,20]
+        namakolom = ['No','WAKTU','NOMOR PR','PEMBUAT PR','DIVISI','COST CENTER','ANALYTIC ACCOUNT','NO PO','NAMA BARANG','JUMLAH','SATUAN','HARGA SATUAN','TOTAL HARGA BELI','STATUS','REFERENCE']
+        lebarkolom = [10,15,12,15,20,25,25,12,60,12,20,25,25,20,20]
         ii = 0
         worksheet.write_merge(0,0,0,10,('Tanggal '+str(self.tanggal)),style0)
         for kolom in namakolom:
@@ -57,23 +57,25 @@ class InventoryValueationEnhanced(models.TransientModel):
                 if namadivisi != False:
                     divisi = namadivisi
             worksheet.write(jj,4,divisi,style2)
-            worksheet.write(jj,5,move.picking_id.purchase_id.display_name,style2)
-            worksheet.write(jj,6,move.product_id.display_name,style2)
-            worksheet.write(jj,7,move.product_qty,style2)
-            worksheet.write(jj,8,move.product_uom.name,style2)
+            worksheet.write(jj,5,move.cost_center_id.name,style2)
+            worksheet.write(jj,6,move.analytic_account_id.name,style2)
+            worksheet.write(jj,7,move.picking_id.purchase_id.display_name,style2)
+            worksheet.write(jj,8,move.product_id.display_name,style2)
+            worksheet.write(jj,9,move.product_qty,style2)
+            worksheet.write(jj,10,move.product_uom.name,style2)
             datapo_line = move.picking_id.purchase_id.order_line
             harga = 0
             for barispo in datapo_line:
                 if barispo.product_id.id == move.product_id.id:
                     harga = barispo.price_unit
-            worksheet.write(jj,9,harga,style2)
+            worksheet.write(jj,11,harga,style2)
             rumus = harga * move.product_qty
-            worksheet.write(jj,10,rumus,style2)
+            worksheet.write(jj,12,rumus,style2)
             if move.picking_id.purchase_id.langsung == True:
-                worksheet.write(jj,11,'Direct to Customer',style2)
+                worksheet.write(jj,13,'Direct to Customer',style2)
             else:
-                worksheet.write(jj,11,'Internal Location',style2)
-            worksheet.write(jj,12,move.reference,style2)
+                worksheet.write(jj,13,'Internal Location',style2)
+            worksheet.write(jj,14,move.reference,style2)
             jj = jj + 1
 
         fp = BytesIO()
