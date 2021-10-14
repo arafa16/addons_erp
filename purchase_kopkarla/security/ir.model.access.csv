@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_audit_report_account_user,purchase.audit.report.account.user,model_purchase_audit_report,account.group_account_user,1,1,1,1
+access_purchase_audit_report_account_manager,purchase.audit.report.account.manager,model_purchase_audit_report,account.group_account_manager,1,1,1,1
+access_purchase_audit_report_purchase_user,purchase.audit.report.purchase.user,model_purchase_audit_report,purchase.group_purchase_user,1,1,1,1
+access_purchase_audit_report_purchase_manager,purchase.audit.report.purchase.manager,model_purchase_audit_report,purchase.group_purchase_manager,1,1,1,1

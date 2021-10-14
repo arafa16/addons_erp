@@ -28,8 +28,10 @@ It gives each transaction a cost center and an analytic account.
     ],
     'data': [
         'security/purchase_security.xml',
+        'security/ir.model.access.csv',
         'wizard/purchase_make_invoice_advance_views.xml',
         'views/purchase_views.xml',
+        'reports/purchase_audit_report_views.xml',
         'views/res_config_settings_views.xml',
         'views/payment_term_view.xml',
     ],
