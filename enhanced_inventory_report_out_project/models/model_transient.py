@@ -27,8 +27,8 @@ class InventoryOutOperationEnhanced(models.TransientModel):
             worksheet = workbook.add_sheet('INVENTORY OUT OPERATION',cell_overwrite_ok=True)
             style1 = xlwt.easyxf('font: bold True, color black; borders: top_color black, bottom_color black, right_color black, left_color black, left thin, right thin, top thin, bottom thin; pattern: pattern solid, fore_color red; align: horiz center;')
             style2 = xlwt.easyxf('font: bold off, color black; borders: top_color black, bottom_color black, right_color black, left_color black, left thin, right thin, top thin, bottom thin; pattern: pattern solid, fore_color white;')
-            namakolom = ['WAKTU','KODE BARANG','NAMA MATERIAL','QTY','SATUAN','CATEGORY','PELANGGAN','NO JARINGAN','TOTAL HARGA','REFERENCE']
-            lebarkolom = [18,20,60,12,12,40,45,15,12,18]
+            namakolom = ['WAKTU','KODE BARANG','NAMA MATERIAL','CATEGORY','PELANGGAN','NO JARINGAN','COST CENTER','ANALYTIC ACCOUNT','QTY','SATUAN','TOTAL HARGA','REFERENCE']
+            lebarkolom = [18,20,60,40,45,15,25,25,12,12,12,18]
             ii = 0
             for kolom in namakolom:
                 cols = worksheet.col(ii)
@@ -46,14 +46,16 @@ class InventoryOutOperationEnhanced(models.TransientModel):
                 produkid = move.product_id
                 worksheet.write(baris,1,produkid.default_code,style2)
                 worksheet.write(baris,2,produkid.display_name,style2)
-                worksheet.write(baris,3,move.product_uom_qty,style2)
-                worksheet.write(baris,4,move.product_uom.name,style2)
-                worksheet.write(baris,5,move.kategorix.name,style2)
+                worksheet.write(baris,3,move.kategorix.name,style2)
                 cc = move.picking_id
-                worksheet.write(baris,6,cc.idmr.task_idx.related_cust.display_name,style2)
-                worksheet.write(baris,7,cc.idmr.task_idx.related_nojar,style2)
-                worksheet.write(baris,8,move.jumlahx,style2)
-                worksheet.write(baris,9,move.reference,style2)
+                worksheet.write(baris,4,cc.idmr.task_idx.related_cust.display_name,style2)
+                worksheet.write(baris,5,cc.idmr.task_idx.related_nojar,style2)
+                worksheet.write(baris,6,move.cost_center_id.name,style2)
+                worksheet.write(baris,7,move.analytic_account_id.name,style2)
+                worksheet.write(baris,8,move.product_uom_qty,style2)
+                worksheet.write(baris,9,move.product_uom.name,style2)
+                worksheet.write(baris,10,move.jumlahx,style2)
+                worksheet.write(baris,11,move.reference,style2)
                 baris = baris + 1
             fp = BytesIO()
             workbook.save(fp)
