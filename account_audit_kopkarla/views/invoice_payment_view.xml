@@ -13,6 +13,8 @@
                     <field name="date_due"/>
                     <field name="partner_id"/>
                     <field name="sale_id"/>
+                    <field name="sale_date"/>
+                    <field name="delivery_date"/>
                     <field name="sales_person"/>
                     <field name="faktur_number"/>
                     <field name="faktur_date"/>

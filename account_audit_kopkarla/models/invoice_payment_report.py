@@ -14,6 +14,8 @@ class BudgetRequestReport(models.TransientModel):
     date_due = fields.Date('Due Date')
     partner_id = fields.Many2one('res.partner', string='Partner')
     sale_id = fields.Many2one('sale.order', 'Sales No')
+    sale_date = fields.Date('Order Date')
+    delivery_date = fields.Date('Delivery Date')
     amount_untaxed = fields.Float('DPP') #, currency_field='currency_id')
     amount_tax = fields.Float('Tax') #, currency_field='currency_id')
     amount_total = fields.Float('Total') #, currency_field='currency_id')
@@ -86,8 +88,13 @@ class BudgetRequestReport(models.TransientModel):
         for r in res:
             line = self.env['sale.invoice.payment.report']
             sale_id = False
+            sale_date = False
+            delivery_date = False
             if r[6]:
-                sale_id = self.env['sale.order'].sudo().search([('name', '=', r[6])]).id
+                sale = self.env['sale.order'].sudo().search([('name', '=', r[6])])
+                sale_id = sale.id
+                sale_date = sale.date_order
+                delivery_date = sale.delivery_doc
             query = """
                 select concat(code, ':', name) as accounts 
                 from account_account where id in (
@@ -119,6 +126,8 @@ class BudgetRequestReport(models.TransientModel):
                         'date_due': r[4],
                         'partner_id': r[5],
                         'sale_id': sale_id,
+                        'sale_date': sale_date,
+                        'delivery_date': delivery_date,
                         'amount_untaxed': r[7],
                         'amount_tax': r[8],
                         'amount_total': r[9],
@@ -146,6 +155,8 @@ class BudgetRequestReport(models.TransientModel):
                     'date_due': r[4],
                     'partner_id': r[5],
                     'sale_id': sale_id,
+                    'sale_date': sale_date,
+                    'delivery_date': delivery_date,
                     'amount_untaxed': r[7],
                     'amount_tax': r[8],
                     'amount_total': r[9],
