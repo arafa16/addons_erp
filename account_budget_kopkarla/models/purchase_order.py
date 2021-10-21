@@ -139,12 +139,16 @@ class PurchaseOrderLine(models.Model):
     @api.one
     @api.depends('product_id')
     def _get_invoice_line_account(self):
-        if self.product_id:
-            accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
-            if self.product_id.type == 'product':
-                account_id = accounts_data['stock_input'].id
-            else:
-                account_id = accounts_data['expense'].id
+        for line in self:
+            account_id = False
+            if line.order_id.requisition_id.id:
+                account_id = line.order_id.requisition_id.nomor_pr.line_ids.filtered(lambda x: x.product_id == line.product_id).mapped('account_id')[0].id
+            if not account_id and self.product_id:
+                accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
+                if self.product_id.type == 'product':
+                    account_id = accounts_data['stock_input'].id
+                else:
+                    account_id = accounts_data['expense'].id
             self.account_id = account_id
 
     def _prepare_analytic_line(self, reverse=False):
