@@ -141,7 +141,7 @@ class PurchaseOrderLine(models.Model):
     def _get_invoice_line_account(self):
         for line in self:
             account_id = False
-            if line.order_id.requisition_id.id:
+            if not line.is_downpayment and line.order_id.requisition_id.id:
                 account_id = line.order_id.requisition_id.nomor_pr.line_ids.filtered(lambda x: x.product_id == line.product_id).mapped('account_id')[0].id
             if not account_id and self.product_id:
                 accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
