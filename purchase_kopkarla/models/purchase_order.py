@@ -213,7 +213,7 @@ class PurchaseOrderLine(models.Model):
             req_line = self.env['sprogroup.purchase.request.line'].sudo().search([('request_id', '=', req.id), ('product_id', '=', self.product_id.id)], limit=1)
             if req_line:
                 account = req_line.account_id
-            else:
+            if not account:
                 account = self.product_id.property_account_expense_id or self.product_id.categ_id.property_account_expense_categ_id
             if not account:
                 raise UserError(_('Please define expense account for this product: "%s" (id:%d) - or for its category: "%s".') %
