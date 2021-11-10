@@ -195,6 +195,7 @@ class GeneralLedgerReportMoveLine(models.TransientModel):
     label = fields.Char()
     cost_center = fields.Char()
     analytic_account = fields.Char()
+    sale_order = fields.Char()
     matching_number = fields.Char()
     debit = fields.Float(digits=(16, 2))
     credit = fields.Float(digits=(16, 2))
@@ -925,6 +926,7 @@ INSERT INTO
     label,
     cost_center,
     analytic_account,
+    sale_order,
     matching_number,
     debit,
     credit,
@@ -990,6 +992,7 @@ SELECT
     CONCAT_WS(' - ', NULLIF(ml.ref, ''), NULLIF(ml.name, '')) AS label,
     cc.name AS cost_center,
     aa.name AS analytic_account,
+    case ai.type when 'out_invoice' then ai.origin else so.name end AS sale_order,
     fr.name AS matching_number,
     ml.debit,
     ml.credit,
@@ -1077,6 +1080,13 @@ LEFT JOIN cost_center cc ON ml.cost_center_id = cc.id
 LEFT JOIN
     account_analytic_account aa ON ml.analytic_account_id = aa.id
             """
+        query_inject_move_line += """
+    left join account_invoice ai on ml.invoice_id = ai.id
+    left join purchase_order po on ai.origin = po.name
+    left join purchase_requisition pr on po.requisition_id = pr.id
+    left join sprogroup_purchase_request spr on pr.nomor_pr = spr.id
+    left join sale_order so on spr.salesorder_id = so.id
+                """
         query_inject_move_line += """
 WHERE
     ra.report_id = %s

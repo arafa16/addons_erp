@@ -129,6 +129,7 @@
                         <!--## cost_center-->
                         <div class="act_as_cell" style="width: 8.03%;">Cost center</div>
                         <div class="act_as_cell" style="width: 8.03%;">Analytic account</div>
+                        <div class="act_as_cell" style="width: 8.03%;">Sale Order</div>
                     </t>
                     <!--## matching_number-->
                     <div class="act_as_cell" style="width: 2.41%;">Rec.</div>
@@ -165,6 +166,7 @@
                 <div class="act_as_cell amount">Initial balance</div>
                 <t t-if="show_cost_center">
                     <!--## cost_center-->
+                    <div class="act_as_cell"/>
                     <div class="act_as_cell"/>
                     <div class="act_as_cell"/>
                 </t>
@@ -391,6 +393,7 @@
                             </span>
                         </div>
                     </t>
+                    <div class="act_as_cell left"><span t-field="line.sale_order"/></div>
                     <!--## matching_number-->
                     <div class="act_as_cell">
                         <t t-set="res_model" t-value="'account.full.reconcile'"/>
