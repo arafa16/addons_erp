@@ -45,7 +45,7 @@
                                  &#160; &#160; &#160; &#160; &#160; &#160; Pengirim
                             </div>
                             <div style="padding-top:80px;">
-                                ( &#160; <span style="text-decoration:underline;">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;</span> &#160; )
+                                (<span style="text-decoration:underline;">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;</span>)
                             </div>
                         </div>
                         <div style="float:right; width:200px;">
@@ -53,14 +53,14 @@
                                  &#160; &#160; &#160; &#160; &#160; &#160; Penerima
                             </div>
                             <div style="padding-top:80px;">
-                                ( &#160; <span style="text-decoration:underline;">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;</span> &#160; )
+                                (<span style="text-decoration:underline;">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;</span>)
                             </div>
                         </div>
                         <div style="clear:both;"></div>
                     </div>
                 </xpath>
                 <xpath expr="//table[2]/tbody/tr/td/span" position="replace">
-                    <span t-field="move.move_id.name"/>
+                    <span t-field="move.name"/>
                 </xpath>
                 <xpath expr="//table[3]/tbody/tr/td/span" position="replace">
                     <span t-field="move_line.move_id.name"/>
