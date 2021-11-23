@@ -59,6 +59,9 @@
                         <div style="clear:both;"></div>
                     </div>
                 </xpath>
+                <xpath expr="//table[3]/tbody/tr/td/span" position="replace">
+                    <span t-field="move_line.move_id.name"/>
+                </xpath>
         </template>
     </data>
 </odoo>
