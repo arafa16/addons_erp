@@ -190,7 +190,8 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         res = {}
         product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
-        if self.order_id.jenis_so in ('Project', 'datacom') and self.product_id.type != 'product' and self.product_id.id != int(product_id):
+        # if self.order_id.jenis_so in ('Project', 'datacom') and self.product_id.type != 'product' and self.product_id.id != int(product_id):
+        if self.order_id.jenis_so in ('Project', 'datacom') and self.product_id.id != int(product_id):
             account = self.order_id.proj_type.project_income_id
             if not account:
                 raise UserError(_('Please define income account for this order type: "%s"') % (self.order_id.jenis_so))
