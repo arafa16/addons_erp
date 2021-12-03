@@ -27,7 +27,9 @@ class SaleRevaReport(models.Model):
     price_total = fields.Float('Amount Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
     amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
+    dpp_to_invoice = fields.Float('DPP To Invoice', readonly=True)
     amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
+    dpp_invoiced = fields.Float('DPP Invoiced', readonly=True)
     amt_cancel = fields.Float('Amount Canceled', readonly=True)
     # sales_total = fields.Float('Sales Amount', readonly=True)
     nbr = fields.Integer('# of Sales', readonly=True)
@@ -63,7 +65,9 @@ class SaleRevaReport(models.Model):
                     sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_subtotal,
                     sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_to_invoice,
+                    sum((l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_to_invoice,
                     sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
+                    sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_invoiced,
                     0 as amt_cancel,
                     -- s.amount_total as sales_total,
                     count(*) as nbr,
@@ -93,7 +97,9 @@ class SaleRevaReport(models.Model):
                     0 as price_total,
                     0 as price_subtotal,
                     0 as amt_to_invoice,
+                    0 as dpp_to_invoice,
                     0 as amt_invoiced,
+                    0 as dpp_invoiced,
                     sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_cancel,
                     -- 0 as sales_total,
                     count(*) as nbr,
