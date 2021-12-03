@@ -65,9 +65,11 @@ class SaleRevaReport(models.Model):
                     sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_subtotal,
                     sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_to_invoice,
-                    sum((l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_to_invoice,
+                    case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
+                         else sum((l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
                     sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
-                    sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_invoiced,
+                    case when sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
+                         else sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_invoiced,
                     0 as amt_cancel,
                     -- s.amount_total as sales_total,
                     count(*) as nbr,
