@@ -992,7 +992,17 @@ SELECT
     CONCAT_WS(' - ', NULLIF(ml.ref, ''), NULLIF(ml.name, '')) AS label,
     cc.name AS cost_center,
     aa.name AS analytic_account,
-    case ai.type when 'out_invoice' then ai.origin else so.name end AS sale_order,
+    case ai.type when 'out_invoice' then ai.origin 
+                 when 'out_refund' then ai.origin 
+                 when 'in_invoice' then so.name
+                 when 'in_refund' then so.name
+                 else case ml.user_type_id when 14 then ai.origin 
+                                           when 17 then so.name 
+                                           when 5 then case when sp.sale_id is not null then sp.origin
+                                                                                        else so2.name
+                                                       end
+                      end
+    end AS sale_order,
     fr.name AS matching_number,
     ml.debit,
     ml.credit,
@@ -1086,6 +1096,12 @@ LEFT JOIN
     left join purchase_requisition pr on po.requisition_id = pr.id
     left join sprogroup_purchase_request spr on pr.nomor_pr = spr.id
     left join sale_order so on spr.salesorder_id = so.id
+    left join stock_move sm on ml.move_id = sm.move_id
+    left join stock_picking sp on sm.picking_id = sp.id
+    left join purchase_order po2 on sp.origin = po2.name
+    left join purchase_requisition pr2 on po2.requisition_id = pr2.id
+    left join sprogroup_purchase_request spr2 on pr2.nomor_pr = spr2.id
+    left join sale_order so2 on spr2.salesorder_id = so2.id
                 """
         query_inject_move_line += """
 WHERE
