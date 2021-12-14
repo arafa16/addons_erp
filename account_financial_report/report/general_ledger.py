@@ -999,7 +999,9 @@ SELECT
                  else case ml.user_type_id when 14 then ai.origin 
                                            when 17 then so.name 
                                            when 5 then case when sp.sale_id is not null then sp.origin
-                                                                                        else so2.name
+                                                            else case when ai2.origin is not null then ai2.origin
+                                                                      else so2.name
+                                                                 end
                                                        end
                       end
     end AS sale_order,
@@ -1101,7 +1103,9 @@ LEFT JOIN
     left join purchase_order po2 on sp.origin = po2.name
     left join purchase_requisition pr2 on po2.requisition_id = pr2.id
     left join sprogroup_purchase_request spr2 on pr2.nomor_pr = spr2.id
-    left join sale_order so2 on spr2.salesorder_id = so2.id
+    left join project_task pt on sp.idtask = pt.id
+    left join sale_order so2 on pt.sale_order_id = so2.id
+    left join account_invoice ai2 on ml.move_id = ai2.move_id
                 """
         query_inject_move_line += """
 WHERE
