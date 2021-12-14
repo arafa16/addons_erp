@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
@@ -217,6 +217,7 @@ class SaleOrderLine(models.Model):
             'product_id': self.product_id.id or False,
             'layout_category_id': self.layout_category_id and self.layout_category_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
+            'cost_center_id': self.order_id.cost_center_id.id,
             'account_analytic_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
         }
