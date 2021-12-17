@@ -1000,7 +1000,9 @@ SELECT
                                            when 17 then so.name 
                                            when 5 then case when sp.sale_id is not null then sp.origin
                                                             else case when ai2.origin is not null then ai2.origin
-                                                                      else so2.name
+                                                                      else case when so2.name is not null then so2.name 
+                                                                                else case when sp.origin is not null then sp.origin else sp.note end 
+                                                                           end
                                                                  end
                                                        end
                       end
