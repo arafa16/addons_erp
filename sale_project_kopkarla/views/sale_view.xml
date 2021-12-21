@@ -30,8 +30,8 @@
                     <button name="action_view_purchase" groups="account.group_account_invoice"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-random"
-                        attrs="{'invisible': [('purchase_amount', '=', 0)]}">
+                        icon="fa-random">
+                        <!--attrs="{'invisible': [('purchase_amount', '=', 0)]}">-->
                         <field name="purchase_amount" widget="statinfo" string="Purchases"/>
                     </button>
                 </button>
