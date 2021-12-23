@@ -55,7 +55,7 @@ class PaymentBankBatch(models.Model):
                 amount = math.ceil(payment_id.amount)
                 desc = re.sub('[`~!@#$%^&*()-+,.<>/?;:\'\"{}|]', ' ',
                               " ".join([i.invoice_id.origin if i.invoice_id.origin else (
-                                  i.invoice_id.reference if i.invoice_id.reference else i.invoice_id.name)
+                                  i.invoice_id.reference if i.invoice_id.reference else (i.invoice_id.name if i.invoice_id.name else i.invoice_id.number))
                                         for i in payment_id.line_ids])[:32])
                 line_ids.append((0, 0, {'payment_id': payment_id.id,
                                         'partner_id': payment_id.partner_id,
