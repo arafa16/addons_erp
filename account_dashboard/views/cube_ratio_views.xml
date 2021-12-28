@@ -82,8 +82,8 @@
             <field name="search_view_id" ref="view_cube_ratio_search"/>
         </record>
 
-        <menuitem id="menu_Aging" name="Dashboard Model Data" parent="account.menu_finance"  sequence="2" groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"/>
-        <menuitem id="menu_cube_ratio_ap" name="Cube Ratio" parent="menu_Aging" action="action_cube_ratio" sequence="90"/>
+        <!--<menuitem id="menu_Aging" name="Dashboard Model Data" parent="account.menu_finance"  sequence="2" groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"/>-->
+        <menuitem id="menu_cube_ratio_ap" name="Cube Ratio" parent="account.menu_account_reports" action="action_cube_ratio" sequence="90"/>
         
     </data>
 </odoo>
