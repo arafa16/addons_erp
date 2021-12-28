@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dashboard_cubes_monthly,dashboard_cubes_monthly,model_dashboard_cubes_financial_report,base.group_user,1,0,0,0
+access_dashboard_cubes_yearly,dashboard_cubes_yearly,model_dashboard_cubes_yearly,base.group_user,1,0,0,0
+access_dashboard_cubes_ratio,dashboard_cubes_ratio,model_dashboard_cubes_ratio,base.group_user,1,0,0,0
+access_dashboard_cubes_ratio_target,dashboard_cubes_ratio_target,model_dashboard_cubes_ratio_target,base.group_user,1,1,1,1

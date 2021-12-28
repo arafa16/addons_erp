@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_cube_ratio_tree" model="ir.ui.view">
+            <field name="name">cube.ratio.tree</field>
+            <field name="model">dashboard.cubes.yearly</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" invisible="0"/>
+                    <field name="sequence" invisible="0"/>
+                    <field name="dimension" invisible="0"/>
+                    <field name="date" invisible="0"/>
+                    <field name="company_id" invisible="0"/>
+                    <field name="currency_id" invisible="0"/>
+                    <field name="balance"/>
+                    <field name="balance_01"/>
+                    <field name="balance_02"/>
+                    <field name="balance_03"/>
+                    <field name="balance_04"/>
+                    <field name="balance_05"/>
+                    <field name="balance_06"/>
+                    <field name="balance_07"/>
+                    <field name="balance_08"/>
+                    <field name="balance_09"/>
+                    <field name="balance_10"/>
+                    <field name="balance_11"/>
+                    <field name="balance_12"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_cube_ratio_form" model="ir.ui.view">
+            <field name="name">cube.ratio.form</field>
+            <field name="model">dashboard.cubes.yearly</field>
+            <field name="arch" type="xml">
+                <form string="Ratio Journal Line">
+                    <sheet>
+                        <group col="2">
+                            <group>
+                                <field name="name" invisible="0"/>
+                                <field name="sequence" invisible="0"/>
+                                <field name="dimension" invisible="0"/>
+                                <field name="date" invisible="0"/>
+                                <field name="company_id" invisible="0"/>
+                                <field name="currency_id" invisible="0"/>
+                            </group>
+                            <group>
+                                <field name="balance"/>
+                                <field name="balance_01"/>
+                                <field name="balance_02"/>
+                                <field name="balance_03"/>
+                                <field name="balance_04"/>
+                                <field name="balance_05"/>
+                                <field name="balance_06"/>
+                                <field name="balance_07"/>
+                                <field name="balance_08"/>
+                                <field name="balance_09"/>
+                                <field name="balance_10"/>
+                                <field name="balance_11"/>
+                                <field name="balance_12"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_cube_ratio_search" model="ir.ui.view">
+            <field name="name">cube.ratio.search</field>
+            <field name="model">dashboard.cubes.yearly</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner Import">
+                    <field name="date"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_cube_ratio" model="ir.actions.act_window">
+            <field name="name">Cube ratio</field>
+            <field name="res_model">dashboard.cubes.yearly</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_cube_ratio_tree"/>
+            <field name="search_view_id" ref="view_cube_ratio_search"/>
+        </record>
+
+        <menuitem id="menu_Aging" name="Dashboard Model Data" parent="account.menu_finance"  sequence="2" groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"/>
+        <menuitem id="menu_cube_ratio_ap" name="Cube Ratio" parent="menu_Aging" action="action_cube_ratio" sequence="90"/>
+        
+    </data>
+</odoo>

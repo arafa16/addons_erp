@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--Current Ratio-->
+        <record id="ins_account_financial_report_current_ratio0" model="account.financial.report">
+            <field name="name">Current Ratio</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_asset_lancar0" model="account.financial.report">
+            <field name="name">Total Asset Lancar</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_current_ratio0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_kewajiban_jangka_pendek0" model="account.financial.report">
+            <field name="name">Total Kewajiban Jangka Pendek</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_current_ratio0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_current_ratio_formula0" model="account.financial.report">
+            <field name="name">Ratio CR</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_current_ratio0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/%s,1,2</field>
+        </record>
+
+        <!--Quick Ratio-->
+        <record id="ins_account_financial_report_quick_ratio0" model="account.financial.report">
+            <field name="name">Quick Ratio</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_cash_on_hand0" model="account.financial.report">
+            <field name="name">Cash on Hand</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_quick_ratio0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_bank0" model="account.financial.report">
+            <field name="name">Bank &amp; Deposito</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_quick_ratio0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_cash_bank0" model="account.financial.report">
+            <field name="name">Total Cash &amp; Bank</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_quick_ratio0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/%s,1,2</field>
+        </record>
+        <record id="ins_account_financial_report_kewajiban_jangka_pendek1" model="account.financial.report">
+            <field name="name">Total Kewajiban Jangka Pendek</field>
+            <field name="sequence">4</field>
+            <field name="parent_id" ref="ins_account_financial_report_quick_ratio0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_quick_ratio_formula0" model="account.financial.report">
+            <field name="name">Ratio QR</field>
+            <field name="sequence">5</field>
+            <field name="parent_id" ref="ins_account_financial_report_quick_ratio0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/%s,[3],[4]</field>
+        </record>
+
+        <!--AR Days-->
+        <record id="ins_account_financial_report_ar_days0" model="account.financial.report">
+            <field name="name">AR Days</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_receivable0" model="account.financial.report">
+            <field name="name">Piutang usaha (AR Trade)</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_ar_days0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_revenue0" model="account.financial.report">
+            <field name="name">Pendapatan/Revenue (all)</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_ar_days0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_quick_ratio_ar_days0" model="account.financial.report">
+            <field name="name">Ratio ARD</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_ar_days0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/%s*%s*30,1,2,M</field>
+        </record>
+
+        <!--AP Days-->
+        <record id="ins_account_financial_report_ap_days0" model="account.financial.report">
+            <field name="name">AP Days</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_payable0" model="account.financial.report">
+            <field name="name">Hutang usaha (AP Trade)</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_ap_days0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_cost_of_revenue0" model="account.financial.report">
+            <field name="name">Cost of Revenue (Beban Langsung/HPP)</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_ap_days0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_ratio_ap_days0" model="account.financial.report">
+            <field name="name">Ratio APD</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_ap_days0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/%s*%s*30,1,2,M</field>
+        </record>
+
+        <!--Inventory Turnover-->
+        <record id="ins_account_financial_report_inventory_turnover0" model="account.financial.report">
+            <field name="name">Inventory Turnover</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_inventory0" model="account.financial.report">
+            <field name="name">Inventories/Persediaan</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_inventory_turnover0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_cost_of_revenue1" model="account.financial.report">
+            <field name="name">Cost of Revenue (Beban Langsung/HPP)</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_inventory_turnover0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_ratio_inventory_turnover0" model="account.financial.report">
+            <field name="name">Ratio IT</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_inventory_turnover0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/%s*%s*30,1,2,M</field>
+        </record>
+
+        <!--OPR Cycle-->
+        <record id="ins_account_financial_report_opr_cycle0" model="account.financial.report">
+            <field name="name">OPR Cycle</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_opr_ar_days0" model="account.financial.report">
+            <field name="name">AR Days</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_opr_cycle0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">account_report</field>
+        </record>
+        <record id="ins_account_financial_report_opr_inventory_turnover0" model="account.financial.report">
+            <field name="name">Inventory Turnover</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_opr_cycle0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">account_report</field>
+        </record>
+        <record id="ins_account_financial_report_opr_ap_days0" model="account.financial.report">
+            <field name="name">AP Days</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_opr_cycle0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">account_report</field>
+        </record>
+        <record id="ins_account_financial_report_opr_cycle_ratio0" model="account.financial.report">
+            <field name="name">Ratio OPR</field>
+            <field name="sequence">4</field>
+            <field name="parent_id" ref="ins_account_financial_report_opr_cycle0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s+%s-%s,1,2,3</field>
+        </record>
+
+        <!--GP Margin-->
+        <record id="ins_account_financial_report_gp_margin0" model="account.financial.report">
+            <field name="name">GP Margin</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_gp_margin_laba_kotor0" model="account.financial.report">
+            <field name="name">Laba Kotor</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_gp_margin0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_gp_margin_revenue0" model="account.financial.report">
+            <field name="name">Pendapatan/Revenue (all)</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_gp_margin0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_gp_margin_ratio0" model="account.financial.report">
+            <field name="name">Ratio GP (%)</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_gp_margin0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/%s*100,1,2</field>
+        </record>
+
+        <!--OPR Profit-->
+        <record id="ins_account_financial_report_opr_profit0" model="account.financial.report">
+            <field name="name">OPR Profit</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_opr_profit_laba0" model="account.financial.report">
+            <field name="name">Laba Operasional</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_opr_profit0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_opr_profit_revenue0" model="account.financial.report">
+            <field name="name">Pendapatan/Revenue (all)</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_opr_profit0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_opr_profit_ratio0" model="account.financial.report">
+            <field name="name">Ratio OPR (%)</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_opr_profit0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/%s*100,1,2</field>
+        </record>
+
+        <!--DER-->
+        <record id="ins_account_financial_report_der0" model="account.financial.report">
+            <field name="name">DER</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+            <field name="dashboard">1</field>
+        </record>
+        <record id="ins_account_financial_report_der_payable0" model="account.financial.report">
+            <field name="name">Hutang usaha (AP Trade)</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="ins_account_financial_report_der0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_der_tax0" model="account.financial.report">
+            <field name="name">Total Ekuitas</field>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="ins_account_financial_report_der0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_der_equity0" model="account.financial.report">
+            <field name="name">Laba Tahun Berjalan</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="ins_account_financial_report_der0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">group</field>
+        </record>
+        <record id="ins_account_financial_report_der_ratio0" model="account.financial.report">
+            <field name="name">Ratio DER</field>
+            <field name="sequence">4</field>
+            <field name="parent_id" ref="ins_account_financial_report_der0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">formula</field>
+            <field name="formula">%s/(%s+%s),1,2,3</field>
+        </record>
+    </data>
+<!--
+
+    <data noupdate="1">
+        &lt;!&ndash;GPM MBUT&ndash;&gt;
+        <record id="ins_account_gpm_mbut0" model="account.financial.report">
+            <field name="name">GROSS PROFIT MARGIN MBUT</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+        </record>
+            <record id="ins_account_gpm_mbut_revenue0" model="account.financial.report">
+                <field name="name">REVENUE</field>
+                <field name="sequence">1</field>
+                <field name="parent_id" ref="ins_account_gpm_mbut0"/>
+                <field name="sign">-1</field>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_mbut_revenue_civil0" model="account.financial.report">
+                    <field name="name">Civil</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_revenue0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_mbut_revenue_maintenance0" model="account.financial.report">
+                    <field name="name">Maintenance</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_revenue0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_mbut_revenue_rent0" model="account.financial.report">
+                    <field name="name">Rental</field>
+                    <field name="sequence">3</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_revenue0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_mbut_revenue_services0" model="account.financial.report">
+                    <field name="name">Services</field>
+                    <field name="sequence">4</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_revenue0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+            <record id="ins_account_gpm_mbut_cost0" model="account.financial.report">
+                <field name="name">COST</field>
+                <field name="sequence">2</field>
+                <field name="parent_id" ref="ins_account_gpm_mbut0"/>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_mbut_cost_civil0" model="account.financial.report">
+                    <field name="name">Civil</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_cost0"/>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">sum</field>
+                </record>
+                    <record id="ins_account_gpm_mbut_cost_civil_construction0" model="account.financial.report">
+                        <field name="name">Civil Construction</field>
+                        <field name="sequence">1</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_civil0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                <record id="ins_account_gpm_mbut_cost_maintenance0" model="account.financial.report">
+                    <field name="name">Maintenance</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_cost0"/>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">sum</field>
+                </record>
+                    <record id="ins_account_gpm_mbut_cost_maintenance_ac0" model="account.financial.report">
+                        <field name="name">Maintenance AC</field>
+                        <field name="sequence">1</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_maintenance0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_cost_maintenance_gedung0" model="account.financial.report">
+                        <field name="name">Maintenance Gedung</field>
+                        <field name="sequence">2</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_maintenance0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_cost_maintenance_stp0" model="account.financial.report">
+                        <field name="name">Maintenance STP - GWT</field>
+                        <field name="sequence">3</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_maintenance0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                <record id="ins_account_gpm_mbut_cost_rent0" model="account.financial.report">
+                    <field name="name">Rental</field>
+                    <field name="sequence">3</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_cost0"/>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">sum</field>
+                </record>
+                    <record id="ins_account_gpm_mbut_cost_rent_car0" model="account.financial.report">
+                        <field name="name">Rent a Car</field>
+                        <field name="sequence">1</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_rent0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                <record id="ins_account_gpm_mbut_cost_services0" model="account.financial.report">
+                    <field name="name">Services</field>
+                    <field name="sequence">4</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_cost0"/>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">sum</field>
+                </record>
+                    <record id="ins_account_gpm_mbut_cost_services_administration0" model="account.financial.report">
+                        <field name="name">Administration Support</field>
+                        <field name="sequence">1</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_services0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_cost_services_cleaning0" model="account.financial.report">
+                        <field name="name">Cleaning Service</field>
+                        <field name="sequence">2</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_services0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_cost_services_js0" model="account.financial.report">
+                        <field name="name">Job Supply</field>
+                        <field name="sequence">3</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_services0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_cost_services_ob0" model="account.financial.report">
+                        <field name="name">Office Boy</field>
+                        <field name="sequence">4</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_services0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_cost_services_svcjapek0" model="account.financial.report">
+                        <field name="name">Services Japek</field>
+                        <field name="sequence">5</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_services0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_cost_services_mejapek0" model="account.financial.report">
+                        <field name="name">ME Japek</field>
+                        <field name="sequence">6</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_cost_services0"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">accounts</field>
+                    </record>
+            <record id="ins_account_gpm_mbut_gpm0" model="account.financial.report">
+                <field name="name">GROSS PROFIT MARGIN</field>
+                <field name="sequence">3</field>
+                <field name="parent_id" ref="ins_account_gpm_mbut0"/>
+                <field name="sign">-1</field>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_mbut_civil0" model="account.financial.report">
+                    <field name="name">Civil</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_gpm0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">sum</field>
+                </record>
+                    <record id="ins_account_gpm_mbut_civil_revenue0" model="account.financial.report">
+                        <field name="name">Revenue</field>
+                        <field name="sequence">1</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_civil0"/>
+                        <field name="sign">-1</field>
+                        <field name="account_report_id" ref="ins_account_gpm_mbut_revenue_civil0"/>
+                        <field name="type">account_report</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_civil_cost0" model="account.financial.report">
+                        <field name="name">Cost</field>
+                        <field name="sequence">2</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_civil0"/>
+                        <field name="account_report_id" ref="ins_account_gpm_mbut_cost_civil0"/>
+                        <field name="type">account_report</field>
+                    </record>
+                <record id="ins_account_gpm_mbut_maintenance0" model="account.financial.report">
+                    <field name="name">Maintenance</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_gpm0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">sum</field>
+                </record>
+                    <record id="ins_account_gpm_mbut_maintenance_revenue0" model="account.financial.report">
+                        <field name="name">Revenue</field>
+                        <field name="sequence">1</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_maintenance0"/>
+                        <field name="sign">-1</field>
+                        <field name="account_report_id" ref="ins_account_gpm_mbut_revenue_maintenance0"/>
+                        <field name="type">account_report</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_maintenance_cost0" model="account.financial.report">
+                        <field name="name">Cost</field>
+                        <field name="sequence">2</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_maintenance0"/>
+                        <field name="account_report_id" ref="ins_account_gpm_mbut_cost_maintenance0"/>
+                        <field name="type">account_report</field>
+                    </record>
+                <record id="ins_account_gpm_mbut_rent0" model="account.financial.report">
+                    <field name="name">Rental</field>
+                    <field name="sequence">3</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_gpm0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">sum</field>
+                </record>
+                    <record id="ins_account_gpm_mbut_rent_revenue0" model="account.financial.report">
+                        <field name="name">Revenue</field>
+                        <field name="sequence">1</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_rent0"/>
+                        <field name="sign">-1</field>
+                        <field name="account_report_id" ref="ins_account_gpm_mbut_revenue_rent0"/>
+                        <field name="type">account_report</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_rent_cost0" model="account.financial.report">
+                        <field name="name">Cost</field>
+                        <field name="sequence">2</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_rent0"/>
+                        <field name="account_report_id" ref="ins_account_gpm_mbut_cost_rent0"/>
+                        <field name="type">account_report</field>
+                    </record>
+                <record id="ins_account_gpm_mbut_services0" model="account.financial.report">
+                    <field name="name">Services</field>
+                    <field name="sequence">4</field>
+                    <field name="parent_id" ref="ins_account_gpm_mbut_gpm0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">sum</field>
+                </record>
+                    <record id="ins_account_gpm_mbut_services_revenue0" model="account.financial.report">
+                        <field name="name">Revenue</field>
+                        <field name="sequence">1</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_services0"/>
+                        <field name="sign">-1</field>
+                        <field name="account_report_id" ref="ins_account_gpm_mbut_revenue_services0"/>
+                        <field name="type">account_report</field>
+                    </record>
+                    <record id="ins_account_gpm_mbut_services_cost0" model="account.financial.report">
+                        <field name="name">Cost</field>
+                        <field name="sequence">2</field>
+                        <field name="parent_id" ref="ins_account_gpm_mbut_services0"/>
+                        <field name="account_report_id" ref="ins_account_gpm_mbut_cost_services0"/>
+                        <field name="type">account_report</field>
+                    </record>
+    </data>
+
+    <data noupdate="1">
+        &lt;!&ndash;GPM YKBUT&ndash;&gt;
+        <record id="ins_account_gpm_ykbut0" model="account.financial.report">
+            <field name="name">GROSS PROFIT</field>
+            <field name="type">sum</field>
+            <field name="display_detail">no_detail</field>
+        </record>
+            <record id="ins_account_gpm_ykbut_uts0" model="account.financial.report">
+                <field name="name">UT School</field>
+                <field name="sequence">1</field>
+                <field name="parent_id" ref="ins_account_gpm_ykbut0"/>
+                <field name="sign">-1</field>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_ykbut_uts_revenue0" model="account.financial.report">
+                    <field name="name">Revenue</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_ykbut_uts0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_ykbut_uts_costs0" model="account.financial.report">
+                    <field name="name">Costs</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_ykbut_uts0"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+            <record id="ins_account_gpm_ykbut_daycare0" model="account.financial.report">
+                <field name="name">Daycare</field>
+                <field name="sequence">2</field>
+                <field name="parent_id" ref="ins_account_gpm_ykbut0"/>
+                <field name="sign">-1</field>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_ykbut_daycare_revenue0" model="account.financial.report">
+                    <field name="name">Revenue</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_ykbut_daycare0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_ykbut_daycare_costs0" model="account.financial.report">
+                    <field name="name">Costs</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_ykbut_daycare0"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+            <record id="ins_account_gpm_ykbut_poliklinik0" model="account.financial.report">
+                <field name="name">Poliklinik</field>
+                <field name="sequence">3</field>
+                <field name="parent_id" ref="ins_account_gpm_ykbut0"/>
+                <field name="sign">-1</field>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_ykbut_poliklinik_revenue0" model="account.financial.report">
+                    <field name="name">Revenue</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_ykbut_poliklinik0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_ykbut_poliklinik_costs0" model="account.financial.report">
+                    <field name="name">Costs</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_ykbut_poliklinik0"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+    </data>
+
+    <data noupdate="1">
+        &lt;!&ndash;GPM LSPABI&ndash;&gt;
+        <record id="ins_account_gpm_lspabi0" model="account.financial.report">
+            <field name="name">GROSS PROFIT LSP ABI</field>
+            <field name="type">sum</field>
+            <field name="sign">-1</field>
+            <field name="display_detail">no_detail</field>
+        </record>
+            <record id="ins_account_gpm_lspabi_serkom0" model="account.financial.report">
+                <field name="name">Sertifikasi Kompetensi</field>
+                <field name="sequence">1</field>
+                <field name="parent_id" ref="ins_account_gpm_lspabi0"/>
+                <field name="sign">-1</field>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_lspabi_serkom_revenue0" model="account.financial.report">
+                    <field name="name">Revenue</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_lspabi_serkom0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_lspabi_serkom_costs0" model="account.financial.report">
+                    <field name="name">Costs</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_lspabi_serkom0"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+            <record id="ins_account_gpm_lspabi_rcc0" model="account.financial.report">
+                <field name="name">Perpanjangan (RCC) Sertifikat</field>
+                <field name="sequence">2</field>
+                <field name="parent_id" ref="ins_account_gpm_lspabi0"/>
+                <field name="sign">-1</field>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_lspabi_rcc_revenue0" model="account.financial.report">
+                    <field name="name">Revenue</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_lspabi_rcc0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_lspabi_rcc_costs0" model="account.financial.report">
+                    <field name="name">Costs</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_lspabi_rcc0"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+            <record id="ins_account_gpm_lspabi_other0" model="account.financial.report">
+                <field name="name">Pendapatan Lain-lain</field>
+                <field name="sequence">3</field>
+                <field name="parent_id" ref="ins_account_gpm_lspabi0"/>
+                <field name="sign">-1</field>
+                <field name="display_detail">no_detail</field>
+                <field name="type">sum</field>
+            </record>
+                <record id="ins_account_gpm_lspabi_other_revenue0" model="account.financial.report">
+                    <field name="name">Revenue</field>
+                    <field name="sequence">1</field>
+                    <field name="parent_id" ref="ins_account_gpm_lspabi_other0"/>
+                    <field name="sign">-1</field>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+                <record id="ins_account_gpm_lspabi_other_costs0" model="account.financial.report">
+                    <field name="name">Costs</field>
+                    <field name="sequence">2</field>
+                    <field name="parent_id" ref="ins_account_gpm_lspabi_other0"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">accounts</field>
+                </record>
+    </data>
+-->
+</odoo>

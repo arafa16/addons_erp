@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_financial_report_dashboard_tbd" model="ir.ui.view">
+            <field name="name">account.financial.report.dashboard.tbd</field>
+            <field name="model">account.financial.report</field>
+            <field name="inherit_id" ref="account.view_account_financial_report_form"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="dashboard" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                </field>
+                <!--<field name="sign" position="after">
+                    <field name="value_type"/>
+                </field>-->
+                <xpath expr="//notebook" position="replace">
+                    <notebook>
+                        <page string="Report" attrs="{'invisible': [('type','not in',['accounts','account_type', 'account_report', 'group', 'formula'])]}">
+                            <group>
+                                <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts', 'account_type', 'group'])]}"/>
+                                <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
+                            </group>
+                            <group>
+                                <field name="account_ids" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
+                                <field name="account_type_ids" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
+                                <field name="account_group_ids" attrs="{'invisible': [('type', '!=', 'group')]}"/>
+                            </group>
+                            <group colspan="2" attrs="{'invisible': [('type', 'not in', ['formula'])]}">
+                                <group>
+                                    <field name="formula"/>
+                                </group>
+                            </group>
+                        </page>
+                        <!--<page string="Journals" attrs="{'invisible': [('type','not in',['accounts','account_type', 'account_report', 'formula'])]}">
+                            <group>
+                                <field name="exclude_journal_ids" widget="many2many_tags"
+                                       options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                            </group>
+                        </page>-->
+                        <!--<page string="Additional Setting">
+                            <group colspan="2">
+                                <group>
+                                    <field name="header_hide"/>
+                                    <label for="bottom_total"/>
+                                    <div class="oe_inline">
+                                        <field name="bottom_total" style="width: 5%"/>
+                                        <field name="bottom_title" style="width: 93%" attrs="{'readonly': [('bottom_total', '=', False)]}"/>
+                                    </div>
+                                    <field name="indent"/>
+                                    <field name="font_size"/>
+                                </group>
+                                <group>
+                                    <field name="amount_type"/>
+                                    <field name="prev_balance"/>
+                                </group>
+                            </group>
+                        </page>-->
+                        <page string="Cube Setting" attrs="{'invisible': [('for_dashboard_only', '=', False)]}">
+                            <group>
+                                <field name="for_dashboard_only" readonly="1"/>
+                                <field name="population_method"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_view_synchronize_report" model="ir.actions.act_window">
+            <field name="name">Synchronize Report</field>
+            <field name="res_model">account.financial.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+<!--            <field name="view_id" ref="view_hr_contract_change_state"/>-->
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account_dashboard.model_account_financial_report" />
+        </record>
+
+
+        <record id="populate_cube_action" model="ir.actions.server">
+            <field name="name">Populate Cubes</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="account.model_account_financial_report"/>
+            <field name="binding_model_id" ref="account.model_account_financial_report"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.populate_cube()
+            </field>
+        </record>
+
+        <record id="view_dashboard_financial_report_form" model="ir.ui.view">
+            <field name="name">dashboard.financial.report.form</field>
+            <field name="model">account.financial.report.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard Report">
+                    <group col="2">
+                        <field name="name"/>
+                    </group>
+                    <notebook>
+                        <page string="Report">
+                            <field name="report_ids">
+                                <tree editable="bottom" string="Reports">
+                                    <field name="name"/>
+                                    <field name="sequence"/>
+                                    <field name="report_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_dashboard_financial_report_tree" model="ir.ui.view">
+            <field name="name">dashboard.financial.report.tree</field>
+            <field name="model">account.financial.report.dashboard</field>
+            <field name="arch" type="xml">
+                <tree string="Account Report">
+                    <field name="name"/>
+                    <field name="report_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_dashboard_financial_report_search" model="ir.ui.view">
+            <field name="name">dashboard.financial.report.search</field>
+            <field name="model">account.financial.report.dashboard</field>
+            <field name="arch" type="xml">
+                <search string="Dashboard Report">
+                    <field name="name" string="Account Report"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_dashboard_financial_report_tree" model="ir.actions.act_window">
+            <field name="name">Dashboard Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.financial.report.dashboard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_dashboard_financial_report_search"/>
+            <field name="view_id" ref="view_dashboard_financial_report_tree"/>
+        </record>
+
+        <menuitem id="menu_dashboard_financial_report_tree" name="Dashboard Reports" parent="account.menu_account_reports" action="action_dashboard_financial_report_tree"/>
+
+    </data>
+</odoo>

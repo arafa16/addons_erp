@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form_tbd" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="child_ids" widget="many2many_tags"/>
+                    <field name="console_id"/>
+                    <field name="consolidation_ids" widget="many2many_tags" string="Child Consolidation"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

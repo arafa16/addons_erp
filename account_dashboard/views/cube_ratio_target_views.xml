@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_cube_ratio_target_tree" model="ir.ui.view">
+            <field name="name">cube.ratio.target.tree</field>
+            <field name="model">dashboard.cubes.ratio.target</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="company_id"/>
+                    <field name="current_ratio"/>
+                    <field name="quick_ratio"/>
+                    <field name="ar_days"/>
+                    <field name="ap_days"/>
+                    <field name="inventory_turnover"/>
+                    <field name="opr_cycle"/>
+                    <field name="gp_margin"/>
+                    <field name="opr_profit"/>
+                    <field name="der"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_cube_ratio_target" model="ir.actions.act_window">
+            <field name="name">Ratio Target</field>
+            <field name="res_model">dashboard.cubes.ratio.target</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_cube_ratio_target_tree"/>
+        </record>
+
+        <menuitem id="menu_cube_ratio_target" name="Ratio Target" parent="account.menu_account_reports" action="action_cube_ratio_target" sequence="100"/>
+
+    </data>
+</odoo>
