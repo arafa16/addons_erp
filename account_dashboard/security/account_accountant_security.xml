@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data>
-        <record id="group_hidden_object" model="res.groups">
-            <field name="name">Group for Hidden Object</field>
-        </record>
-    </data>
-</odoo>
