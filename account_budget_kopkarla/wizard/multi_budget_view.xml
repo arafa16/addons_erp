@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="confirm_multi_budget_view" model="ir.ui.view">
+            <field name="name">Confirm Budgets</field>
+            <field name="model">confirm.budget</field>
+            <field name="arch" type="xml">
+                <form string="Confirm Budget">
+                    <label string="All selected budgets will be confirm. You won't be able to modify them afterwards."/>
+                    <footer>
+                        <button string="Confirm" name="confirm_budgets" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_confirm_budget" model="ir.actions.act_window">
+            <field name="name">Confirm Budgets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">confirm.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="confirm_multi_budget_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will confirm all budget selected. Once budget are confirmed, you can not update them anymore.</field>
+            <field name="binding_model_id" ref="account_budget_kopkarla.model_crossovered_budget" />
+        </record>
+
+
+        <record id="validate_multi_budget_view" model="ir.ui.view">
+            <field name="name">Validate Budgets</field>
+            <field name="model">validate.budget</field>
+            <field name="arch" type="xml">
+                <form string="Validate Budget">
+                    <label string="All selected budgets will be validate."/>
+                    <footer>
+                        <button string="Validate" name="validate_budgets" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_validate_budget" model="ir.actions.act_window">
+            <field name="name">Validate Budgets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">validate.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="validate_multi_budget_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will validate all budget selected.</field>
+            <field name="binding_model_id" ref="account_budget_kopkarla.model_crossovered_budget" />
+        </record>
+
+
+        <record id="done_multi_budget_view" model="ir.ui.view">
+            <field name="name">Archive Budgets</field>
+            <field name="model">done.budget</field>
+            <field name="arch" type="xml">
+                <form string="Done Budget">
+                    <label string="All selected budgets will be done."/>
+                    <footer>
+                        <button string="Done" name="done_budgets" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_done_budget" model="ir.actions.act_window">
+            <field name="name">Archive Budgets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">done.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="done_multi_budget_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will done all budget selected.</field>
+            <field name="binding_model_id" ref="account_budget_kopkarla.model_crossovered_budget" />
+        </record>
+
+
+        <record id="cancel_multi_budget_view" model="ir.ui.view">
+            <field name="name">Cancel Budgets</field>
+            <field name="model">cancel.budget</field>
+            <field name="arch" type="xml">
+                <form string="Cancel Budget">
+                    <label string="All selected budgets will be cancel."/>
+                    <footer>
+                        <button string="Process" name="cancel_budgets" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_cancel_budget" model="ir.actions.act_window">
+            <field name="name">Cancel Budgets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cancel.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="cancel_multi_budget_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will cancel all budget selected.</field>
+            <field name="binding_model_id" ref="account_budget_kopkarla.model_crossovered_budget" />
+        </record>
+
+
+        <record id="draft_multi_budget_view" model="ir.ui.view">
+            <field name="name">Set Budgets to Draft</field>
+            <field name="model">draft.budget</field>
+            <field name="arch" type="xml">
+                <form string="Draft Budget">
+                    <label string="All selected budgets will be set to draft."/>
+                    <footer>
+                        <button string="Set to Draft" name="draft_budgets" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_draft_budget" model="ir.actions.act_window">
+            <field name="name">Draft Budgets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">draft.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="draft_multi_budget_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will set to draft all budget selected.</field>
+            <field name="binding_model_id" ref="account_budget_kopkarla.model_crossovered_budget" />
+        </record>
+
+    </data>
+</odoo>
