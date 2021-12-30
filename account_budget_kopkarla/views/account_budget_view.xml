@@ -290,6 +290,49 @@
             </field>
         </record>
 
+        <record id="view_crossovered_budget_search_kopkarla" model="ir.ui.view">
+            <field name="model">crossovered.budget</field>
+            <field name="inherit_id" ref="account_budget.view_crossovered_budget_search"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <filter string="Canceled" name="canceled" domain="[('state','=','cancel')]"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('state','!=','done')]"/>
+                    <filter string="Archived" name="inactive" domain="[('state','=','done')]"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="account_budget.act_crossovered_budget_view">
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_active': True}</field>
+            <!--<field name="name">Budgets</field>
+            <field name="res_model">crossovered.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="crossovered_budget_view_tree"/>
+            <field name="search_view_id" ref="view_crossovered_budget_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new budget.
+              </p><p>
+                A budget is a forecast of your company's income and/or expenses
+                expected for a period in the future. A budget is defined on some
+                financial accounts and/or analytic accounts (that may represent
+                projects, departments, categories of products, etc.)
+              </p><p>
+                By keeping track of where your money goes, you may be less
+                likely to overspend, and more likely to meet your financial
+                goals. Forecast a budget by detailing the expected revenue per
+                analytic account and monitor its evolution based on the actuals
+                realised during that period.
+              </p>
+            </field>-->
+        </record>
+
+
+
         <record model="ir.ui.view" id="view_budget_post_group_tree">
             <field name="name">budget.post.group.tree</field>
             <field name="model">account.budget.post.group</field>

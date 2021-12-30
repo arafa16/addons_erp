@@ -51,30 +51,36 @@ class Budget(models.Model):
 
     @api.multi
     def action_budget_confirm(self):
-        for line in self.crossovered_budget_line:
-            line._validate_sign_planned_amount()
-        self.write({'state': 'confirm'})
-        self.change_state_budget_line()
+        for budget in self:
+            for line in budget.crossovered_budget_line:
+                line._validate_sign_planned_amount()
+            budget.write({'state': 'confirm'})
+            budget.change_state_budget_line()
 
     @api.multi
     def action_budget_draft(self):
-        self.write({'state': 'draft'})
-        self.change_state_budget_line()
+        for budget in self:
+            budget.write({'state': 'draft'})
+            budget.change_state_budget_line()
 
     @api.multi
     def action_budget_validate(self):
-        self.write({'state': 'validate'})
-        self.change_state_budget_line()
+        for budget in self:
+            budget.write({'state': 'validate'})
+            budget.change_state_budget_line()
 
     @api.multi
     def action_budget_cancel(self):
-        self.write({'state': 'cancel'})
-        self.change_state_budget_line()
+        for budget in self:
+            budget.write({'state': 'cancel'})
+            budget.change_state_budget_line()
 
     @api.multi
     def action_budget_done(self):
-        self.write({'state': 'done'})
-        self.change_state_budget_line()
+        for budget in self:
+            budget.write({'state': 'done'})
+            budget.change_state_budget_line()
+
 
 class BudgetLine(models.Model):
     _inherit = 'crossovered.budget.lines'

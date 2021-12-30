@@ -40,6 +40,7 @@ Support following feature:
         "security/ir.model.access.csv",
         "views/purchase_request_so_view.xml",
         "views/purchase_budget_request_view.xml",
+        "wizard/multi_budget_view.xml",
     ],
     'installable': True,
     'application': False,
