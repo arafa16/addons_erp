@@ -26,6 +26,7 @@
              <tree string="Sales Analysis">
                  <field name="name"/>
                  <field name="date"/>
+                 <field name="est_invoice_date"/>
                  <field name="partner_id"/>
                  <field name="reva_group_id"/>
                  <field name="reva_status"/>
