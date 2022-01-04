@@ -19,6 +19,28 @@
          </field>
     </record>
 
+    <record id="view_sales_reva_tree" model="ir.ui.view">
+         <field name="name">sale.reva.report.tree</field>
+         <field name="model">sale.reva.report</field>
+         <field name="arch" type="xml">
+             <tree string="Sales Analysis">
+                 <field name="name"/>
+                 <field name="date"/>
+                 <field name="partner_id"/>
+                 <field name="reva_group_id"/>
+                 <field name="reva_status"/>
+                 <field name="cost_center_id"/>
+                 <field name="analytic_account_id"/>
+                 <field name="price_total"/>
+                 <field name="price_subtotal"/>
+                 <field name="amt_to_invoice"/>
+                 <field name="dpp_to_invoice"/>
+                 <field name="dpp_invoiced"/>
+                 <field name="state"/>
+             </tree>
+         </field>
+    </record>
+
     <record id="view_sale_reva_graph" model="ir.ui.view">
          <field name="name">sale.reva.report.graph</field>
          <field name="model">sale.reva.report</field>
@@ -87,7 +109,7 @@
         <field name="name">Sales Reva Analysis</field>
         <field name="res_model">sale.reva.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">pivot,graph</field>
+        <field name="view_mode">pivot,tree,graph</field>
         <field name="view_id"></field>  <!-- force empty -->
         <field name="search_view_id" ref="view_sale_reva_search"/>
         <!--<field name="context">{'search_default_Outstanding':1, 'group_by_no_leaf':1,'group_by':[]}</field>-->

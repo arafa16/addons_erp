@@ -13,6 +13,7 @@ class EnhancedSalesArea(models.Model):
     purchase_ids = fields.Many2many("purchase.order", string='Purchases', compute="_get_purchased", readonly=True, copy=False)
     advance_amount = fields.Float(string='# of Advances', compute='_get_advance', readonly=True, store=True)
     expense_amount = fields.Float(string='# of Expenses', compute='_get_expense', readonly=True, store=True)
+    est_invoice_date = fields.Date('Estimasi Invoice Date')
 
     @api.multi
     def convert_to_project(self):

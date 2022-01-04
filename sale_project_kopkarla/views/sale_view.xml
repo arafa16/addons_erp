@@ -114,6 +114,9 @@
                         </group>
                     </page>
                 </xpath>
+                <group name="info_reva" position="inside">
+                    <field name="est_invoice_date"/>
+                </group>
             </field>
         </record>
 

@@ -50,6 +50,7 @@ class SaleRevaReport(models.Model):
                                  ("rental", "Rental Order")], string='Order Type', readonly=True)
     reva_status = fields.Char(readonly=True)
     reva_group_id = fields.Many2one('enhanced.reva.group.tabel', 'Reva Group', readonly=True)
+    est_invoice_date = fields.Date('Estimasi Invoice Date')
 
     def _select(self):
         select_str = """
@@ -84,6 +85,7 @@ class SaleRevaReport(models.Model):
                     s.pricelist_id as pricelist_id,
                     s.cost_center_id as cost_center_id,
                     s.analytic_account_id as analytic_account_id,
+                    s.est_invoice_date,
                     -- s.team_id as team_id,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id
@@ -116,6 +118,7 @@ class SaleRevaReport(models.Model):
                     s.pricelist_id as pricelist_id,
                     s.cost_center_id as cost_center_id,
                     s.analytic_account_id as analytic_account_id,
+                    s.est_invoice_date,
                     -- s.team_id as team_id,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id
@@ -165,6 +168,7 @@ class SaleRevaReport(models.Model):
                     s.cost_center_id,
                     s.analytic_account_id,
                     s.team_id,
+                    s.est_invoice_date,
                     partner.country_id,
                     partner.commercial_partner_id,
                     s.type_reva, r.name, r.reva_id, rg.id
