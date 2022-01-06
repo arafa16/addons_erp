@@ -32,6 +32,8 @@
                  <field name="reva_status"/>
                  <field name="cost_center_id"/>
                  <field name="analytic_account_id"/>
+                 <field name="delivery_date"/>
+                 <field name="payment_term_id"/>
                  <field name="price_total"/>
                  <field name="price_subtotal"/>
                  <field name="amt_to_invoice"/>

@@ -15,6 +15,7 @@ class SaleRevaReport(models.Model):
     name = fields.Char('Sales Order', readonly=True)
     date = fields.Datetime('Date Order', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
+    delivery_date = fields.Datetime('Delivery Date', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
@@ -50,6 +51,7 @@ class SaleRevaReport(models.Model):
                                  ("rental", "Rental Order")], string='Order Type', readonly=True)
     reva_status = fields.Char(readonly=True)
     reva_group_id = fields.Many2one('enhanced.reva.group.tabel', 'Reva Group', readonly=True)
+    payment_term_id = fields.Many2one('account.payment.term', 'Payment Term', readonly=True)
     est_invoice_date = fields.Date('Estimasi Invoice Date')
 
     def _select(self):
@@ -86,6 +88,8 @@ class SaleRevaReport(models.Model):
                     s.cost_center_id as cost_center_id,
                     s.analytic_account_id as analytic_account_id,
                     s.est_invoice_date,
+                    s.delivery_doc as delivery_date,
+                    s.payment_term_id as payment_term_id,
                     -- s.team_id as team_id,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id
@@ -119,6 +123,8 @@ class SaleRevaReport(models.Model):
                     s.cost_center_id as cost_center_id,
                     s.analytic_account_id as analytic_account_id,
                     s.est_invoice_date,
+                    s.delivery_doc as delivery_date,
+                    s.payment_term_id as payment_term_id,
                     -- s.team_id as team_id,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id
@@ -169,6 +175,8 @@ class SaleRevaReport(models.Model):
                     s.analytic_account_id,
                     s.team_id,
                     s.est_invoice_date,
+                    s.delivery_doc,
+                    s.payment_term_id,
                     partner.country_id,
                     partner.commercial_partner_id,
                     s.type_reva, r.name, r.reva_id, rg.id
