@@ -42,7 +42,8 @@ class RentalOrderWizard(models.TransientModel):
     order_id = fields.Many2one(
         "sale.order", 
         default=lambda self: self._context.get('active_id', False),
-        required=True
+        required=True,
+        ondelete='cascade'
     )
     currency_id = fields.Many2one(
         "res.currency",
