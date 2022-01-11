@@ -86,10 +86,10 @@
                                     'search_default_analytic_account':True,}--></field>
         </record>
 
-        <menuitem parent="account_asset_kopkarla.menu_asset_reports"
+        <!--<menuitem parent="account_asset_kopkarla.menu_asset_reports"
             id="menu_act_asset_balance_report"
             name="Asset Balance"
             action="act_asset_balance_report" sequence="22"
-            groups="account.group_account_user"/>
+            groups="account.group_account_user"/>-->
     </data>
 </odoo>

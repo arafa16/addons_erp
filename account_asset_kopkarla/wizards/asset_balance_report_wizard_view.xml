@@ -1,0 +1,41 @@
+    <?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="asset_balance_report_wizard_view" model="ir.ui.view">
+        <field name="name">Asset Balance Report</field>
+        <field name="model">asset.balance.report.wizard</field>
+        <field name="arch" type="xml">
+        <form string="Report Options">
+            <group col="2">
+                <field name="year"/>
+            </group>
+            <group>
+                <!--<field name="category_ids" widget="many2many_tags" options="{'no_create': True}"/>-->
+            </group>
+            <footer>
+                <button name="show_data" string="Show Asset" type="object" default_focus="1" class="oe_highlight"/>
+                <button string="Cancel" class="btn btn-default" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="action_asset_balance_report_wizard" model="ir.actions.act_window">
+        <field name="name">Asset Balance Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">asset.balance.report.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="asset_balance_report_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_asset_balance_report_wizard"
+        name="Asset Balance"
+        parent="account_asset_kopkarla.menu_asset_reports"
+        action="action_asset_balance_report_wizard"
+        groups="account.group_account_user"
+       />
+
+</odoo>

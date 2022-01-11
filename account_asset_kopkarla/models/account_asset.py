@@ -10,7 +10,7 @@ class AccountAssetAsset(models.Model):
 
     date_acq = fields.Date(string='Acquisition Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today)
     date = fields.Date(string='Start Period', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today, oldname="purchase_date")
-
+    code = fields.Char(string='Reference', size=32, readonly=True, states={'draft': [('readonly', False)]}, required=True)
     cost_center_id = fields.Many2one("cost.center", string='Cost Center', required=True)
     account_move_line_ids = fields.One2many(
         'account.move.line', 'asset_id', 'Journal Items',
@@ -37,6 +37,9 @@ class AccountAssetAsset(models.Model):
 
     _fields_to_compute = ['value_residual']
 
+    _sql_constraints = [('asset_unique',
+                         'unique (code)',
+                         'Choose another reference - it has to be unique!')]
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fields_to_compute = []

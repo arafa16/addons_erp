@@ -120,56 +120,56 @@ class AssetBalanceReport(models.Model):
             # button.set('invisible', self.env.context.get('budget_position') and '0' or '1')
             # setup_modifiers(button)
             # res['arch'] = etree.tostring(arch, encoding='utf-8')
-            self.populate_budget_request()
+            self.populate_budget_request(dict(self._context or {}).get('year', False))
         return res
 
     @api.multi
-    def populate_budget_request(self):
+    def populate_budget_request(self, year):
         query = """
             delete from asset_balance_report where create_uid = %s;
             select a.id, a.category_id, a.cost_center_id, a.analytic_account_id, c.account_asset_id, a.date_acq, coalesce(a.value, 0) as value, a.state,
                 coalesce(sum(d.amount), 0) as total_last_depre,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Jan 2021' and '31 Jan 2021'
+                 where asset_id = a.id and depreciation_date between '1 Jan %s' and '31 Jan %s'
                         and move_check = True and move_posted_check = True) as jan,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Feb 2021' and '28 Feb 2021'
+                 where asset_id = a.id and depreciation_date between '1 Feb %s' and '28 Feb %s'
                         and move_check = True and move_posted_check = True) as feb,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Mar 2021' and '31 Mar 2021'
+                 where asset_id = a.id and depreciation_date between '1 Mar %s' and '31 Mar %s'
                         and move_check = True and move_posted_check = True) as mar,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Apr 2021' and '30 Apr 2021'
+                 where asset_id = a.id and depreciation_date between '1 Apr %s' and '30 Apr %s'
                         and move_check = True and move_posted_check = True) as apr,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 May 2021' and '31 May 2021'
+                 where asset_id = a.id and depreciation_date between '1 May %s' and '31 May %s'
                         and move_check = True and move_posted_check = True) as may,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Jun 2021' and '30 Jun 2021'
+                 where asset_id = a.id and depreciation_date between '1 Jun %s' and '30 Jun %s'
                         and move_check = True and move_posted_check = True) as jun,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Jul 2021' and '31 Jul 2021'
+                 where asset_id = a.id and depreciation_date between '1 Jul %s' and '31 Jul %s'
                         and move_check = True and move_posted_check = True) as jul,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Aug 2021' and '31 Aug 2021'
+                 where asset_id = a.id and depreciation_date between '1 Aug %s' and '31 Aug %s'
                         and move_check = True and move_posted_check = True) as aug,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Sep 2021' and '30 Sep 2021'
+                 where asset_id = a.id and depreciation_date between '1 Sep %s' and '30 Sep %s'
                         and move_check = True and move_posted_check = True) as sep,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Oct 2021' and '31 Oct 2021'
+                 where asset_id = a.id and depreciation_date between '1 Oct %s' and '31 Oct %s'
                         and move_check = True and move_posted_check = True) as oct,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Nov 2021' and '30 Nov 2021'
+                 where asset_id = a.id and depreciation_date between '1 Nov %s' and '30 Nov %s'
                         and move_check = True and move_posted_check = True) as nov,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Dec 2021' and '31 Dec 2021'
+                 where asset_id = a.id and depreciation_date between '1 Dec %s' and '31 Dec %s'
                         and move_check = True and move_posted_check = True) as dec,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Jan 2021' and '31 Dec 2021'
+                 where asset_id = a.id and depreciation_date between '1 Jan %s' and '31 Dec %s'
                         and move_check = True and move_posted_check = True) as this_year_depre,
                 (coalesce(a.value, 0) - coalesce(sum(d.amount), 0) - (select coalesce(sum(amount), 0) from account_asset_depreciation_line
-                 where asset_id = a.id and depreciation_date between '1 Jan 2021' and '31 Dec 2021'
+                 where asset_id = a.id and depreciation_date between '1 Jan %s' and '31 Dec %s'
                         and move_check = True and move_posted_check = True)) as book_value,
                 a.sale_date, a.disposal_date, a.code,
                 (select max(depreciation_date)
@@ -185,12 +185,14 @@ class AssetBalanceReport(models.Model):
                        and move_check = true and move_posted_check = true) as depreciation_count_done
             from account_asset_asset a
                  inner join account_asset_category c on a.category_id = c.id
-                 left join account_asset_depreciation_line d on a.id = d.asset_id and d.depreciation_date <= '31 Dec 2020'
+                 left join account_asset_depreciation_line d on a.id = d.asset_id and d.depreciation_date <= '31 Dec %s'
             where a.active = true
             group by a.id, a.category_id, a.cost_center_id, a.analytic_account_id, c.account_asset_id, a.date_acq, a.value, a.state
         """
         cr = self.env.cr
-        params = (self.env.user.id,)
+        year = int(year)
+        params = (self.env.user.id, year, year, year, year, year, year, year, year, year, year, year, year, year, year,
+                                    year, year, year, year, year, year, year, year, year, year, year, year, year, year, year - 1)
         cr.execute(query, params)
         res = cr.fetchall()
 

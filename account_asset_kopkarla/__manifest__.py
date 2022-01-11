@@ -6,6 +6,7 @@
 #
 ##############################################################################
 
+
 {
     'name': 'Assets Management Enhancement',
     'version': '11.0.0.1',
@@ -36,8 +37,6 @@ Support following feature:
         "views/account_asset_category_view.xml",
         "views/account_invoice_view.xml",
         "views/account_view.xml",
-        "wizards/account_asset_reclass_view.xml",
-        "wizards/account_asset_disposal_wizard_view.xml",
         "views/account_asset_views.xml",
         "views/account_asset_sale_views.xml",
         "views/account_asset_disposal_views.xml",
@@ -45,6 +44,9 @@ Support following feature:
         "views/account_asset_depreciation_views.xml",
         "views/account_asset_reclass_views.xml",
         "views/account_asset_menus.xml",
+        "wizards/account_asset_reclass_view.xml",
+        "wizards/account_asset_disposal_wizard_view.xml",
+        "wizards/asset_balance_report_wizard_view.xml",
         "reports/asset_balance_report_view.xml",
         # "data/sequences.xml",
         "security/ir.model.access.csv"
