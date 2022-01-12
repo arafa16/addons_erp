@@ -125,8 +125,9 @@ class AssetBalanceReport(models.Model):
 
     @api.multi
     def populate_budget_request(self, year):
+        # delete from asset_balance_report where create_uid = %s
         query = """
-            delete from asset_balance_report where create_uid = %s;
+            delete from asset_balance_report;
             select a.id, a.category_id, a.cost_center_id, a.analytic_account_id, c.account_asset_id, a.date_acq, coalesce(a.value, 0) as value, a.state,
                 coalesce(sum(d.amount), 0) as total_last_depre,
                 (select coalesce(sum(amount), 0) from account_asset_depreciation_line
@@ -191,7 +192,8 @@ class AssetBalanceReport(models.Model):
         """
         cr = self.env.cr
         year = int(year)
-        params = (self.env.user.id, year, year, year, year, year, year, year, year, year, year, year, year, year, year,
+        # self.env.user.id,
+        params = (year, year, year, year, year, year, year, year, year, year, year, year, year, year,
                                     year, year, year, year, year, year, year, year, year, year, year, year, year, year, year - 1)
         cr.execute(query, params)
         res = cr.fetchall()
