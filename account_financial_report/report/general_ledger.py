@@ -1100,7 +1100,7 @@ LEFT JOIN
     left join purchase_requisition pr on po.requisition_id = pr.id
     left join sprogroup_purchase_request spr on pr.nomor_pr = spr.id
     left join sale_order so on spr.salesorder_id = so.id
-    left join stock_move sm on ml.move_id = sm.move_id
+    left join stock_move sm on ml.move_id = sm.move_id and sm.state = 'done' and sm.to_refund = False
     left join stock_picking sp on sm.picking_id = sp.id
     left join purchase_order po2 on sp.origin = po2.name
     left join purchase_requisition pr2 on po2.requisition_id = pr2.id
