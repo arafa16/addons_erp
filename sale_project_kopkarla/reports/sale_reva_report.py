@@ -41,11 +41,15 @@ class SaleRevaReport(models.Model):
     country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
     state = fields.Selection([
+        ('cancel', 'Cancelled'),
         ('draft', 'Draft Quotation'),
         ('sent', 'Quotation Sent'),
+        ('spvcheck', 'SPV Check'),
+        ('assmancheck', 'Assman Check'),
+        ('requestloa', 'Request LoA'),
+        ('loaconfirmed', 'LoA Confirmed'),
         ('sale', 'Sales Order'),
         ('done', 'Sales Done'),
-        ('cancel', 'Cancelled'),
         ], string='Status', readonly=True)
     jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("datacom", "Trading Datacom"),
                                  ("rental", "Rental Order")], string='Order Type', readonly=True)
@@ -66,10 +70,14 @@ class SaleRevaReport(models.Model):
                     -- s.expense_amount,
                     -- (s.amount_untaxed - s.purchase_amount - s.advance_amount - s.expense_amount) as total_amount,
                     sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_total,
-                    sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_subtotal,
-                    sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_to_invoice,
+                    sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_subtotal, -- untaxed
+                    -- sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_to_invoice,
+                    case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0
+                         else sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as amt_to_invoice,
+                    -- case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
+                    --      else sum((l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
                     case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
-                         else sum((l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
+                         else sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
                     sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
                     case when sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
                          else sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_invoiced,
