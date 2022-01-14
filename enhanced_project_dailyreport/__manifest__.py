@@ -7,7 +7,8 @@
     'enhanced_sales_convert_project',
     'enhanced_sales_attribute',
     'enhanced_project_task_badges',
-    'enhanced_project_cost'
+    'enhanced_project_cost',
+    'cost_centers_kopkarla'
   ],
   'data': [
     'views/list_daily.xml',
