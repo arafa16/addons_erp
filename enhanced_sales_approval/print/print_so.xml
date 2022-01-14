@@ -47,8 +47,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div style="clear:both;">
+                    <div style="clear:both;"/>
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('col-xs-6')]/t" position="replace">
