@@ -9,19 +9,19 @@ class AccountAsset(models.Model):
     _inherit = 'account.asset.asset'
 
     equipment_ids = fields.One2many('maintenance.equipment', 'asset_id', string='Equipment')
-    code = fields.Char(string='Reference', size=255, compute='_get_equip_serno')
+    # code = fields.Char(string='Reference', size=255, compute='_get_equip_serno')
 
-    @api.multi
-    def _get_equip_serno(self):
-        for asset in self:
-            code = asset.equipment_ids.mapped('serial_no')
-            asset.code = ', '.join(code)
+    # @api.multi
+    # def _get_equip_serno(self):
+    #     for asset in self:
+    #         code = asset.equipment_ids.mapped('serial_no')
+    #         asset.code = ', '.join(code)
 
-    @api.model
-    def _check_internal_call(self, equipment):
-        if not self._context.get('internal_call', False) and equipment:
-            return True
-        return False
+    # @api.model
+    # def _check_internal_call(self, equipment):
+    #     if not self._context.get('internal_call', False) and equipment:
+    #         return True
+    #     return False
 
     # @api.model
     # def create(self, values):

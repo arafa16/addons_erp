@@ -11,7 +11,7 @@ class AccountAssetAsset(models.Model):
     date_acq = fields.Date(string='Acquisition Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today)
     date = fields.Date(string='Start Period', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today, oldname="purchase_date")
     code = fields.Char(string='Reference', size=32, readonly=True, states={'draft': [('readonly', False)]}, required=True)
-    cost_center_id = fields.Many2one("cost.center", string='Cost Center', required=True)
+    cost_center_id = fields.Many2one("cost.center", string='Cost Center', readonly=True, states={'draft': [('readonly', False)]}, required=True)
     account_move_line_ids = fields.One2many(
         'account.move.line', 'asset_id', 'Journal Items',
         readonly=True, copy=False)

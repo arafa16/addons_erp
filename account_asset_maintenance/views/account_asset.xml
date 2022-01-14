@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view" id="view_account_asset_asset_equipment_tree_inherit">
-        <field name="name">account.asset.asset.purchase.tree.inherit</field>
+    <!--<record model="ir.ui.view" id="view_account_asset_asset_equipment_tree_inherit">
         <field name="model">account.asset.asset</field>
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
         <field name="arch" type="xml">
-            <field name="value" position="before">
+            <field name="state" position="before">
                 <field name="equipment_ids"/>
             </field>
         </field>
-    </record>
+    </record>-->
     <record id="view_account_asset_asset_form" model="ir.ui.view">
         <field name="model">account.asset.asset</field>
         <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
