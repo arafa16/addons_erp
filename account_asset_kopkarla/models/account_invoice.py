@@ -243,8 +243,11 @@ class AccountInvoice(models.Model):
                 line.asset_id.sale_cancel()
             elif line.asset_id:
                 asset = line.asset_id
+                if asset.state != 'draft':
+                    raise UserError(('Cannot cancel invoice, asset not in draft state.'))
                 if line.asset_id.invoice_id.id == line.invoice_id.id:
                     line.asset_id = None
+                    asset.unlink()
                 else:
                     amount = asset.value - line.price_subtotal_signed
                     asset.value = amount
