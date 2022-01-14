@@ -8,7 +8,8 @@
     'project_task_default_stage',
     'enhanced_sales_project',
     'enhanced_project_task_badges',
-    'enhanced_project_customer_alias'
+    'enhanced_project_customer_alias',
+    'cost_centers_kopkarla'
   ],
   'data': [
     'views/sales_order.xml',
