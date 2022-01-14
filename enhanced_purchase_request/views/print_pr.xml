@@ -147,15 +147,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <p>
-                                <div style="font-weight:bold; padding-top:20px;">Description</div>
-                                <div style="border:thin solid #DADADA; padding:5px; min-height:40px;">
-                                    <span t-field="doc.description"/>
-                                </div>
-                            </p>
-                            <div style="padding-top:50px;">
-                                <div class="row" name="kolomttd">
-                                    
+                            <div style="page-break-inside: avoid;">
+                                <p>
+                                    <div style="font-weight:bold; padding-top:20px;">Description</div>
+                                    <div style="border:thin solid #DADADA; padding:5px; min-height:40px;">
+                                        <span t-field="doc.description"/>
+                                    </div>
+                                </p>
+                                <div style="padding-top:50px;">
+                                    <div class="row" name="kolomttd">
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
