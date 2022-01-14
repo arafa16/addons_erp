@@ -22,27 +22,29 @@
                 </div>
             </xpath>  
             <xpath expr="//div[hasclass('oe_structure')][2]" position="after">
-                <div style="padding-top:20px;">
-                    Demikian penawaran ini kami sampaikan, kami sangat menunggu kabar baiknya. Atas perhatiannya kami ucapkan terima kasih.
-                </div>
-                <div style="padding-top:10px;">
-                    <div style="float:left;">
-                        <div style="padding-top:35px;">
-                            Hormat kami,<br/>
-                        </div>
-                        <div style="padding-top:110px;">
-                            <div style="font-weight:bold; text-decoration:underline;" t-field="doc.pegawai_ttd"></div>
-                            <!--<div t-field="doc.pegawai_ttd.job_id"></div>-->
-                            <div t-field="doc.penandatangan.name"></div>
-                        </div>
+                <div style="page-break-inside: avoid;">
+                    <div style="padding-top:20px;">
+                        Demikian penawaran ini kami sampaikan, kami sangat menunggu kabar baiknya. Atas perhatiannya kami ucapkan terima kasih.
                     </div>
-                    <div style="float:right;">
-                        <div style="padding-top:35px;">
-                            Menyetujui,<br/>
-                            <span t-field="doc.partner_id.name"/>
+                    <div style="padding-top:10px;">
+                        <div style="float:left;">
+                            <div style="padding-top:35px;">
+                                Hormat kami,<br/>
+                            </div>
+                            <div style="padding-top:110px;">
+                                <div style="font-weight:bold; text-decoration:underline;" t-field="doc.pegawai_ttd"></div>
+                                <!--<div t-field="doc.pegawai_ttd.job_id"></div>-->
+                                <div t-field="doc.penandatangan.name"></div>
+                            </div>
                         </div>
-                        <div style="padding-top:90px;">
-                            (______________)
+                        <div style="float:right;">
+                            <div style="padding-top:35px;">
+                                Menyetujui,<br/>
+                                <span t-field="doc.partner_id.name"/>
+                            </div>
+                            <div style="padding-top:90px;">
+                                (______________)
+                            </div>
                         </div>
                     </div>
                 </div>
