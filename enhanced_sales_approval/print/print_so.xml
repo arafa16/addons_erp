@@ -34,7 +34,7 @@
                             <div style="padding-top:110px;">
                                 <div style="font-weight:bold; text-decoration:underline;" t-field="doc.pegawai_ttd"></div>
                                 <!--<div t-field="doc.pegawai_ttd.job_id"></div>-->
-                                <div t-field="doc.penandatangan.name" style="width: 100%;"></div>
+                                <div t-field="doc.penandatangan.name" style="width:300px;"/>
                             </div>
                         </div>
                         <div style="float:right;">
