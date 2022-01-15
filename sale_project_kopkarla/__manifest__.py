@@ -36,6 +36,7 @@
         'reports/sale_report_margin_views.xml',
         'reports/sale_report_reva_views.xml',
         'security/ir.model.access.csv',
+        'security/sale_security.xml',
     ],
     'images': ['static/description/poster_image.png'],
     'installable': True,

@@ -9,10 +9,10 @@
                 <button name="%(sale.action_view_sale_advance_payment_inv)d" position="replace"/>
                 <button name="%(sale.action_view_sale_advance_payment_inv)d" position="replace">
                     <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                        type="action" class="btn-primary" groups="account.group_account_invoice"
+                        type="action" class="btn-primary" groups="sale_project_kopkarla.group_sale_invoice"
                         attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
                     <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                        type="action" context="{'default_advance_payment_method': 'percentage'}" groups="account.group_account_invoice"
+                        type="action" context="{'default_advance_payment_method': 'percentage'}" groups="sale_project_kopkarla.group_sale_invoice"
                         attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
                 </button>
                 <button name="action_done" position="replace">
