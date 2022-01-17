@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="inventory_valuation_report">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <style>
+                        #table_css {
+                            border: 1px solid black
+                            border-collapse: collapse;
+                            border-spacing : 0px;
+                            border-top-spacing : 0px;
+                        }
+                        #table_css td, #table_css th {
+                            border: 1px solid black
+                        }
+                        #table_css tr: {
+                            border: 1px solid black
+                        }
+                        #table_css th {
+                            style="border: 1px solid black"
+                        }
+                    </style>
+                    <div class="row">
+                        <t t-foreach="docs.warehouse_ids" t-as="warehouse">
+                            <t t-if="docs.location_ids">
+                                <t t-set="location_ids" t-value="get_warehouse_wise_location(docs,warehouse)"/>
+                            </t>
+                            <div style="font-size:19px;font-weight:bold;text-align:center;">
+                                Inventory Valuation Report
+                            </div>
+                            <span style="font-size:16px;text-align:left;">
+                                Date:
+                                <span t-esc="datetime.datetime.strptime(docs.start_date,'%Y-%m-%d').strftime('%d-%m-%Y')"/>
+                                To
+                                <span t-esc="datetime.datetime.strptime(docs.end_date,'%Y-%m-%d').strftime('%d-%m-%Y')"/>
+                            </span>
+                            <span style="font-size:16px;text-align:right;padding-left:710px;">
+                                Warehouse: <span t-esc="warehouse.name"/>
+                            </span>
+
+                            <table class="table table-condensed" id="table_css">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Costing Method</th>
+                                        <th t-if="docs.location_ids">Location</th>
+                                        <th colspan="2" class="text-center">Beginning</th>
+                                        <th colspan="2" class="text-center">Received</th>
+                                        <th colspan="2" class="text-center">Sales</th>
+                                        <th colspan="2" class="text-center">Internal</th>
+                                        <th colspan="2" class="text-center">Adjustment</th>
+                                        <th colspan="3" class="text-center">Ending</th>
+                                    </tr>
+                                    <tr>
+                                        <th/>
+                                        <th/>
+                                        <th t-if="docs.location_ids"></th>
+                                        <th>Qty</th>
+                                        <th>Value</th>
+                                        <th>Qty</th>
+                                        <th>Value</th>
+                                        <th>Qty</th>
+                                        <th>Value</th>
+                                        <th>Qty</th>
+                                        <th>Value</th>
+                                        <th>Qty</th>
+                                        <th>Value</th>
+                                        <th>Qty</th>
+                                        <th>Unit Price</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="invoice_tbody">
+                                    <t t-set="sum_begning" t-value="0.0"/>
+                                    <t t-set="sum_begning_value" t-value="0.0"/>
+                                    <t t-set="sum_product_qty_in" t-value="0.0"/>
+                                    <t t-set="sum_product_qty_in_value" t-value="0.0"/>
+                                    <t t-set="sum_product_qty_out" t-value="0.0"/>
+                                    <t t-set="sum_product_qty_out_value" t-value="0.0"/>
+                                    <t t-set="sum_product_qty_internal" t-value="0.0"/>
+                                    <t t-set="sum_product_qty_internal_value" t-value="0.0"/>
+                                    <t t-set="sum_product_qty_adjustment" t-value="0.0"/>
+                                    <t t-set="sum_product_qty_adjustment_value" t-value="0.0"/>
+                                    <t t-set="sum_ending_qty_value" t-value="0.0"/>
+
+                                    <t t-if="not docs.group_by_categ">
+                                        <t t-if="docs.location_ids">
+                                            <t t-set="product_sum_begning" t-value="0.0"/>
+                                            <t t-set="product_sum_begning_val" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_in" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_in_val" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_out" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_out_val" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_internal" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_internal_val" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_adjustment" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_adjustment_val" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_ending" t-value="0.0"/>
+                                            <t t-set="product_sum_product_qty_ending_val" t-value="0.0"/>
+                                            <t t-foreach="get_products(docs)" t-as="product">
+                                                <span t-set="location_data" t-value="get_location_wise_product(docs,warehouse,product,location_ids)"/>
+                                                <tr>
+                                                    <td><span t-esc="product.display_name"/></td>
+                                                    <td>
+                                                        <span t-esc="dict(product.categ_id.fields_get()['property_cost_method']['selection'])[product.categ_id.property_cost_method]"/>
+                                                    </td>
+                                                    <td></td>
+                                                    <td style="font-weight:bold;"><span t-esc="location_data[1][0]"/></td>
+                                                    <td style="font-weight:bold;">
+                                                        <t t-esc="get_product_valuation(docs,product,location_data[1][0],warehouse)"
+                                                        t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                    </td>
+                                                    <td style="font-weight:bold;"><span t-esc="location_data[1][1]"/></td>
+                                                    <td style="font-weight:bold;">
+                                                        <t t-esc="get_product_valuation(docs,product,location_data[1][1],warehouse)"
+                                                        t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                    </td>
+                                                    <td style="font-weight:bold;"><span t-esc="abs(location_data[1][2])"/></td>
+                                                    <td style="font-weight:bold;">
+                                                        <t t-esc="get_product_valuation(docs,product,abs(location_data[1][2]),warehouse)"
+                                                        t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                    </td>
+                                                    <td style="font-weight:bold;"><span t-esc="location_data[1][3]"/></td>
+                                                    <td style="font-weight:bold;">
+                                                        <t t-esc="get_product_valuation(docs,product,location_data[1][3],warehouse)"
+                                                        t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                    </td>
+                                                    <td style="font-weight:bold;"><span t-esc="location_data[1][4]"/></td>
+                                                    <td style="font-weight:bold;">
+                                                        <t t-esc="get_product_valuation(docs,product,location_data[1][4],warehouse)"
+                                                        t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                    </td>
+                                                    <td style="font-weight:bold;"><span t-esc="location_data[1][5]"/></td>
+                                                    <td style="font-weight:bold;">
+                                                        <t t-esc="get_product_valuation(docs,product,location_data[1][5],warehouse)"
+                                                        t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                    </td>
+                                                    <td style="font-weight:bold;">
+                                                        <t t-esc="get_product_valuation(docs,product,location_data[1][5],warehouse)"
+                                                        t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                    </td>
+                                                </tr>
+                                                <tr t-foreach="location_data[0]" t-as="l">
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <span t-esc="l.display_name"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="l_value[0]"/>
+                                                        <t t-set="product_sum_begning" t-value="product_sum_begning + l_value[0]"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="product_beg_qty_value" t-value="get_product_valuation(docs,product,l_value[0],warehouse)"/>
+                                                        <span t-esc="product_beg_qty_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="product_sum_begning_val" t-value="product_sum_begning_val + product_beg_qty_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="l_value[1]"/>
+                                                        <t t-set="product_sum_product_qty_in" t-value="product_sum_product_qty_in + l_value[1]"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="product_sum_product_qty_in_value" t-value="get_product_valuation(docs,product,l_value[1],warehouse)"/>
+                                                        <span t-esc="product_sum_product_qty_in_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="product_sum_product_qty_in_val" t-value="product_sum_product_qty_in_val + product_sum_product_qty_in_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="abs(l_value[2])"/>
+                                                        <t t-set="product_sum_product_qty_out" t-value="product_sum_product_qty_out + l_value[2]"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="product_sum_product_qty_out_value" t-value="get_product_valuation(docs,product,l_value[2],warehouse)"/>
+                                                        <span t-esc="abs(product_sum_product_qty_out_value)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="product_sum_product_qty_out_val" t-value="product_sum_product_qty_out_val + product_sum_product_qty_out_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="l_value[3]"/>
+                                                        <t t-set="product_sum_product_qty_internal" t-value="product_sum_product_qty_internal + l_value[3]"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="product_sum_product_qty_int_value" t-value="get_product_valuation(docs,product,l_value[3],warehouse)"/>
+                                                        <span t-esc="product_sum_product_qty_int_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="product_sum_product_qty_internal_val" t-value="product_sum_product_qty_internal_val + product_sum_product_qty_int_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="l_value[4]"/>
+                                                        <t t-set="product_sum_product_qty_adjustment" t-value="product_sum_product_qty_adjustment + l_value[4]"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="product_sum_product_qty_adjustment_value" t-value="get_product_valuation(docs,product,l_value[4],warehouse)"/>
+                                                        <span t-esc="product_sum_product_qty_adjustment_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="product_sum_product_qty_adjustment_val" t-value="product_sum_product_qty_adjustment_val + product_sum_product_qty_adjustment_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="l_value[5]"/>
+                                                        <t t-set="product_sum_product_qty_ending" t-value="product_sum_product_qty_ending + l_value[5]"/>
+                                                    </td>
+                                                    <td>
+                                                        <!--<t t-if="product_sum_product_qty_ending != 0">
+                                                            <t t-set="product_sum_ending_unit" t-value="get_product_valuation(docs,product,l_value[5],warehouse) / product_sum_product_qty_ending"/>
+                                                        </t>-->
+                                                        <!--<t t-if="product_sum_product_qty_ending == 0">
+                                                            <t t-set="product_sum_ending_unit" t-value="0"/>
+                                                        </t>-->
+                                                        <span t-esc="product_sum_product_qty_ending and get_product_valuation(docs,product,l_value[5],warehouse) / product_sum_product_qty_ending or 0" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="product_sum_ending_value" t-value="get_product_valuation(docs,product,l_value[5],warehouse)"/>
+                                                        <span t-esc="product_sum_ending_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="product_sum_product_qty_ending_val" t-value="product_sum_product_qty_ending_val + product_sum_ending_value"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <tr>
+                                                <th style="border-top: 2px solid black">Total</th>
+                                                <th style="border-top: 2px solid black"></th>
+                                                <th style="border-top: 2px solid black"></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_begning"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_begning_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_in"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_in_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="abs(product_sum_product_qty_out)"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="abs(product_sum_product_qty_out_val)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_internal"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_internal_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_adjustment"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_adjustment_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_ending"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_ending and product_sum_product_qty_ending_val / product_sum_product_qty_ending or 0" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="product_sum_product_qty_ending_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                            </tr>
+                                        </t>
+
+                                        <t t-if="not docs.location_ids">
+                                            <t t-foreach="get_products(docs)" t-as="product">
+                                                <t t-value="get_beginning_inventory(docs,product,warehouse)" t-set="product_beg_qty"/>
+                                                <t t-value="get_product_sale_qty(docs,warehouse,product)" t-set="product_val"/>
+                                                <t t-set="ending_qty"
+                                                t-value="product_beg_qty + product_val['product_qty_in'] + product_val['product_qty_out'] +
+                                                            product_val['product_qty_internal'] + product_val['product_qty_adjustment']"/>
+                                                <tr>
+                                                    <td><span t-esc="product.display_name"/></td>
+                                                    <td>
+                                                        <span t-esc="dict(product.categ_id.fields_get()['property_cost_method']['selection'])[product.categ_id.property_cost_method]"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="product_beg_qty"/>
+                                                        <t t-set="sum_begning" t-value="sum_begning + product_beg_qty"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="product_beg_qty_value" t-value="get_product_valuation(docs,product,product_beg_qty,warehouse)"/>
+                                                        <span t-esc="product_beg_qty_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="sum_begning_value" t-value="sum_begning_value + product_beg_qty_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="product_val['product_qty_in']"/>
+                                                        <t t-set="sum_product_qty_in" t-value="sum_product_qty_in + product_val['product_qty_in']"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="product_receive_qty_value" t-value="get_product_valuation(docs,product,product_val['product_qty_in'],warehouse)"/>
+                                                        <span t-esc="product_receive_qty_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="sum_product_qty_in_value" t-value="sum_product_qty_in_value + product_receive_qty_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="abs(product_val['product_qty_out'])"/>
+                                                        <t t-set="sum_product_qty_out" t-value="sum_product_qty_out + product_val['product_qty_out']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-set="product_qty_out_value" t-value="get_product_valuation(docs,product,product_val['product_qty_out'],warehouse)"/>
+                                                        <span t-esc="abs(product_qty_out_value)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="sum_product_qty_out_value" t-value="sum_product_qty_out_value + product_qty_out_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="product_val['product_qty_internal']"/>
+                                                        <t t-set="sum_product_qty_internal" t-value="sum_product_qty_internal + product_val['product_qty_internal']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-set="product_qty_internal_value" t-value="get_product_valuation(docs,product,product_val['product_qty_internal'],warehouse)"/>
+                                                        <span t-esc="product_qty_internal_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="sum_product_qty_internal_value" t-value="sum_product_qty_internal_value + product_qty_internal_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="product_val['product_qty_adjustment']"/>
+                                                        <t t-set="sum_product_qty_adjustment" t-value="sum_product_qty_adjustment + product_val['product_qty_adjustment']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-set="product_qty_adjustment_value" t-value="get_product_valuation(docs,product,product_val['product_qty_adjustment'],warehouse)"/>
+                                                        <span t-esc="product_qty_adjustment_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="sum_product_qty_adjustment_value" t-value="sum_product_qty_adjustment_value + product_qty_adjustment_value"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-set="sum_ending_qty" t-value="product_beg_qty + product_val['product_qty_in'] +
+                                                                product_val['product_qty_out'] + product_val['product_qty_internal'] +
+                                                                product_val['product_qty_adjustment']"/>
+                                                        <span t-esc="sum_ending_qty"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-set="ending_qty_value" t-value="get_product_valuation(docs,product,ending_qty,warehouse)"/>
+                                                        <span t-set="ending_qty_unit" t-value="sum_ending_qty and ending_qty_value / sum_ending_qty or 0"/>
+                                                        <span t-esc="ending_qty_unit" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <!--<t t-set="sum_ending_qty_value" t-value="sum_ending_qty_value + ending_qty_value"/>-->
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="ending_qty_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        <t t-set="sum_ending_qty_value" t-value="sum_ending_qty_value + ending_qty_value"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <tr>
+                                                <th style="border-top: 2px solid black">Total</th>
+                                                <th style="border-top: 2px solid black"></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="sum_begning"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="sum_begning_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="sum_product_qty_in"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="sum_product_qty_in_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="abs(sum_product_qty_out)"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="abs(sum_product_qty_out_value)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="sum_product_qty_internal"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="sum_product_qty_internal_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="sum_product_qty_adjustment"/></th>
+                                                <th style="border-top: 2px solid black"><span t-esc="sum_product_qty_adjustment_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th style="border-top: 2px solid black">
+                                                    <t t-set="sum_ending_qty" t-value="sum_begning + sum_product_qty_in + sum_product_qty_out + sum_product_qty_internal 
+                                                                + sum_product_qty_adjustment"/>
+                                                    <span t-esc="sum_ending_qty"/>
+                                                </th>
+                                                <th style="border-top: 2px solid black">
+                                                    <t t-esc="sum_ending_qty and sum_ending_qty_value / sum_ending_qty or 0" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                </th>
+                                                <th style="border-top: 2px solid black">
+                                                    <t t-esc="sum_ending_qty_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                </th>
+                                            </tr>
+                                        </t>
+                                    </t>
+
+                                    <t t-if="docs.group_by_categ">
+                                        <t t-value="get_product_sale_qty(docs,warehouse,product=None)" t-set="product_val"/>
+                                        <t t-foreach="product_val" t-as="product_categ">
+                                            <t t-set="sum_categ_begning" t-value="0.0"/>
+                                            <t t-set="sum_categ_begning_val" t-value="0.0"/>
+                                            <t t-set="sum_categ_product_qty_in" t-value="0.0"/>
+                                            <t t-set="sum_categ_product_qty_in_val" t-value="0.0"/>
+                                            <t t-set="sum_categ_product_qty_out" t-value="0.0"/>
+                                            <t t-set="sum_categ_product_qty_out_val" t-value="0.0"/>
+                                            <t t-set="sum_categ_product_qty_internal" t-value="0.0"/>
+                                            <t t-set="sum_categ_product_qty_internal_val" t-value="0.0"/>
+                                            <t t-set="sum_categ_product_qty_adjustment" t-value="0.0"/>
+                                            <t t-set="sum_categ_product_qty_adjustment_val" t-value="0.0"/>
+                                            <t t-set="sum_categ_ending" t-value="0.0"/>
+                                            <t t-set="sum_categ_ending_val" t-value="0.0"/>
+                                            <span t-set="product_categ_id" t-value="request.env['product.category'].browse(product_categ)"/>
+                                            <tr style="background-color:darkgrey;">
+                                                <td><span t-esc="product_categ_id.name"/></td>
+                                                <td colspan="14"/>
+                                                <td t-if="docs.location_ids"></td>
+                                            </tr>
+                                            <t t-foreach="product_categ_value" t-as="product_categ_data">
+                                                <t t-set="product_id" t-value="product_categ_data['product_id']"/>
+                                                <t t-value="get_beginning_inventory(docs,product_id,warehouse)" t-set="product_beg_qty"/>
+                                                <span t-set="total_ending" t-value=" product_beg_qty + product_categ_data['product_qty_in'] +
+                                                    product_categ_data['product_qty_out'] + product_categ_data['product_qty_internal'] +
+                                                    product_categ_data['product_qty_adjustment']"/>
+                                                <span t-set="product_id" t-value="request.env['product.product'].browse(product_id)"/>
+
+                                                <t t-if="docs.location_ids">
+                                                    <span t-set="location_data" t-value="get_location_wise_product(docs,warehouse,product_id,location_ids,product_categ_id)"/>
+                                                    <t t-set="product_sum_begning" t-value="0.0"/>
+                                                    <t t-set="product_sum_product_qty_in" t-value="0.0"/>
+                                                    <t t-set="product_sum_product_qty_out" t-value="0.0"/>
+                                                    <t t-set="product_sum_product_qty_internal" t-value="0.0"/>
+                                                    <t t-set="product_sum_product_qty_adjustment" t-value="0.0"/>
+                                                    <tr>
+                                                        <td>
+                                                            <span t-esc="product_id.display_name"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="dict(product_categ_id.fields_get()['property_cost_method']['selection'])[product_categ_id.property_cost_method]"/>
+                                                        </td>
+                                                        <td></td>
+                                                        <td style="font-weight:bold;"><span t-esc="location_data[1][0]"/></td>
+                                                        <td style="font-weight:bold;"><t t-esc="get_product_valuation(docs,product_id,location_data[1][0],warehouse)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                                        <td style="font-weight:bold;"><span t-esc="location_data[1][1]"/></td>
+                                                        <td style="font-weight:bold;"><t t-esc="get_product_valuation(docs,product_id,location_data[1][1],warehouse)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                                        <td style="font-weight:bold;"><span t-esc="abs(location_data[1][2])"/></td>
+                                                        <td style="font-weight:bold;"><t t-esc="get_product_valuation(docs,product_id,abs(location_data[1][2]),warehouse)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                                        <td style="font-weight:bold;"><span t-esc="location_data[1][3]"/></td>
+                                                        <td style="font-weight:bold;"><t t-esc="get_product_valuation(docs,product_id,location_data[1][3],warehouse)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                                        <td style="font-weight:bold;"><span t-esc="location_data[1][4]"/></td>
+                                                        <td style="font-weight:bold;"><t t-esc="get_product_valuation(docs,product_id,location_data[1][4],warehouse)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                                        <td style="font-weight:bold;"><span t-esc="location_data[1][5]"/></td>
+                                                        <td style="font-weight:bold;">
+                                                            <t t-set="unit_price" t-value="location_data[1][5] and get_product_valuation(docs,product_id,location_data[1][5],warehouse) / location_data[1][5] or 0"/>
+                                                            <t t-esc="unit_price" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        </td>
+                                                        <td style="font-weight:bold;"><t t-esc="get_product_valuation(docs,product_id,location_data[1][5],warehouse)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                                    </tr>
+                                                    <tr t-foreach="location_data[0]" t-as="l">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>
+                                                            <span t-esc="l.display_name"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="l_value[0]"/>
+                                                            <t t-set="sum_categ_begning" t-value="sum_categ_begning + l_value[0]"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_begning_value" t-value="get_product_valuation(docs,product_id,product_beg_qty,warehouse)"/>
+                                                            <span t-esc="sum_begning_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_begning_val" t-value="sum_categ_begning_val + sum_begning_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="l_value[1]"/>
+                                                            <t t-set="sum_categ_product_qty_in" t-value="sum_categ_product_qty_in + l_value[1]"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_product_qty_in_value" t-value="get_product_valuation(docs,product_id,l_value[1],warehouse)"/>
+                                                            <span t-esc="sum_categ_product_qty_in_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_product_qty_in_val" t-value="sum_categ_product_qty_in_val + sum_categ_product_qty_in_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="abs(l_value[2])"/>
+                                                            <t t-set="sum_categ_product_qty_out" t-value="sum_categ_product_qty_out + l_value[2]"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_product_qty_out_value" t-value="get_product_valuation(docs,product_id,l_value[2],warehouse)"/>
+                                                            <span t-esc="abs(sum_categ_product_qty_out_value)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_product_qty_out_val" t-value="sum_categ_product_qty_out_val + sum_categ_product_qty_out_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="l_value[3]"/>
+                                                            <t t-set="sum_categ_product_qty_internal" t-value="sum_categ_product_qty_internal + l_value[3]"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_product_qty_internal_value" t-value="get_product_valuation(docs,product_id,l_value[3],warehouse)"/>
+                                                            <span t-esc="sum_categ_product_qty_internal_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_product_qty_internal_val" t-value="sum_categ_product_qty_internal_val + sum_categ_product_qty_internal_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="l_value[4]"/>
+                                                            <t t-set="sum_categ_product_qty_adjustment" t-value="sum_categ_product_qty_adjustment + l_value[4]"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_product_qty_adjustment_value" t-value="get_product_valuation(docs,product_id,l_value[4],warehouse)"/>
+                                                            <span t-esc="sum_categ_product_qty_adjustment_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_product_qty_adjustment_val" t-value="sum_categ_product_qty_adjustment_val + sum_categ_product_qty_adjustment_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="l_value[5]"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_ending_value" t-value="get_product_valuation(docs,product_id,l_value[5],warehouse)"/>
+                                                            <t t-set="sum_categ_ending_unit" t-value="l_value[5] and sum_categ_ending_value / l_value[5] or 0"/>
+                                                            <span t-esc="sum_categ_ending_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                        </td>
+                                                        <td>
+                                                            <!--<span t-set="sum_categ_ending_value" t-value="get_product_valuation(docs,product_id,l_value[5],warehouse)"/>-->
+                                                            <span t-esc="sum_categ_ending_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_ending_val" t-value="sum_categ_ending_val + sum_categ_ending_value"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-if="not docs.location_ids">
+                                                    <tr>
+                                                        <td>
+                                                            <span t-esc="product_id.display_name"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="dict(product_categ_id.fields_get()['property_cost_method']['selection'])[product_categ_id.property_cost_method]"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="product_beg_qty"/>
+                                                            <t t-set="sum_begning" t-value="sum_begning + product_beg_qty"/>
+                                                            <t t-set="sum_categ_begning" t-value="sum_categ_begning + product_beg_qty"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_begning_value" t-value="get_product_valuation(docs,product_id,product_beg_qty,warehouse)"/>
+                                                            <span t-esc="sum_begning_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_begning_val" t-value="sum_categ_begning_val + sum_begning_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="product_categ_data['product_qty_in']"/>
+                                                            <t t-set="sum_product_qty_in" t-value="sum_product_qty_in + product_categ_data['product_qty_in']"/>
+                                                            <t t-set="sum_categ_product_qty_in" t-value="sum_categ_product_qty_in + product_categ_data['product_qty_in']"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_product_qty_in_value" t-value="get_product_valuation(docs,product_id,product_categ_data['product_qty_in'],warehouse)"/>
+                                                            <span t-esc="sum_categ_product_qty_in_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_product_qty_in_val" t-value="sum_categ_product_qty_in_val + sum_categ_product_qty_in_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="abs(product_categ_data['product_qty_out'])"/>
+                                                            <t t-set="sum_product_qty_out" t-value="sum_product_qty_out + product_categ_data['product_qty_out']"/>
+                                                            <t t-set="sum_categ_product_qty_out" t-value="sum_categ_product_qty_out + product_categ_data['product_qty_out']"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_product_qty_out_value" t-value="get_product_valuation(docs,product_id,product_categ_data['product_qty_out'],warehouse)"/>
+                                                            <span t-esc="abs(sum_categ_product_qty_out_value)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_product_qty_out_val" t-value="sum_categ_product_qty_out_val + sum_categ_product_qty_out_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="product_categ_data['product_qty_internal']"/>
+                                                            <t t-set="sum_product_qty_internal" t-value="sum_product_qty_internal + product_categ_data['product_qty_internal']"/>
+                                                            <t t-set="sum_categ_product_qty_internal" t-value="sum_categ_product_qty_internal + product_categ_data['product_qty_internal']"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_product_qty_internal_value" t-value="get_product_valuation(docs,product_id,product_categ_data['product_qty_internal'],warehouse)"/>
+                                                            <span t-esc="sum_categ_product_qty_internal_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_product_qty_internal_val" t-value="sum_categ_product_qty_internal_val + sum_categ_product_qty_internal_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="product_categ_data['product_qty_adjustment']"/>
+                                                            <t t-set="sum_product_qty_adjustment" t-value="sum_product_qty_adjustment + product_categ_data['product_qty_adjustment']"/>
+                                                            <t t-set="sum_categ_product_qty_adjustment" t-value="sum_categ_product_qty_adjustment + product_categ_data['product_qty_adjustment']"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_product_qty_adjustment_value" t-value="get_product_valuation(docs,product_id,product_categ_data['product_qty_adjustment'],warehouse)"/>
+                                                            <span t-esc="sum_categ_product_qty_adjustment_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_product_qty_adjustment_val" t-value="sum_categ_product_qty_adjustment_val + sum_categ_product_qty_adjustment_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_ending_qty_value" t-value="product_beg_qty + product_categ_data['product_qty_in'] +
+                                                                                                        product_categ_data['product_qty_out'] +
+                                                                                                        product_categ_data['product_qty_internal'] +
+                                                                                                        product_categ_data['product_qty_adjustment']"/>
+                                                            <span t-esc="sum_ending_qty_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-set="sum_categ_ending_value" t-value="get_product_valuation(docs,product_id,total_ending,warehouse)"/>
+                                                            <span t-set="sum_categ_ending_unit" t-value="sum_ending_qty_value and sum_categ_ending_value / sum_ending_qty_value or 0"/>
+                                                            <span t-esc="sum_categ_ending_unit" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <!--<t t-set="" t-value="sum_categ_ending_val + sum_categ_ending_value"/>-->
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="sum_categ_ending_value" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                            <t t-set="sum_categ_ending_val" t-value="sum_categ_ending_val + sum_categ_ending_value"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                            <tr>
+                                                <th class="text-center">Total</th>
+                                                <th></th>
+                                                <th t-if="docs.location_ids"></th>
+                                                <th><span t-esc="sum_categ_begning"/></th>
+                                                <th><span t-esc="sum_categ_begning_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th><span t-esc="sum_categ_product_qty_in"/></th>
+                                                <th><span t-esc="sum_categ_product_qty_in_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th><span t-esc="abs(sum_categ_product_qty_out)"/></th>
+                                                <th><span t-esc="abs(sum_categ_product_qty_out_val)" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th><span t-esc="sum_categ_product_qty_internal"/></th>
+                                                <th><span t-esc="sum_categ_product_qty_internal_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th><span t-esc="sum_categ_product_qty_adjustment"/></th>
+                                                <th><span t-esc="sum_categ_product_qty_adjustment_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                                <th>
+                                                    <span t-set="sum_ending_qty_value" t-value="sum_categ_begning + sum_categ_product_qty_in + sum_categ_product_qty_out + sum_categ_product_qty_internal
+                                                                                                + sum_categ_product_qty_adjustment"/>
+                                                    <span t-esc="sum_ending_qty_value"/>
+                                                </th>
+                                                <th>
+                                                    <span t-set="sum_ending_qty_unit" t-value="sum_ending_qty_value and sum_categ_ending_val / sum_ending_qty_value or 0"/>
+                                                    <span t-esc="sum_ending_qty_unit" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                                </th>
+                                                <th><span t-esc="sum_categ_ending_val" t-esc-options='{"widget": "float", "decimal_precision": "Product Price"}'/></th>
+                                            </tr>
+                                        </t>
+                                    </t>
+
+                                </tbody>
+                            </table>
+
+                            <!-- Page Break -->
+                            <p style="page-break-before:always;"/>
+
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>
