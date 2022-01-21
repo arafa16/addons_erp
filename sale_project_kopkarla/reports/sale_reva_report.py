@@ -16,6 +16,7 @@ class SaleRevaReport(models.Model):
     date = fields.Date('Date Order', readonly=True)
     confirmation_date = fields.Date('Confirmation Date', readonly=True)
     delivery_date = fields.Date('Delivery Date', readonly=True)
+    bast_date = fields.Date('BAST Date', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
@@ -87,6 +88,7 @@ class SaleRevaReport(models.Model):
                     s.name as name,
                     s.date_order as date,
                     s.confirmation_date as confirmation_date,
+                    s.bast_date as bast_date,
                     s.state as state,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
@@ -122,6 +124,7 @@ class SaleRevaReport(models.Model):
                     s.name as name,
                     s.date_order as date,
                     s.confirmation_date as confirmation_date,
+                    s.bast_date as bast_date,
                     s.state as state,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
@@ -174,6 +177,7 @@ class SaleRevaReport(models.Model):
                     s.name,
                     s.date_order,
                     s.confirmation_date,
+                    s.bast_date,
                     s.partner_id,
                     s.user_id,
                     s.state,
