@@ -13,9 +13,9 @@ class SaleRevaReport(models.Model):
     _order = 'date desc'
 
     name = fields.Char('Sales Order', readonly=True)
-    date = fields.Datetime('Date Order', readonly=True)
-    confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
-    delivery_date = fields.Datetime('Delivery Date', readonly=True)
+    date = fields.Date('Date Order', readonly=True)
+    confirmation_date = fields.Date('Confirmation Date', readonly=True)
+    delivery_date = fields.Date('Delivery Date', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
