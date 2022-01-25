@@ -37,6 +37,7 @@ class HrExpense(models.Model):
         ("company_account", "Company")
     ], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)], 'submitted': [('readonly', True)]}, related='sheet_id.payment_mode', string="Payment By")
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
+    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', related='sheet_id.bank_journal_id')
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

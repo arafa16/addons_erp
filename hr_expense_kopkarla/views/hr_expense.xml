@@ -60,5 +60,17 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_expenses_tree_jouorna" model="ir.ui.view">
+            <field name="name">hr.expense.tree.journal</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="arch" type="xml">
+                <field name="analytic_account_id" position="before">
+                    <field name="bank_journal_id"/>
+                    <field name="cost_center_id"/>
+                </field>
+            </field>
+        </record>
     </data>
 </odoo>
