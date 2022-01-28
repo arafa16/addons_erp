@@ -59,6 +59,9 @@
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="sales_area_kode"/>
                 </xpath>
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="partner_shipping_id"/>
+                </xpath>
             </field>
         </record>
         <record model="ir.ui.view" id="esp_order_tree">
