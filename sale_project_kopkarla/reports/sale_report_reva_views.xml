@@ -38,6 +38,15 @@
                  <field name="amt_to_invoice"/>
                  <field name="dpp_to_invoice"/>
                  <field name="dpp_invoiced"/>
+                 <field name="spk_sementara"/>
+                 <field name="nomor_spk"/>
+                 <field name="tgl_spk"/>
+                 <field name="partner_shipping_id"/>
+                 <field name="reva_notes"/>
+                 <field name="nojar"/>
+                 <field name="proj_type"/>
+                 <field name="ord_type"/>
+                 <field name="pek_type"/>
                  <field name="state"/>
              </tree>
          </field>

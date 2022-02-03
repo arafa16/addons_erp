@@ -31,7 +31,8 @@
                             </group>
                         </group>
                     </page>
-                    <page string="REVA" attrs="{'invisible': [('state', 'in', ['draft'])]}" name="page_spk">
+                    <!--<page string="REVA" attrs="{'invisible': [('state', 'in', ['draft'])]}" name="page_spk">-->
+                    <page string="REVA" name="page_spk">
                         <group name="page_spk_x">
                             <group string="Status REVA" name="info_reva">
                                 <field name="type_reva"/>

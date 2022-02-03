@@ -14,6 +14,7 @@ class EnhancedSalesArea(models.Model):
     advance_amount = fields.Float(string='# of Advances', compute='_get_advance', readonly=True, store=True)
     expense_amount = fields.Float(string='# of Expenses', compute='_get_expense', readonly=True, store=True)
     est_invoice_date = fields.Date('Estimasi Invoice Date')
+    reva_notes = fields.Char('Catatan Proses Reva')
 
     @api.multi
     def convert_to_project(self):

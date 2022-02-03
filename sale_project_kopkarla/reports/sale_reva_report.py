@@ -59,6 +59,16 @@ class SaleRevaReport(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Term', readonly=True)
     est_invoice_date = fields.Date('Estimasi Invoice Date')
 
+    spk_sementara = fields.Char('SPK User')
+    nomor_spk = fields.Char('No. PO')
+    tgl_spk = fields.Char('Tanggal PO')
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True)
+    reva_notes = fields.Char('Catatan Proses Reva')
+    nojar = fields.Char('Nomor Jaringan')
+    proj_type = fields.Many2one('enhanced.sales.project.tabel', 'Jenis Project')
+    ord_type = fields.Many2one('enhanced.sales.jenis.tabel', 'Jenis Order')
+    pek_type = fields.Many2one('enhanced.sales.pekerjaan.tabel', 'Jenis Pekerjaan')
+
     def _select(self):
         select_str = """
              SELECT s.id,
@@ -100,6 +110,15 @@ class SaleRevaReport(models.Model):
                     s.est_invoice_date,
                     s.delivery_doc as delivery_date,
                     s.payment_term_id as payment_term_id,
+                    s.spk_sementara as spk_sementara,
+                    s.nomor_spk as nomor_spk,
+                    s.tgl_spk as tgl_spk,
+                    s.partner_shipping_id as partner_shipping_id,
+                    s.reva_notes as reva_notes,
+                    s.nojar as nojar,
+                    s.proj_type as proj_type,
+                    s.ord_type as ord_type,
+                    s.pek_type as pek_type,
                     -- s.team_id as team_id,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id
@@ -136,6 +155,15 @@ class SaleRevaReport(models.Model):
                     s.est_invoice_date,
                     s.delivery_doc as delivery_date,
                     s.payment_term_id as payment_term_id,
+                    s.spk_sementara as spk_sementara,
+                    s.nomor_spk as nomor_spk,
+                    s.tgl_spk as tgl_spk,
+                    s.partner_shipping_id as partner_shipping_id,
+                    s.reva_notes as reva_notes,
+                    s.nojar as nojar,
+                    s.proj_type as proj_type,
+                    s.ord_type as ord_type,
+                    s.pek_type as pek_type,
                     -- s.team_id as team_id,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id
@@ -189,6 +217,15 @@ class SaleRevaReport(models.Model):
                     s.est_invoice_date,
                     s.delivery_doc,
                     s.payment_term_id,
+                    s.spk_sementara,
+                    s.nomor_spk,
+                    s.tgl_spk,
+                    s.partner_shipping_id,
+                    s.reva_notes,
+                    s.nojar,
+                    s.proj_type,
+                    s.ord_type,
+                    s.pek_type,
                     partner.country_id,
                     partner.commercial_partner_id,
                     s.type_reva, r.name, r.reva_id, rg.id

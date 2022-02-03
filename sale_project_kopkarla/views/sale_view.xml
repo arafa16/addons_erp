@@ -113,6 +113,7 @@
                 </xpath>
                 <group name="info_reva" position="inside">
                     <field name="est_invoice_date"/>
+                    <field name="reva_notes"/>
                 </group>
             </field>
         </record>
