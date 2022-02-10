@@ -11,6 +11,7 @@ class StockMove(models.Model):
     cost_center_id = fields.Many2one("cost.center", string='Cost Center')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete="cascade")
     move_id = fields.Many2one('account.move', string="Journal",)
+    asset_category_id = fields.Many2one('account.asset.category', 'Asset Type', related='product_id.asset_category_id')
 
     @api.onchange('product_id')
     def set_analytic_account(self):

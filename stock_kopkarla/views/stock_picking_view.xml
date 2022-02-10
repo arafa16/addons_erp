@@ -16,6 +16,7 @@
                 <field name="product_uom" position="after">
                     <field name="cost_center_id"/>
                     <field name="analytic_account_id"/>
+                    <field name="asset_category_id"/>
                     <field name="move_id" groups="account.group_account_invoice" attrs="{'column_invisible': [('parent.state', '!=', 'done')]}"/>
                 </field>
             </field>
