@@ -23,31 +23,37 @@
          <field name="model">sale.reva.report</field>
          <field name="arch" type="xml">
              <tree string="Sales Analysis">
-                 <field name="name"/>
+                 <field name="user_id"/>
+                 <field name="requested_date"/>
                  <field name="date"/>
-                 <field name="est_invoice_date"/>
-                 <field name="partner_id"/>
-                 <field name="reva_group_id"/>
+                 <field name="name"/>
+                 <field name="state"/>
                  <field name="reva_status"/>
-                 <field name="cost_center_id"/>
-                 <field name="analytic_account_id"/>
-                 <field name="delivery_date"/>
+                 <field name="reva_group_id"/>
                  <field name="payment_term_id"/>
-                 <field name="price_total"/>
+                 <field name="pek_type"/>
+                 <field name="proj_type"/>
+                 <field name="tgl_spk"/>
+                 <field name="spk_sementara"/>
+                 <field name="nojar"/>
+                 <field name="delivery_date"/>
+                 <field name="bast_no"/>
+                 <field name="bast_date"/>
+                 <field name="partner_shipping_id"/>
+                 <field name="client_order_ref"/>
+                 <field name="analytic_account_id"/>
                  <field name="price_subtotal"/>
-                 <field name="amt_to_invoice"/>
                  <field name="dpp_to_invoice"/>
                  <field name="dpp_invoiced"/>
-                 <field name="spk_sementara"/>
+                 <field name="est_invoice_date"/>
+
+                 <!--<field name="partner_id"/>
+                 <field name="cost_center_id"/>
+                 <field name="price_total"/>
+                 <field name="amt_to_invoice"/>
                  <field name="nomor_spk"/>
-                 <field name="tgl_spk"/>
-                 <field name="partner_shipping_id"/>
                  <field name="reva_notes"/>
-                 <field name="nojar"/>
-                 <field name="proj_type"/>
-                 <field name="ord_type"/>
-                 <field name="pek_type"/>
-                 <field name="state"/>
+                 <field name="ord_type"/>-->
              </tree>
          </field>
     </record>
