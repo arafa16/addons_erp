@@ -12,11 +12,11 @@ class SaleRevaReport(models.Model):
     _rec_name = 'date'
     _order = 'date desc'
 
-    name = fields.Char('SO Number', readonly=True)
+    name = fields.Char('Sales Order', readonly=True)
     date = fields.Date('Date Order', readonly=True)
     confirmation_date = fields.Date('Confirmation Date', readonly=True)
-    delivery_date = fields.Date('Tgl. Target Delivery', readonly=True)
-    bast_date = fields.Date('Tgl. BAST LA', readonly=True)
+    delivery_date = fields.Date('Delivery Date', readonly=True)
+    bast_date = fields.Date('BAST Date', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
@@ -27,11 +27,11 @@ class SaleRevaReport(models.Model):
     # advance_amount = fields.Float('Advance Total', readonly=True)
     # expense_amount = fields.Float('Expense Total', readonly=True)
     price_total = fields.Float('Amount Total', readonly=True)
-    price_subtotal = fields.Float('Nilai PO', readonly=True)
+    price_subtotal = fields.Float('Untaxed Total', readonly=True)
     amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
-    dpp_to_invoice = fields.Float('Nilai Sisa Tagihan', readonly=True)
+    dpp_to_invoice = fields.Float('DPP To Invoice', readonly=True)
     amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
-    dpp_invoiced = fields.Float('Nilai Sudah Ditagihkan', readonly=True)
+    dpp_invoiced = fields.Float('DPP Invoiced', readonly=True)
     amt_cancel = fields.Float('Amount Canceled', readonly=True)
     # sales_total = fields.Float('Sales Amount', readonly=True)
     nbr = fields.Integer('# of Sales', readonly=True)
@@ -51,21 +51,21 @@ class SaleRevaReport(models.Model):
         ('loaconfirmed', 'LoA Confirmed'),
         ('sale', 'Sales Order'),
         ('done', 'Sales Done'),
-        ], string='Status SO', readonly=True)
+        ], string='Status', readonly=True)
     jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("datacom", "Trading Datacom"),
                                  ("rental", "Rental Order")], string='Order Type', readonly=True)
     reva_status = fields.Char(string='Reva Status', readonly=True)
-    reva_group_id = fields.Many2one('enhanced.reva.group.tabel', 'Status Penagihan', readonly=True)
-    payment_term_id = fields.Many2one('account.payment.term', 'Termin Pembayaran', readonly=True)
-    est_invoice_date = fields.Date('Target Invoice')
+    reva_group_id = fields.Many2one('enhanced.reva.group.tabel', 'Reva Group', readonly=True)
+    payment_term_id = fields.Many2one('account.payment.term', 'Payment Term', readonly=True)
+    est_invoice_date = fields.Date('Estimasi Invoice Date')
 
-    spk_sementara = fields.Char('No. SPK')
+    spk_sementara = fields.Char('SPK User')
     nomor_spk = fields.Char('No. PO')
-    tgl_spk = fields.Char('Tanggal SPK / PO')
-    partner_shipping_id = fields.Many2one('res.partner', string='Uraian Pekerjaan', readonly=True)
+    tgl_spk = fields.Char('Tanggal PO')
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True)
     reva_notes = fields.Char('Catatan Proses Reva')
-    nojar = fields.Char('No. Jaringan')
-    proj_type = fields.Many2one('enhanced.sales.project.tabel', 'Akun Perkiraan')
+    nojar = fields.Char('Nomor Jaringan')
+    proj_type = fields.Many2one('enhanced.sales.project.tabel', 'Jenis Project')
     ord_type = fields.Many2one('enhanced.sales.jenis.tabel', 'Jenis Order')
     pek_type = fields.Many2one('enhanced.sales.pekerjaan.tabel', 'Jenis Pekerjaan')
 
@@ -94,8 +94,9 @@ class SaleRevaReport(models.Model):
                     case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
                          else sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
                     sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
-                    case when sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
-                         else sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_invoiced,
+                    -- case when sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
+                    --     else sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_invoiced,
+                    sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_invoiced,
                     0 as amt_cancel,
                     -- s.amount_total as sales_total,
                     count(*) as nbr,
