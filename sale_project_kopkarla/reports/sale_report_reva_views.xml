@@ -46,14 +46,15 @@
                  <field name="dpp_to_invoice"/>
                  <field name="dpp_invoiced"/>
                  <field name="est_invoice_date"/>
-
-                 <!--<field name="partner_id"/>
+                 <field name="partner_id"/>
                  <field name="cost_center_id"/>
                  <field name="price_total"/>
                  <field name="amt_to_invoice"/>
                  <field name="nomor_spk"/>
                  <field name="reva_notes"/>
-                 <field name="ord_type"/>-->
+                 <field name="ord_type"/>
+                 <field name="daily_tgl_mulai"/>
+                 <field name="daily_tgl_selesai"/>
              </tree>
          </field>
     </record>

@@ -73,6 +73,9 @@ class SaleRevaReport(models.Model):
     bast_no = fields.Char('DO / BAST Number', readonly=True)
     client_order_ref = fields.Char('Nama Pelanggan', readonly=True)
 
+    daily_tgl_mulai = fields.Date(string='TANGGAL MULAI')
+    daily_tgl_selesai = fields.Date(string='TGL SELESAI')
+
     def _select(self):
         select_str = """
              SELECT s.id,
@@ -129,7 +132,9 @@ class SaleRevaReport(models.Model):
                     partner.commercial_partner_id as commercial_partner_id,
                     s.requested_date,
                     s.bast_no,
-                    s.client_order_ref
+                    s.client_order_ref,
+                    pt.create_date::date as daily_tgl_mulai,
+                    pt.daily_tgl_selesai                    
         """
         return select_str
 
@@ -177,7 +182,9 @@ class SaleRevaReport(models.Model):
                     partner.commercial_partner_id as commercial_partner_id,
                     s.requested_date,
                     s.bast_no,
-                    s.client_order_ref
+                    s.client_order_ref,
+                    pt.create_date::date as daily_tgl_mulai,
+                    pt.daily_tgl_selesai
         """
         return select_str
 
@@ -193,6 +200,7 @@ class SaleRevaReport(models.Model):
                     (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
                 left join enhanced_reva_tabel r on s.stat_reva = r.id
                 left join enhanced_reva_group_tabel rg on r.reva_id = rg.id
+                left join project_task pt on s.id = pt.sale_order_id
         """
         return from_str
 
@@ -242,7 +250,9 @@ class SaleRevaReport(models.Model):
                     s.type_reva, r.name, r.reva_id, rg.id,
                     s.requested_date,
                     s.bast_no,
-                    s.client_order_ref
+                    s.client_order_ref,
+                    pt.create_date::date,
+                    pt.daily_tgl_selesai
         """
         return group_by_str
 
@@ -264,4 +274,3 @@ class SaleRevaReport(models.Model):
             )""" % (self._table, self.env['res.currency']._select_companies_rates(),
                     self._select(), self._from(), self._where(), self._group_by(),
                     self._select_cancel(), self._from(), self._where_cancel(), self._group_by()))
-
