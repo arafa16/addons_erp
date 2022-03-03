@@ -497,6 +497,8 @@ class CubeRatio(models.Model):
     opr_profit = fields.Monetary('OPR Profit (%)', currency_field='currency_id',) # fields.Float(digit=2)
     der = fields.Monetary('DER', currency_field='currency_id',) # fields.Float(digit=2)
     roa = fields.Monetary('ROA', currency_field='currency_id',) # fields.Float(digit=2)
+    wc = fields.Monetary('Working Capital', currency_field='currency_id',) # fields.Float(digit=2)
+    roe = fields.Monetary('ROE', currency_field='currency_id',) # fields.Float(digit=2)
 
 
 class CubeRatioTarget(models.Model):
@@ -517,6 +519,8 @@ class CubeRatioTarget(models.Model):
     opr_profit = fields.Monetary('OPR Profit (%)', currency_field='currency_id',) # fields.Float(digit=2)
     der = fields.Monetary('DER', currency_field='currency_id',) # fields.Float(digit=2)
     roa = fields.Monetary('ROA', currency_field='currency_id',) # fields.Float(digit=2)
+    wc = fields.Monetary('Working Capital', currency_field='currency_id',) # fields.Float(digit=2)
+    roe = fields.Monetary('ROE', currency_field='currency_id',) # fields.Float(digit=2)
 
 
 # class CubeGPDPP(models.Model):
