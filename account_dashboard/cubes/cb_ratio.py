@@ -516,6 +516,7 @@ class CubeRatioTarget(models.Model):
     gp_margin = fields.Monetary('GP Margin (%)', currency_field='currency_id',) # fields.Float(digit=2)
     opr_profit = fields.Monetary('OPR Profit (%)', currency_field='currency_id',) # fields.Float(digit=2)
     der = fields.Monetary('DER', currency_field='currency_id',) # fields.Float(digit=2)
+    roa = fields.Monetary('ROA', currency_field='currency_id',) # fields.Float(digit=2)
 
 
 # class CubeGPDPP(models.Model):

@@ -94,6 +94,7 @@ class account_financial_report(models.Model):
             gp_margin = self.env['dashboard.cubes.financial.report'].sudo().search([('company_id', '=', company_id), ('date', '=', date), ('report_line_id', '=', report_ids[6])])
             opr_profit = self.env['dashboard.cubes.financial.report'].sudo().search([('company_id', '=', company_id), ('date', '=', date), ('report_line_id', '=', report_ids[7])])
             der = self.env['dashboard.cubes.financial.report'].sudo().search([('company_id', '=', company_id), ('date', '=', date), ('report_line_id', '=', report_ids[8])])
+            roa = self.env['dashboard.cubes.financial.report'].sudo().search([('company_id', '=', company_id), ('date', '=', date), ('report_line_id', '=', report_ids[9])])
             ratio = self.env['dashboard.cubes.ratio']
             ratio.create({
                 'company_id': company_id,
@@ -108,6 +109,7 @@ class account_financial_report(models.Model):
                 'gp_margin': gp_margin.balance,
                 'opr_profit': opr_profit.balance,
                 'der': der.balance,
+                'roa': roa.balance,
             })
 
     # @api.multi
