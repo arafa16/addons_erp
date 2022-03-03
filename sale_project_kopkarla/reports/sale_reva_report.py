@@ -71,7 +71,7 @@ class SaleRevaReport(models.Model):
 
     requested_date = fields.Date('Requested Date', readonly=True)
     bast_no = fields.Char('DO / BAST Number', readonly=True)
-    client_order_ref = fields.Char('Nama Pelanggan', readonly=True)
+    client_order_ref = fields.Char('Customer Reference', readonly=True)
 
     daily_tgl_mulai = fields.Date(string='TANGGAL MULAI')
     daily_tgl_selesai = fields.Date(string='TGL SELESAI')
