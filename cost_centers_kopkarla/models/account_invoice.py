@@ -40,13 +40,15 @@ class AccountInvoice(models.Model):
     @api.model
     def invoice_line_move_line_get(self):
         res = super(AccountInvoice, self).invoice_line_move_line_get()
-
+        cost_center_id = False
         for dict_data in res:
             invl_id = dict_data.get('invl_id')
             line = self.env['account.invoice.line'].browse(invl_id)
             if line.cost_center_id:
                 dict_data['cost_center_id'] = line.cost_center_id.id
-
+                cost_center_id = line.cost_center_id.id
+            elif cost_center_id and 'account_analytic_id' in dict_data:
+                dict_data['cost_center_id'] = cost_center_id
         return res
 
     # @api.onchange('cost_center_id')
