@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="item_form_view">
+            <field name="name">ks_dashboard_ninja_item form</field>
+            <field name="model">ks_dashboard_ninja.item</field>
+            <field name="inherit_id" ref="ks_dashboard_ninja.item_form_view"/>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <field name="ks_record_field" position="replace">
+                    <field name="ks_record_field"
+                           options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"
+                           attrs="{'invisible':[('ks_record_count_type','in',('count','count_distinct')),'|',('ks_dashboard_item_type','!=','ks_kpi'),('ks_dashboard_item_type','!=','ks_tile')],
+                                       'required':[('ks_record_count_type','!=','count'),'|',('ks_dashboard_item_type','=','ks_kpi'),('ks_dashboard_item_type','=','ks_tile')]}"/>
+                    <field name="ks_record_field3"
+                           options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"
+                           attrs="{'invisible':[('ks_record_count_type','!=','count_distinct'),'|',('ks_dashboard_item_type','!=','ks_kpi'),('ks_dashboard_item_type','!=','ks_tile')],
+                                       'required':[('ks_record_count_type','!=','count'),'|',('ks_dashboard_item_type','=','ks_kpi'),('ks_dashboard_item_type','=','ks_tile')]}"/>
+                </field>
+                <xpath expr="//notebook/page[@name='display_settings']/group/group" position="after">
+                     <group attrs="{'invisible':[('ks_dashboard_item_type','!=','ks_tile'),('ks_dashboard_item_type','!=','ks_kpi')]}">
+                            <field name="show_full_amount"/>
+                            <!-- <field name="use_system_unit"/> -->
+                     </group>
+                </xpath>
+                <xpath expr="//notebook/page[@name='display_settings']/group/group[3]" position="after">
+                     <group attrs="{'invisible':['|','|',('ks_dashboard_item_type','=','ks_tile'),('ks_dashboard_item_type','=','ks_list_view'),('ks_dashboard_item_type','=','ks_kpi')]}">
+                            <field name="legend_bar_position"/>
+                     </group>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

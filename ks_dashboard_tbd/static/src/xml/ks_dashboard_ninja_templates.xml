@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <!--Item Layouts : -->
+    <t t-name="ks_dashboard_item_layout1" t-inherit="ks_dashboard_ninja.ks_dashboard_item_layout1" t-inherit-mode="primary">
+        <xpath expr="//div" position="replace">
+            <div t-att-class="'ks_item_click ' + ks_container_class" class="ks_dn_z_index">
+                <div t-att-id="item.id"
+                     t-att-class="'ks_dashboarditem_id ks_dashboard_item ks_dashboard_item_hover ' + ks_inner_container_class"
+                     t-att-style="style_main_body">
+                    <div class="ks_dashboard_item_button_container ks_dashboard_item_header ks_dashboard_item_header_hover"
+                    t-att-data-item_id="item.id">
+                        <t t-if="item.ksIsDashboardManager">
+
+                            <!--  Dashboard Item Move/Copy Feature -->
+                            <button title="Move/Duplicate" data-toggle="dropdown"
+                                    class="ks_dashboard_item_action btn dropdown-toggle btn-xs" type="button"
+                                    aria-expanded="true">
+                                <i class="fa fa-files-o"/>
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" class="ks_dashboard_menu_container dropdown-menu dropdown-menu-right ks-move-duplicate-dropdown">
+                                <li class="ks_md_heading">
+                                    <span>Select Dashboard</span>
+                                </li>
+                                <li class="ks_dashboard_select">
+                                    <select class="o_input o_group_selector o_add_group ks_dashboard_select">
+                                        <t t-foreach="ks_dashboard_list" t-as="ks_dashboard">
+                                            <option t-att-value="ks_dashboard['id']">
+                                                <t t-esc="ks_dashboard['name']"/>
+                                            </option>
+
+                                        </t>
+
+                                    </select>
+                                </li>
+                                <li class="ks_move_duplicate_button">
+                                    <button class="btn btn-primary o_apply_group o_add_group ks_duplicate_item"
+                                            tabindex="-1" type="button">Duplicate
+                                    </button>
+                                    <button class="btn btn-primary o_apply_group o_add_group ks_move_item" tabindex="-1"
+                                            type="button">Move
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <button title="Quick Customize"
+                                    class="ks_dashboard_quick_edit_action_popup  btn d-none ks_quick_button"
+                                    type="button" t-att-data-item-id="item.id">
+                                <i class="fa fa-pencil"/>
+                            </button>
+                            <button type="button" title="Customize Item"
+                                    class="ks_dashboard_item_customize d-none ks_customise_button">
+                                <i class="fa fa-pencil"/>
+                            </button>
+                            <button type="button" title="Remove Item" class="ks_dashboard_item_delete">
+                                <i class="fa fa-times"/>
+                            </button>
+                            <div class="ks_chart_inner_buttons ks_button_padding">
+                                <button title="Export Item" data-toggle="dropdown"
+                                            class="ks_dashboard_item_action  btn dropdown-toggle btn-xs o-no-caret btn"
+                                            type="button"
+                                            aria-expanded="true">
+                                        <i class="fa fa-ellipsis-v"/>
+                                    </button>
+                                    <div role="menu" class="dropdown-menu dropdown-menu-right ks_drop_dwon_menu">
+                                        <!--Dynamic Rendering-->
+                                        <div class="ks_chart_export_menu">
+                                    <div class="ks_chart_export_menu_header">
+                                        <span>Export</span>
+                                    </div>
+                                    <div class="ks_chart_json_export ks_chart_export_menu_item" t-att-data-item-id="item_id"
+                                         data-format="chart_xls">
+                                        <i class="fa fa-file-code-o"/>
+                                        <span>Export Item</span>
+                                    </div>
+                                 </div>
+                                </div>
+                                </div>
+                        </t>
+                    </div>
+
+                    <div class="ks_dashboard_item_main_body">
+                        <div class="ks_dashboard_icon">
+                            <t t-if="item.ks_icon_select=='Custom'">
+                                <t t-if="ks_icon_url">
+                                    <img t-att-src="ks_icon_url"/>
+                                </t>
+                            </t>
+                            <t t-elif="item.ks_icon_select=='Default'">
+                                <span t-att-style="'color:'+ ks_rgba_default_icon_color + ';'"
+                                      t-att-class="'fa fa-' + item.ks_default_icon + ' fa-5x'"/>
+                            </t>
+                            <!--<img t-att-src="ks_icon_url"/>-->
+                        </div>
+                        <div class="ks_dashboard_item_info">
+                            <div class="ks_dashboard_item_name" t-att-title="item.name">
+                                <t t-esc="item.name"/>
+                            </div>
+                            <div class="ks_dashboard_item_domain_count" t-att-title="count">
+                                <t t-if="show_full_amount">
+                                    <span style="font-size:20px!important;"><t t-esc="count"/></span>
+                                </t>
+                                <t t-else=''>
+                                    <t t-esc="data_count"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+
+</templates>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <!--Basic Field Image replace view for icon set-->
+
+    <!--layouts for items-->
+    <t t-name="ks_db_list_preview_layout1" t-inherit="ks_dashboard_ninja.ks_db_list_preview_layout1" t-inherit-mode="primary">
+        <div id="enterID" class="ks_dashboard_item  ks_db_item_preview ks_db_item_preview_color_picker ">
+            <div class="ks_dashboard_item_header ks_dashboard_item_header_hover">
+                <button type="button" title="Customize Item" class="ks_dashboard_item_preview_customize">
+                    <i class="fa fa-cog"/>
+                </button>
+                <button type="button" title="Remove Item" class="ks_dashboard_item_preview_delete">
+                    <i class="fa fa-times"/>
+                </button>
+            </div>
+            <div class="ks_dashboard_item_main_body">
+                <div class="ks_dashboard_icon ks_dashboard_icon_color_picker">
+                    <t t-if="icon_select=='Custom'">
+                        <t t-if="img_src">
+                            <img t-att-src="img_src" class="ks_db_list_image"/>
+                        </t>
+                    </t>
+                    <t t-elif="icon_select=='Default'">
+                        <span t-att-style="'color:'+ icon_color + ';'"
+                              t-att-class="'fa fa-' + default_icon + ' fa-5x'"/>
+                    </t>
+                </div>
+                <div class="ks_dashboard_item_info">
+                    <div class="ks_dashboard_item_name" t-att-title="name">
+                        <t t-esc="name"/>
+                    </div>
+                    <div class="ks_dashboard_item_domain_count">
+                        <t t-if="show_full_amount">
+                            <span style="font-size:20px!important;"><t t-esc="data_count"/></span>
+                        </t>
+                        <t t-else=''>
+                            <t t-esc="count"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+
+
+</templates>
