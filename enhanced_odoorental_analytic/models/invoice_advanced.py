@@ -24,7 +24,7 @@ class InheritInvoicedAdvanced(models.TransientModel):
                     maxtenur = baris.rental_tenure
                 namakategori = baris.product_id.categ_id.name
                 prodquant = baris.product_uom_qty
-                hargaperbulan = baris.price_total / baris.rental_tenure / baris.product_uom_qty
+                hargaperbulan = 0 if baris.product_uom_qty == 0 else baris.price_total / baris.rental_tenure / baris.product_uom_qty
                 namaproduk = baris.name
             namakategori = 'Sewa ' + namakategori
             habis = False
