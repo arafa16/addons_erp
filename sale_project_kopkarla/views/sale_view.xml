@@ -20,14 +20,14 @@
                         help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
                 </button>
                 <button name="action_view_invoice" position="replace">
-                    <button name="action_view_invoice" groups="account.group_account_invoice"
+                    <button name="action_view_invoice" groups="account.group_account_invoice,sale_project_kopkarla.group_sale_invoice"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-pencil-square-o"
                         attrs="{'invisible': [('invoice_count', '=', 0)]}">
                         <field name="invoice_count" widget="statinfo" string="Invoices"/>
                     </button>
-                    <button name="action_view_purchase" groups="account.group_account_invoice"
+                    <button name="action_view_purchase" groups="account.group_account_invoice,sale_project_kopkarla.group_sale_invoice"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-random">
