@@ -183,6 +183,26 @@ class EnhancedSalesArea(models.Model):
                 line.unlink()
         return new_so
 
+    @api.multi
+    def action_invoice_create(self, grouped=False, final=False):
+        for order in self:
+            if not order.spk_sementara:
+                raise UserError('SPK belum di isi')
+
+            # if not order.stat_spk:
+            #     raise UserError('SPK belum di isi')
+
+            if not order.nomor_spk:
+                raise UserError('Nomer PO belum di isi')
+
+            if not order.bast_no:
+                raise UserError('Nomer BAST belum di isi')
+
+            if not order.bast_date:
+                raise UserError('Tanggal BAST belum di isi')
+
+        return super(EnhancedSalesArea, self).action_invoice_create(grouped=grouped, final=final)
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'

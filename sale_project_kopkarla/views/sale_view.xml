@@ -111,9 +111,16 @@
                         </group>
                     </page>
                 </xpath>
-                <group name="info_reva" position="inside">
-                    <field name="est_invoice_date"/>
-                    <field name="reva_notes"/>
+                <field name="requested_date" position="attributes">
+                    <attribute name="attrs">{'readonly': False, 'required': True}</attribute>
+                </field>
+                <group name="info_reva" position="replace">
+                    <group string="Status REVA" name="info_reva">
+                        <field name="type_reva" required="1"/>
+                        <field name="stat_reva" required="1" options="{'no_create': True, 'no_open':True}" domain="[('jenis', '=', type_reva)]"/>
+                        <field name="est_invoice_date" required="1"/>
+                        <field name="reva_notes"/>
+                    </group>
                 </group>
             </field>
         </record>
