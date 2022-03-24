@@ -203,6 +203,14 @@ class EnhancedSalesArea(models.Model):
 
         return super(EnhancedSalesArea, self).action_invoice_create(grouped=grouped, final=final)
 
+    @api.multi
+    def action_confirm(self):
+        for sale in self:
+            if not sale.est_invoice_date:
+                raise UserError('It is not allowed to confirm an order due to Estimasi Invoice Date empty.')
+
+        return super(EnhancedSalesArea, self).action_confirm()
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
