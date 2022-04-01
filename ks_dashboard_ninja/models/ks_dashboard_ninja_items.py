@@ -121,7 +121,7 @@ def ks_time_addition(self, gb, query):
             'hour': 'hh:00 dd MMM',
             'day': 'dd MMM yyyy',  # yyyy = normal year
             'week': "'W'w YYYY",  # w YYYY = ISO week-year
-            'month': 'MMMM yyyy',
+            'month': 'MMM yyyy',
             'quarter': 'QQQ yyyy',
             'year': 'yyyy',
         }
@@ -2668,7 +2668,7 @@ class KsDashboardNinjaItems(models.Model):
             'hour': 'hh:00 dd MMM',
             'day': 'dd MMM yyyy',  # yyyy = normal year
             'week': "'W'w YYYY",  # w YYYY = ISO week-year
-            'month': 'MMMM yyyy',
+            'month': 'MMM yyyy',
             'quarter': 'QQQ yyyy',
             'year': 'yyyy',
         }
