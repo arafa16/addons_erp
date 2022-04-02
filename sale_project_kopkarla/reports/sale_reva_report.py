@@ -138,6 +138,54 @@ class SaleRevaReport(models.Model):
         """
         return select_str
 
+    def _select_rental(self):
+        select_str = """
+             SELECT s.id,
+                    s.jenis_so,
+                    rg.id as reva_group_id,
+                    CONCAT(s.type_reva, ' ', r.name) AS reva_status,
+                    avg(s.amount_total) as price_total,
+                    avg(s.amount_untaxed) as price_subtotal,
+                    sum(ai1.amount_total) as amt_to_invoice,
+                    sum(ai1.amount_untaxed) as dpp_to_invoice,
+                    sum(ai2.amount_total) as amt_invoiced,
+                    sum(ai2.amount_untaxed) as dpp_invoiced,
+                    0 as amt_cancel,
+                    count(*) as nbr,
+                    s.name as name,
+                    s.date_order::date as date,
+                    s.confirmation_date::date as confirmation_date,
+                    s.bast_date as bast_date,
+                    s.state as state,
+                    s.partner_id as partner_id,
+                    s.user_id as user_id,
+                    s.company_id as company_id,
+                    extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
+                    s.pricelist_id as pricelist_id,
+                    s.cost_center_id as cost_center_id,
+                    s.analytic_account_id as analytic_account_id,
+                    s.est_invoice_date,
+                    s.delivery_doc as delivery_date,
+                    s.payment_term_id as payment_term_id,
+                    s.spk_sementara as spk_sementara,
+                    s.nomor_spk as nomor_spk,
+                    s.tgl_spk as tgl_spk,
+                    s.partner_shipping_id as partner_shipping_id,
+                    s.reva_notes as reva_notes,
+                    s.nojar as nojar,
+                    s.proj_type as proj_type,
+                    s.ord_type as ord_type,
+                    s.pek_type as pek_type,
+                    partner.country_id as country_id,
+                    partner.commercial_partner_id as commercial_partner_id,
+                    s.requested_date::date as requested_date,
+                    s.bast_no,
+                    s.client_order_ref,
+                    pt.create_date::date as daily_tgl_mulai,
+                    pt.daily_tgl_selesai                    
+        """
+        return select_str
+
     def _select_cancel(self):
         select_str = """
              SELECT s.id,
@@ -204,9 +252,33 @@ class SaleRevaReport(models.Model):
         """
         return from_str
 
+    def _from_rental(self):
+        from_str = """
+                sale_order s
+                join res_partner partner on s.partner_id = partner.id
+                left join product_pricelist pp on (s.pricelist_id = pp.id)
+                left join currency_rate cr on (cr.currency_id = pp.currency_id and
+                    cr.company_id = s.company_id and
+                    cr.date_start <= coalesce(s.date_order, now()) and
+                    (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
+                left join enhanced_reva_tabel r on s.stat_reva = r.id
+                left join enhanced_reva_group_tabel rg on r.reva_id = rg.id
+                left join project_task pt on s.id = pt.sale_order_id
+                left join account_analytic_account ac on s.id = ac.sale_order_id
+                left join account_invoice ai1 on ac.id = ai1.contract_id and ai1.state = 'draft'
+                left join account_invoice ai2 on ac.id = ai2.contract_id and ai2.state in ('open', 'paid')
+        """
+        return from_str
+
     def _where(self):
         where_str = """
-            WHERE s.state not in ('cancel')
+            WHERE s.state not in ('cancel') and jenis_so != 'rental'
+        """
+        return where_str
+
+    def _where_rental(self):
+        where_str = """
+            WHERE s.state not in ('cancel') and jenis_so = 'rental'
         """
         return where_str
         # return ""
@@ -271,6 +343,12 @@ class SaleRevaReport(models.Model):
             FROM ( %s )
             %s
             %s
+            UNION
+            %s
+            FROM ( %s )
+            %s
+            %s            
             )""" % (self._table, self.env['res.currency']._select_companies_rates(),
                     self._select(), self._from(), self._where(), self._group_by(),
+                    self._select_rental(), self._from_rental(), self._where_rental(), self._group_by(),
                     self._select_cancel(), self._from(), self._where_cancel(), self._group_by()))
