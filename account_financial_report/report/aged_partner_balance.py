@@ -230,7 +230,8 @@ class AgedPartnerBalanceReportCompute(models.TransientModel):
         # The data of Aged Partner Balance Report
         # are based on Open Items Report data.
         model = self.env['report_open_items']
-        self.open_items_id = model.create(self._prepare_report_open_items())
+        vals = self._prepare_report_open_items()
+        self.open_items_id = model.create(vals)
         self.open_items_id.compute_data_for_report()
 
         # Compute report data
