@@ -75,7 +75,6 @@
             <field name="binding_model_id" ref="account_dashboard.model_account_financial_report" />
         </record>
 
-
         <record id="populate_cube_action" model="ir.actions.server">
             <field name="name">Populate Cubes</field>
             <field name="type">ir.actions.server</field>
@@ -143,5 +142,23 @@
 
         <menuitem id="menu_dashboard_financial_report_tree" name="Dashboard Reports" parent="account.menu_account_reports" action="action_dashboard_financial_report_tree"/>
 
+        <!-- Action Server -->
+        <record id="action_populate_cubes" model="ir.actions.server">
+            <field name="name">Populate Cubes</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <!-- model name -->
+            <field name="model_id" ref="model_account_financial_report"/>
+            <!-- The name of the method to be called -->
+            <field name="code">action = model.populate_cubes()</field>
+        </record>
+
+        <!-- Menuitem on Cubes >> Configuration menu -->
+        <menuitem name="Populate Cubes"
+                id="populate_cubes"
+                parent="account.menu_finance_entries_actions"
+                action="action_populate_cubes"
+                groups="account.group_account_manager"
+                sequence="71"/>
     </data>
 </odoo>
