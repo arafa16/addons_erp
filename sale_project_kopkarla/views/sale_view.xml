@@ -160,6 +160,10 @@
                     <filter name="partner_invoice_name" string="Customer Invoice" domain="[]" context="{'group_by':'partner_invoice_name'}"/>
                     <filter name="invoice_status" string="Invoice Status" domain="[]" context="{'group_by':'invoice_status'}"/>
                 </xpath>
+                <xpath expr="//filter[@name='message_needaction']" position="before">
+                    <filter string="With Purchase Request Only" domain="[('pr_line_ids','!=',False)]"/>
+                    <separator/>
+                </xpath>
             </field>
         </record>
 

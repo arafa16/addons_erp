@@ -17,6 +17,23 @@
          </field>
     </record>
 
+    <record id="view_sales_margin_tree" model="ir.ui.view">
+         <field name="name">sale.margin.report.tree</field>
+         <field name="model">sale.margin.report</field>
+         <field name="arch" type="xml">
+             <tree string="Sales Margin Analysis">
+                 <field name="name"/>
+                 <field name="date"/>
+                 <field name="confirmation_date"/>
+                 <field name="amount_untaxed"/>
+                 <field name="purchase_amount"/>
+                 <field name="advance_amount"/>
+                 <field name="expense_amount"/>
+                 <field name="margin_amount"/>
+             </tree>
+         </field>
+    </record>
+
     <record id="view_sale_margin_graph" model="ir.ui.view">
          <field name="name">sale.margin.report.graph</field>
          <field name="model">sale.margin.report</field>
@@ -83,7 +100,7 @@
         <field name="name">Sales Margin Analysis</field>
         <field name="res_model">sale.margin.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">graph,pivot</field>
+        <field name="view_mode">graph,pivot,tree</field>
         <field name="view_id"></field>  <!-- force empty -->
         <field name="search_view_id" ref="view_sale_margin_search"/>
         <field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>

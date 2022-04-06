@@ -33,6 +33,7 @@
         'views/sale_view.xml',
         'views/sale_report.xml',
         'views/account_invoice_view.xml',
+        'reports/sale_pr_po.xml',
         'reports/sale_report_margin_views.xml',
         'reports/sale_report_reva_views.xml',
         'security/ir.model.access.csv',

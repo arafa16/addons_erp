@@ -9,12 +9,16 @@ class EnhancedSalesArea(models.Model):
     bast_no = fields.Char(string='BAST No.')
     bast_date = fields.Date(string='BAST Date')
     purchase_count = fields.Integer(string='# of Purchases', compute='_get_purchased', readonly=True)
-    purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True, store=True)
+    purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True)
     purchase_ids = fields.Many2many("purchase.order", string='Purchases', compute="_get_purchased", readonly=True, copy=False)
     advance_amount = fields.Float(string='# of Advances', compute='_get_advance', readonly=True, store=True)
     expense_amount = fields.Float(string='# of Expenses', compute='_get_expense', readonly=True, store=True)
     est_invoice_date = fields.Date('Estimasi Invoice Date')
     reva_notes = fields.Char('Catatan Proses Reva')
+    pr_line_ids = fields.One2many('sprogroup.purchase.request', 'salesorder_id', 'PR Lines')
+    pr_amount = fields.Float(string='# of Purchases', compute='_get_request', readonly=True)
+
+    # pr_amount = fields.Float()
 
     @api.multi
     def convert_to_project(self):
@@ -117,6 +121,11 @@ class EnhancedSalesArea(models.Model):
             'kanban_baru': 'A'
         }
         self.task_id = self.env['project.task'].create(isiTask)
+
+    @api.multi
+    def _get_request(self):
+        for sale in self:
+            sale.pr_amount = sum(sale.pr_line_ids.mapped('amount_total'))
 
     # @api.depends('state', 'order_line.invoice_status')
     @api.multi
