@@ -9,15 +9,17 @@ class EnhancedSalesArea(models.Model):
     bast_no = fields.Char(string='BAST No.')
     bast_date = fields.Date(string='BAST Date')
     purchase_count = fields.Integer(string='# of Purchases', compute='_get_purchased', readonly=True)
-    purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True)
+    purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True) #, store=True)
     purchase_ids = fields.Many2many("purchase.order", string='Purchases', compute="_get_purchased", readonly=True, copy=False)
     advance_amount = fields.Float(string='# of Advances', compute='_get_advance', readonly=True, store=True)
     expense_amount = fields.Float(string='# of Expenses', compute='_get_expense', readonly=True, store=True)
     est_invoice_date = fields.Date('Estimasi Invoice Date')
     reva_notes = fields.Char('Catatan Proses Reva')
     pr_line_ids = fields.One2many('sprogroup.purchase.request', 'salesorder_id', 'PR Lines')
-    pr_amount = fields.Float(string='# of Purchases', compute='_get_request', readonly=True)
-
+    pr_amount = fields.Float(string='# of Purchases', compute='_get_request', readonly=True) #, store=True)
+    margin_so_pr = fields.Float(string='Margin SO-PR', compute='_get_margin', readonly=True)
+    variance_pr_po = fields.Float(string='Variance PR-PO', compute='_get_margin', readonly=True)
+    margin_so_po = fields.Float(string='Margin SO-PO', compute='_get_margin', readonly=True)
     # pr_amount = fields.Float()
 
     @api.multi
@@ -122,12 +124,28 @@ class EnhancedSalesArea(models.Model):
         }
         self.task_id = self.env['project.task'].create(isiTask)
 
+    # @api.depends('amount_untaxed', 'pr_amount', 'purchase_amount')
+    @api.multi
+    def _get_margin(self):
+        for sale in self:
+            margin_so_pr = 0
+            margin_so_po = 0
+            if sale.amount_untaxed:
+                margin_so_pr = (sale.amount_untaxed - sale.pr_amount) / sale.amount_untaxed * 100 if sale.pr_amount else 0
+                margin_so_po = (sale.amount_untaxed - sale.purchase_amount) / sale.amount_untaxed * 100 if sale.purchase_amount else 0
+            variance_pr_po = 0
+            if sale.pr_amount:
+                variance_pr_po = (sale.pr_amount - sale.purchase_amount) / sale.pr_amount * 100 if sale.purchase_amount else 0
+            sale.margin_so_pr = margin_so_pr
+            sale.margin_so_po = margin_so_po
+            sale.variance_pr_po = variance_pr_po
+
     @api.multi
     def _get_request(self):
         for sale in self:
             sale.pr_amount = sum(sale.pr_line_ids.mapped('amount_total'))
 
-    # @api.depends('state', 'order_line.invoice_status')
+    # @api.depends('state', 'order_line.invoice_status', 'id')
     @api.multi
     def _get_purchased(self):
         for order in self:
