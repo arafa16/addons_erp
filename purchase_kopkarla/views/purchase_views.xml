@@ -12,7 +12,8 @@
                         attrs="{'invisible': ['|', ('invoice_status', '=', 'invoiced'), ('state', '!=', 'purchase')]}"/>-->
                     <button name="%(action_view_purchase_advance_payment_inv)d" string="Create Invoice"
                         type="action" class="btn-primary" groups="account.group_account_invoice"
-                        attrs="{'invisible': [('state', '!=', 'purchase')]}"/>
+                        attrs="{'invisible': ['|', ('invoice_status', '=', 'invoiced'), ('state', '!=', 'purchase')]}"/>
+                        <!--attrs="{'invisible': [('state', '!=', 'purchase')]}"/>-->
                     <button name="action_set_waiting_bills" string="Set Waiting Bills"
                         type="object" class="btn-primary" groups="purchase_kopkarla.group_purchase_controller"
                         attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'purchase')]}"/>
