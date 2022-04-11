@@ -18,8 +18,8 @@
                     <!--<field name="purchase_ids" string="Purchase Order"/>-->
                     <field name="purchase_amount" string="PO Amount"/> <!--sum="PO Amount"/>-->
                     <field name="margin_so_pr"/>
-                    <field name="variance_pr_po"/>
                     <field name="margin_so_po"/>
+                    <field name="variance_pr_po"/>
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
@@ -29,7 +29,7 @@
             <field name="name">Sales Purchase Analysis</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="sale_project_kopkarla.view_so_pr_po_tree"/>
             <field name="context">{'search_default_general_order': 1, 'search_default_rental_order': 1, 'search_default_trading_datacom': 1}</field>
         </record>
