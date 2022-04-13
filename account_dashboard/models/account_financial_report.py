@@ -97,6 +97,7 @@ class account_financial_report(models.Model):
             roa = self.env['dashboard.cubes.financial.report'].sudo().search([('company_id', '=', company_id), ('date', '=', date), ('report_line_id', '=', report_ids[9])])
             wc = self.env['dashboard.cubes.financial.report'].sudo().search([('company_id', '=', company_id), ('date', '=', date), ('report_line_id', '=', report_ids[10])])
             roe = self.env['dashboard.cubes.financial.report'].sudo().search([('company_id', '=', company_id), ('date', '=', date), ('report_line_id', '=', report_ids[11])])
+            opr_ratio = self.env['dashboard.cubes.financial.report'].sudo().search([('company_id', '=', company_id), ('date', '=', date), ('report_line_id', '=', report_ids[12])])
             ratio = self.env['dashboard.cubes.ratio']
             ratio.create({
                 'company_id': company_id,
@@ -114,6 +115,7 @@ class account_financial_report(models.Model):
                 'roa': roa.balance,
                 'wc': wc.balance,
                 'roe': roe.balance,
+                'opr_ratio': opr_ratio.balance,
             })
 
     # @api.multi
