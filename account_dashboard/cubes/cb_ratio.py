@@ -293,7 +293,7 @@ class CubeRatioMonth(models.Model):
                 try:
                     val = eval(formula % (par1, par2, par3))
                 except:
-                    val = par2 != 0 and eval(formula % (par1, par2, par3)) or 0
+                    val = 0 #par2 != 0 and eval(formula % (par1, par2, par3)) or 0
             else:
                 try:
                     val = eval(formula % (par1, par2))
