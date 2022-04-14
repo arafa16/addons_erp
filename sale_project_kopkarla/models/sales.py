@@ -11,8 +11,6 @@ class EnhancedSalesArea(models.Model):
     purchase_count = fields.Integer(string='# of Purchases', compute='_get_purchased', readonly=True)
     purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True) #, store=True)
     purchase_ids = fields.Many2many("purchase.order", string='Purchases', compute="_get_purchased", readonly=True, copy=False)
-    advance_amount = fields.Float(string='# of Advances', compute='_get_advance', readonly=True, store=True)
-    expense_amount = fields.Float(string='# of Expenses', compute='_get_expense', readonly=True, store=True)
     est_invoice_date = fields.Date('Estimasi Invoice Date')
     reva_notes = fields.Char('Catatan Proses Reva')
     pr_line_ids = fields.One2many('sprogroup.purchase.request', 'salesorder_id', 'PR Lines')
@@ -23,6 +21,8 @@ class EnhancedSalesArea(models.Model):
     # pr_amount = fields.Float()
     advance_ids = fields.One2many('hr.advance', 'order_id', 'Advance Lines')
     expense_ids = fields.One2many('hr.expense.sheet', 'order_id', 'Expense Lines')
+    advance_amount = fields.Float(string='# of Advances', compute='_get_advance', readonly=True) #, store=True)
+    expense_amount = fields.Float(string='# of Expenses', compute='_get_expense', readonly=True) #, store=True)
     margin_so_costs = fields.Float(string='Margin vs All Costs', compute='_get_margin', readonly=True)
 
     @api.multi
