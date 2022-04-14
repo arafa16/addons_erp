@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_so_costs_margin_tree" model="ir.ui.view">
+            <field name="name">Sales Margin</field>
+            <field name="model">sale.order</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree string="Sales PR PO" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name" string="Sales Order"/>
+                    <field name="date_order"/>
+                    <field name="confirmation_date"/>
+                    <field name="nomor_spk"/>
+                    <field name="amount_untaxed" string="SO Amount"/>
+                    <field name="purchase_amount" string="Purchase Amount"/>
+                    <field name="advance_amount" string="Advance Amount"/>
+                    <field name="expense_amount" string="Expense Amount"/>
+                    <field name="margin_so_costs" string="Margin"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_so_costs_margin" model="ir.actions.act_window">
+            <field name="name">Sales Margin</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="sale_project_kopkarla.view_so_costs_margin_tree"/>
+            <!--<field name="context">{'search_default_general_order': 1, 'search_default_rental_order': 1, 'search_default_trading_datacom': 1}</field>-->
+        </record>
+
+        <menuitem id="menu_so_costs_margin"
+            name="Sales Margin"
+            action="action_so_costs_margin"
+            parent="sale.menu_sale_report"
+            sequence="1"/>
+    </data>
+</odoo>

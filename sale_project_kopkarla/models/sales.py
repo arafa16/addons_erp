@@ -21,6 +21,9 @@ class EnhancedSalesArea(models.Model):
     variance_pr_po = fields.Float(string='Variance PR-PO', compute='_get_margin', readonly=True)
     margin_so_po = fields.Float(string='Margin SO-PO', compute='_get_margin', readonly=True)
     # pr_amount = fields.Float()
+    advance_ids = fields.One2many('hr.advance', 'order_id', 'Advance Lines')
+    expense_ids = fields.One2many('hr.expense.sheet', 'order_id', 'Expense Lines')
+    margin_so_costs = fields.Float(string='Margin vs All Costs', compute='_get_margin', readonly=True)
 
     @api.multi
     def convert_to_project(self):
@@ -130,6 +133,7 @@ class EnhancedSalesArea(models.Model):
         for sale in self:
             margin_so_pr = 0
             margin_so_po = 0
+            margin_so_costs = 0
             if sale.amount_untaxed:
                 margin_so_pr = (sale.amount_untaxed - sale.pr_amount) / sale.amount_untaxed * 100 if sale.pr_amount else 0
                 margin_so_po = (sale.amount_untaxed - sale.purchase_amount) / sale.amount_untaxed * 100 if sale.purchase_amount else 0
@@ -139,13 +143,14 @@ class EnhancedSalesArea(models.Model):
             sale.margin_so_pr = margin_so_pr
             sale.margin_so_po = margin_so_po
             sale.variance_pr_po = variance_pr_po
+            sale.margin_so_costs = sale.amount_untaxed - sale.purchase_amount - sale.advance_amount - sale.expense_amount
 
     @api.multi
     def _get_request(self):
         for sale in self:
             sale.pr_amount = sum(sale.pr_line_ids.mapped('amount_total'))
 
-    # @api.depends('state', 'order_line.invoice_status', 'id')
+    # @api.depends('state', 'order_line.invoice_statuspurchase_amount', 'id')
     @api.multi
     def _get_purchased(self):
         for order in self:
@@ -169,25 +174,29 @@ class EnhancedSalesArea(models.Model):
 
     @api.multi
     def _get_advance(self):
-        for order in self:
-            adv_amount = 0
-            for adv in self.env['hr.advance'].sudo().search([('order_id', '=', order.id),('state', '=', 'paid')]):
-                adv_amount += adv.total_amount_expense
-
-            order.update({
-                'advance_amount': adv_amount,
-            })
+        # for order in self:
+        #     adv_amount = 0
+        #     for adv in self.env['hr.advance'].sudo().search([('order_id', '=', order.id),('state', '=', 'paid')]):
+        #         adv_amount += adv.total_amount_expense
+        #
+        #     order.update({
+        #         'advance_amount': adv_amount,
+        #     })
+        for sale in self:
+            sale.advance_amount = sum(sale.advance_ids.filtered(lambda s: s.state == 'paid').mapped('paid_amount'))
 
     @api.multi
     def _get_expense(self):
-        for order in self:
-            exp_amount = 0
-            for exp in self.env['hr.expense.sheet'].sudo().search([('order_id', '=', order.id),('state', '=', 'done')]):
-                exp_amount += exp.expense_amount
-
-            order.update({
-                'expense_amount': exp_amount,
-            })
+        # for order in self:
+        #     exp_amount = 0
+        #     for exp in self.env['hr.expense.sheet'].sudo().search([('order_id', '=', order.id),('state', '=', 'done')]):
+        #         exp_amount += exp.expense_amount
+        #
+        #     order.update({
+        #         'expense_amount': exp_amount,
+        #     })
+        for sale in self:
+            sale.expense_amount = sum(sale.expense_ids.filtered(lambda s: s.state in ('post','done')).mapped('expense_amount'))
 
     @api.multi
     def action_view_purchase(self):
