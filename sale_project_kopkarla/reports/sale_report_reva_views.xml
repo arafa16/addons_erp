@@ -12,6 +12,7 @@
                  <field name="analytic_account_id" type="row"/>
                  <!--<field name="confirmation_date" interval="month" type="row"/>-->
                  <field name="price_subtotal" type="measure"/>
+                 <field name="draft_contract_to_invoice" type="measure"/>
                  <field name="dpp_to_invoice" type="measure"/>
                  <field name="dpp_invoiced" type="measure"/>
              </pivot>
@@ -43,9 +44,9 @@
                  <field name="client_order_ref"/>
                  <field name="analytic_account_id"/>
                  <field name="price_subtotal"/>
+                 <field name="draft_contract_to_invoice"/>
                  <field name="dpp_to_invoice"/>
                  <field name="dpp_invoiced"/>
-                 <field name="draft_contract_to_invoice"/>
                  <field name="est_invoice_date"/>
                  <field name="partner_id"/>
                  <field name="cost_center_id"/>
