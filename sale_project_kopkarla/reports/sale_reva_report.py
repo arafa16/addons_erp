@@ -30,6 +30,7 @@ class SaleRevaReport(models.Model):
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
     amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
     dpp_to_invoice = fields.Float('DPP To Invoice', readonly=True)
+    draft_contract_to_invoice = fields.Float('Draft To Invoice', readonly=True)
     amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
     dpp_invoiced = fields.Float('DPP Invoiced', readonly=True)
     amt_cancel = fields.Float('Amount Canceled', readonly=True)
@@ -76,6 +77,17 @@ class SaleRevaReport(models.Model):
     daily_tgl_mulai = fields.Date(string='TANGGAL MULAI')
     daily_tgl_selesai = fields.Date(string='TGL SELESAI')
 
+    status_stage = fields.Char(string='Stage')
+    status_pelaksanaan = fields.Selection(
+        selection=[
+            ('A', 'Not Started'),
+            ('B', 'On Progress'),
+            ('C', 'Stop Clock'),
+            ('D', 'Done'),
+            ('E', 'Cancel')
+        ],
+        string='Status Pelaksanaan')
+
     def _select(self):
         select_str = """
              SELECT s.id,
@@ -96,6 +108,7 @@ class SaleRevaReport(models.Model):
                     --      else sum((l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
                     case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
                          else sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
+                    0 as draft_contract_to_invoice,
                     sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
                     -- case when sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
                     --     else sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_invoiced,
@@ -134,7 +147,9 @@ class SaleRevaReport(models.Model):
                     s.bast_no,
                     s.client_order_ref,
                     pt.create_date::date as daily_tgl_mulai,
-                    pt.daily_tgl_selesai                    
+                    pt.daily_tgl_selesai,
+                    s.status_stage,
+                    s.status_pelaksanaan
         """
         return select_str
 
@@ -147,7 +162,8 @@ class SaleRevaReport(models.Model):
                     avg(s.amount_total) as price_total,
                     avg(s.amount_untaxed) as price_subtotal,
                     sum(ai1.amount_total) as amt_to_invoice,
-                    sum(ai1.amount_untaxed) as dpp_to_invoice,
+                    avg(s.amount_untaxed) - sum(ai2.amount_untaxed) as dpp_to_invoice,
+                    sum(ai1.amount_untaxed) as draft_contract_to_invoice,
                     sum(ai2.amount_total) as amt_invoiced,
                     sum(ai2.amount_untaxed) as dpp_invoiced,
                     0 as amt_cancel,
@@ -182,7 +198,9 @@ class SaleRevaReport(models.Model):
                     s.bast_no,
                     s.client_order_ref,
                     pt.create_date::date as daily_tgl_mulai,
-                    pt.daily_tgl_selesai                    
+                    pt.daily_tgl_selesai,
+                    s.status_stage,
+                    s.status_pelaksanaan
         """
         return select_str
 
@@ -196,6 +214,7 @@ class SaleRevaReport(models.Model):
                     0 as price_subtotal,
                     0 as amt_to_invoice,
                     0 as dpp_to_invoice,
+                    0 as draft_contract_to_invoice,
                     0 as amt_invoiced,
                     0 as dpp_invoiced,
                     sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_cancel,
@@ -232,7 +251,9 @@ class SaleRevaReport(models.Model):
                     s.bast_no,
                     s.client_order_ref,
                     pt.create_date::date as daily_tgl_mulai,
-                    pt.daily_tgl_selesai
+                    pt.daily_tgl_selesai,
+                    s.status_stage,
+                    s.status_pelaksanaan
         """
         return select_str
 
@@ -265,8 +286,8 @@ class SaleRevaReport(models.Model):
                 left join enhanced_reva_group_tabel rg on r.reva_id = rg.id
                 left join project_task pt on s.id = pt.sale_order_id
                 left join account_analytic_account ac on s.id = ac.sale_order_id
-                left join account_invoice ai1 on ac.id = ai1.contract_id and ai1.state = 'draft'
-                left join account_invoice ai2 on ac.id = ai2.contract_id and ai2.state in ('open', 'paid')
+                left join (select contract_id, sum(amount_untaxed) as amount_untaxed, sum(amount_total) as amount_total from account_invoice where state in ('draft') group by contract_id) ai1 on ac.id = ai1.contract_id
+                left join (select contract_id, sum(amount_untaxed) as amount_untaxed, sum(amount_total) as amount_total from account_invoice where state in ('open', 'paid') group by contract_id) ai2 on ac.id = ai2.contract_id
         """
         return from_str
 
@@ -324,7 +345,9 @@ class SaleRevaReport(models.Model):
                     s.bast_no,
                     s.client_order_ref,
                     pt.create_date::date,
-                    pt.daily_tgl_selesai
+                    pt.daily_tgl_selesai,
+                    s.status_stage,
+                    s.status_pelaksanaan
         """
         return group_by_str
 

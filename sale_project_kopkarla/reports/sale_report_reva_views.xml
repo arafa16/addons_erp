@@ -45,6 +45,7 @@
                  <field name="price_subtotal"/>
                  <field name="dpp_to_invoice"/>
                  <field name="dpp_invoiced"/>
+                 <field name="draft_contract_to_invoice"/>
                  <field name="est_invoice_date"/>
                  <field name="partner_id"/>
                  <field name="cost_center_id"/>
@@ -55,6 +56,8 @@
                  <field name="ord_type"/>
                  <field name="daily_tgl_mulai"/>
                  <field name="daily_tgl_selesai"/>
+                 <field name="status_stage"/>
+                 <field name="status_pelaksanaan"/>
              </tree>
          </field>
     </record>
@@ -113,6 +116,7 @@
                 <filter string="Draft" name="state_draft" domain="[('state','=','draft')]"/>
                 <filter string="Cancelled" name="state_cancel" domain="[('state','=','cancel')]"/>
                 <separator/>
+                <field name="name"/>
                 <field name="partner_id"/>
                 <field name="user_id"/>
                 <group expand="0" string="Extended Filters">

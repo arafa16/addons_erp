@@ -25,7 +25,8 @@
                 'sale','sales_team',
                 'sprogroup_purchase_request',
                 'cost_centers_kopkarla',
-                'account'
+                'account',
+                'enhanced_project_task_badges'
                 ],
     'data': [
         'views/reva_tabel.xml',
