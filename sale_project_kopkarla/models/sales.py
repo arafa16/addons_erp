@@ -25,7 +25,7 @@ class EnhancedSalesArea(models.Model):
     expense_amount = fields.Float(string='# of Expenses', compute='_get_expense', readonly=True) #, store=True)
     margin_so_costs = fields.Float(string='Margin vs All Costs', compute='_get_margin', readonly=True)
 
-    status_stage = fields.Char(string='Stage', related='task_id.stage_id.name', store=True)
+    status_stage = fields.Char(string='Task Stage', related='task_id.stage_id.name', store=True)
     status_pelaksanaan = fields.Selection(
         selection=[
             ('A', 'Not Started'),
@@ -34,7 +34,7 @@ class EnhancedSalesArea(models.Model):
             ('D', 'Done'),
             ('E', 'Cancel')
         ],
-        string='Status Pelaksanaan', related='task_id.kanban_baru', store=True)
+        string='Task Status', related='task_id.kanban_baru', store=True)
 
     @api.multi
     def convert_to_project(self):

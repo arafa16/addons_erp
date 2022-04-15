@@ -77,7 +77,7 @@ class SaleRevaReport(models.Model):
     daily_tgl_mulai = fields.Date(string='TANGGAL MULAI')
     daily_tgl_selesai = fields.Date(string='TGL SELESAI')
 
-    status_stage = fields.Char(string='Stage')
+    status_stage = fields.Char(string='Task Stage')
     status_pelaksanaan = fields.Selection(
         selection=[
             ('A', 'Not Started'),
@@ -86,7 +86,7 @@ class SaleRevaReport(models.Model):
             ('D', 'Done'),
             ('E', 'Cancel')
         ],
-        string='Status Pelaksanaan')
+        string='Task Status')
 
     def _select(self):
         select_str = """
