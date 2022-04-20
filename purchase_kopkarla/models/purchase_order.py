@@ -161,10 +161,16 @@ class PurchaseOrder(models.Model):
 
             if any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in order.order_line):
                 order.invoice_status = 'to invoice'
-            elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line.filtered(lambda l: l.is_downpayment != True)) and order.invoice_ids:
-                order.invoice_status = 'invoiced'
+            # elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line.filtered(lambda l: l.is_downpayment != True)) and order.invoice_ids:
+            #     order.invoice_status = 'invoiced'
+            # else:
+            #     order.invoice_status = 'no'
             else:
-                order.invoice_status = 'no'
+                order.invoice_status = 'invoiced'
+                for line in order.order_line.filtered(lambda l: l.is_downpayment != True):
+                    if float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 or not line.qty_invoiced:
+                        order.invoice_status = 'no'
+                        break
 
     # @api.model
     # def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
