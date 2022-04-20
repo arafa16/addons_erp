@@ -151,6 +151,21 @@ class PurchaseOrder(models.Model):
                 line.unlink()
         return new_po
 
+    @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty')
+    def _get_invoiced(self):
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for order in self:
+            if order.state not in ('purchase', 'done'):
+                order.invoice_status = 'no'
+                continue
+
+            if any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in order.order_line):
+                order.invoice_status = 'to invoice'
+            elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line.filtered(lambda l: l.is_downpayment != True)) and order.invoice_ids:
+                order.invoice_status = 'invoiced'
+            else:
+                order.invoice_status = 'no'
+
     # @api.model
     # def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     #     # if context is None:
