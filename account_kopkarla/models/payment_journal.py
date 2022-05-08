@@ -390,8 +390,8 @@ class PaymentJournalLine(models.Model):
         if not tax_amt:
             for tax_line in self.tax_line_ids:
                 tax_amt += tax_line.tax_amt
-        self.tax_amt = tax_amt
-        total_amt = self.paying_amt - tax_amt
+        self.tax_amt = round(tax_amt)
+        total_amt = self.paying_amt - self.tax_amt
         self.total_amt = total_amt
 
     @api.onchange('paying_amt', 'tax_ids', 'tax_line_ids', 'tax_line_ids.tax_amt')
