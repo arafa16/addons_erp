@@ -29,6 +29,7 @@ class SaleRevaReport(models.Model):
     price_total = fields.Float('Amount Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
     amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
+    wh_to_process = fields.Float('WH To Process', readonly=True)
     dpp_to_invoice = fields.Float('DPP To Invoice', readonly=True)
     draft_contract_to_invoice = fields.Float('Draft To Invoice', readonly=True)
     amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
@@ -99,20 +100,23 @@ class SaleRevaReport(models.Model):
                     -- s.advance_amount,
                     -- s.expense_amount,
                     -- (s.amount_untaxed - s.purchase_amount - s.advance_amount - s.expense_amount) as total_amount,
-                    sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_total,
-                    sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_subtotal, -- untaxed
+                    sum(round(l.price_total) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_total,
+                    sum(round(l.price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as price_subtotal, -- untaxed
                     -- sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_to_invoice,
                     case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0
-                         else sum(l.price_total / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as amt_to_invoice,
+                         else sum(round(l.price_total) / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum(round(l.amt_invoiced) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as amt_to_invoice,
+                    
+                    sum(case when l.qty_to_invoice + l.qty_invoiced = 0 then (round(l.price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) else 0 end) as wh_to_process,
+                         
                     -- case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
-                    --      else sum((l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
-                    case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
-                         else sum(l.price_subtotal / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
+                    --     else sum(round(l.price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum(round(l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
+                    sum(round(l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_to_invoice,
+                    
                     0 as draft_contract_to_invoice,
-                    sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
+                    sum(round(l.amt_invoiced) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
                     -- case when sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
                     --     else sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_invoiced,
-                    sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_invoiced,
+                    sum(round(l.qty_invoiced * l.price_unit * ((100 - l.discount) / 100)) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_invoiced,
                     0 as amt_cancel,
                     -- s.amount_total as sales_total,
                     count(*) as nbr,
@@ -162,6 +166,7 @@ class SaleRevaReport(models.Model):
                     avg(s.amount_total) as price_total,
                     avg(s.amount_untaxed) as price_subtotal,
                     sum(ai1.amount_total) as amt_to_invoice,
+                    0 as wh_to_process,
                     avg(s.amount_untaxed) - sum(ai2.amount_untaxed) as dpp_to_invoice,
                     sum(ai1.amount_untaxed) as draft_contract_to_invoice,
                     sum(ai2.amount_total) as amt_invoiced,
@@ -213,6 +218,7 @@ class SaleRevaReport(models.Model):
                     0 as price_total,
                     0 as price_subtotal,
                     0 as amt_to_invoice,
+                    0 as wh_to_process,
                     0 as dpp_to_invoice,
                     0 as draft_contract_to_invoice,
                     0 as amt_invoiced,
