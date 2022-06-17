@@ -112,11 +112,12 @@ class SaleRevaReport(models.Model):
                     --     else sum(round(l.price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum(round(l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
                     sum(round(l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_to_invoice,
                     
-                    0 as draft_contract_to_invoice,
+                    sum(round(ail.draft_price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as draft_contract_to_invoice,
                     sum(round(l.amt_invoiced) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
                     -- case when sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
                     --     else sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_invoiced,
-                    sum(round(l.qty_invoiced * l.price_unit * ((100 - l.discount) / 100)) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_invoiced,
+                    sum(round((l.qty_invoiced) * l.price_unit * ((100 - l.discount) / 100)) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_invoiced,
+                    -- sum(round((l.qty_invoiced - ail.quantity) * l.price_unit * ((100 - l.discount) / 100)) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_invoiced,
                     0 as amt_cancel,
                     -- s.amount_total as sales_total,
                     count(*) as nbr,
@@ -276,6 +277,13 @@ class SaleRevaReport(models.Model):
                 left join enhanced_reva_tabel r on s.stat_reva = r.id
                 left join enhanced_reva_group_tabel rg on r.reva_id = rg.id
                 left join project_task pt on s.id = pt.sale_order_id
+                left join (
+                    select r.order_line_id, l.quantity, l.price_subtotal as draft_price_subtotal
+                    from sale_order_line_invoice_rel r 
+                         inner join account_invoice_line l on r.invoice_line_id = l.id 
+                         inner join account_invoice i on l.invoice_id = i.id
+                    where i.state = 'draft'
+                ) ail on l.id = ail.order_line_id
         """
         return from_str
 
