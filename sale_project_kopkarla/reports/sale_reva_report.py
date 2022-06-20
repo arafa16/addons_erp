@@ -112,7 +112,7 @@ class SaleRevaReport(models.Model):
                     --     else sum(round(l.price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum(round(l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
                     sum(round(l.qty_to_invoice * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as dpp_to_invoice,
                     
-                    sum(round(ail.draft_price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as draft_contract_to_invoice,
+                    sum(round(COALESCE(ail.draft_price_subtotal, 0)) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as draft_contract_to_invoice,
                     sum(round(l.amt_invoiced) / COALESCE(NULLIF(cr.rate, 0), 1.0)) as amt_invoiced,
                     -- case when sum(l.amt_invoiced / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
                     --     else sum((l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_invoiced,
