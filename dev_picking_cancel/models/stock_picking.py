@@ -8,6 +8,7 @@
 #
 ##############################################################################
 from odoo import api, models, _
+from odoo.exceptions import UserError, ValidationError
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_round, float_is_zero
@@ -206,3 +207,12 @@ class stock_move_line(models.Model):
         return super(stock_move_line, self).unlink()
 
     # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+
+class StockQuant(models.Model):
+    _inherit = 'stock.quant'
+
+    @api.constrains('product_id')
+    def check_product_id(self):
+        if any(elem.product_id.type not in ('product','consu') for elem in self):
+            raise ValidationError(_('Quants cannot be created for consumables or services.'))
