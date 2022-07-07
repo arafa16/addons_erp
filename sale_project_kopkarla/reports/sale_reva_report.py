@@ -106,7 +106,7 @@ class SaleRevaReport(models.Model):
                     case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0
                          else sum(round(l.price_total) / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum(round(l.amt_invoiced) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as amt_to_invoice,
                     
-                    sum(case when l.qty_to_invoice + l.qty_invoiced = 0 then (round(l.price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) else 0 end) as wh_to_process,
+                    sum(case when l.qty_to_invoice + l.qty_invoiced = 0 then (round(l.price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) when l.qty_to_invoice + l.qty_invoiced != l.product_uom_qty then l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0) else 0 end) as wh_to_process,
                          
                     -- case when sum(l.amt_to_invoice / COALESCE(NULLIF(cr.rate, 0), 1.0)) = 0 then 0 
                     --     else sum(round(l.price_subtotal) / COALESCE(NULLIF(cr.rate, 0), 1.0)) - sum(round(l.qty_invoiced * l.price_unit) / COALESCE(NULLIF(cr.rate, 0), 1.0)) end as dpp_to_invoice,
