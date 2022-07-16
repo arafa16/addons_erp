@@ -180,7 +180,7 @@ class AssetDepreciation(models.Model):
         move_lines = [(0, 0, line) for line in lns]
 
         move_vals = {
-            'ref': line.asset_id.code,
+            # 'ref': line.asset_id.code,
             'date': depreciation_date or False,
             'ref': self.description,
             'journal_id': category_id.journal_id.id,
@@ -192,6 +192,12 @@ class AssetDepreciation(models.Model):
         for line in self.depreciation_line_ids:
             line.depreciation_date = self.date
             line.move_posted_check = True
+
+        # set asset closed if last depreciation
+        for line in self.depreciation_line_ids:
+            if line.asset_id.depreciation_line_ids.filtered(lambda l: l.move_posted_check == False):
+                continue
+            line.asset_id.state = 'close'
 
         return self.write({'move_id': move.id, 'state': 'posted'})
 
