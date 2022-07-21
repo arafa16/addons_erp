@@ -998,10 +998,11 @@ SELECT
                  when 'in_refund' then so.name
                  else case ml.user_type_id when 14 then ai.origin 
                                            when 17 then so.name 
+                                           /* when 5 then so2.name */
                                            when 5 then case when sp.sale_id is not null then sp.origin
                                                             else case when ai2.origin is not null then ai2.origin
                                                                       else case when so2.name is not null then so2.name 
-                                                                                else case when sp.origin is not null then sp.origin else sp.note end 
+                                                                                else case when sp.origin is not null then so2.name else m.ref end 
                                                                            end
                                                                  end
                                                        end
@@ -1105,9 +1106,11 @@ LEFT JOIN
     left join purchase_order po2 on sp.origin = po2.name
     left join purchase_requisition pr2 on po2.requisition_id = pr2.id
     left join sprogroup_purchase_request spr2 on pr2.nomor_pr = spr2.id
-    left join project_task pt on sp.idtask = pt.id
-    left join sale_order so2 on pt.sale_order_id = so2.id
+    /* left join project_task pt on sp.idtask = pt.id
+    left join sale_order so2 on pt.sale_order_id = so2.id */
+    left join sale_order so2 on spr2.salesorder_id = so2.id
     left join account_invoice ai2 on ml.move_id = ai2.move_id
+    /* left join stock_picking sp2 on m.ref = sp2.name */
                 """
         query_inject_move_line += """
 WHERE
