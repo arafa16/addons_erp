@@ -75,9 +75,9 @@
                     <attributes name="invisible">1</attributes>
                 </field>
 
-                <field name="origin" position="after">
+                <!--<field name="origin" position="after">
                     <field name="invoice_status" readonly="0" groups="purchase_kopkarla.group_purchase_controller"/>
-                </field>
+                </field>-->
             </field>
         </record>
 
