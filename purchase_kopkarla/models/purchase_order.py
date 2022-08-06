@@ -10,6 +10,7 @@ class PurchaseOrder(models.Model):
 
     invoice_amount = fields.Monetary(string='Invoice Amount', readonly=True, compute='_compute_invoice_amount')
     residual_amount = fields.Monetary(string='Residual Amount', readonly=True, compute='_compute_invoice_amount')
+    invoice_status = fields.Selection(selection_add=[('cancel', 'Canceled'),])
 
     @api.depends('order_line.invoice_lines.invoice_id')
     def _compute_invoice_amount(self):
@@ -31,12 +32,12 @@ class PurchaseOrder(models.Model):
     #         lines = self.env['purchase.order.line'].search([('order_id', '=', values['id'])])
     #     return res
 
-    @api.multi
-    def action_set_waiting_bills(self):
-        for purch in self:
-            purch.invoice_status = 'to invoice'
-            for line in purch.order_line:
-                line.qty_to_invoice = line.product_qty - line.qty_invoiced
+    # @api.multi
+    # def action_set_waiting_bills(self):
+    #     for purch in self:
+    #         purch.invoice_status = 'to invoice'
+    #         for line in purch.order_line:
+    #             line.qty_to_invoice = line.product_qty - line.qty_invoiced
 
     @api.multi
     def _prepare_invoice(self):
@@ -161,6 +162,10 @@ class PurchaseOrder(models.Model):
 
             if any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in order.order_line):
                 order.invoice_status = 'to invoice'
+            elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line) and order.invoice_ids:
+                order.invoice_status = 'invoiced'
+            elif all(float_compare(0, line.product_qty, precision_digits=precision) == 0 for line in order.order_line):
+                order.invoice_status = 'cancel'
             # elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line.filtered(lambda l: l.is_downpayment != True)) and order.invoice_ids:
             #     order.invoice_status = 'invoiced'
             # else:
