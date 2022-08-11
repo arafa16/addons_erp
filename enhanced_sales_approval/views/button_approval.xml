@@ -108,17 +108,42 @@
             <field name="name">esa.sales.order.inherit.sales.attribut.set.spv</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="enhanced_sales_ttd.qotationsale_enhance_field_ttd"/>
+            <field name="groups_id" eval="[(6,0, (ref('group_approval_sales_user'),ref('group_approval_sales_manager')))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='tab_reference_sub3']" position="inside">
-                    <field name="employee_spv" domain="[('sales_spv', '=', True)]" attrs="{'required':[('state', 'in', ['draft','sent'])],'readonly':[('state', 'not in', ['draft','sent','sale'])]}"/>
-                    <field name="employee_assman" domain="[('sales_assman', '=', True)]" attrs="{'readonly':[('state', 'not in', ['draft','sent','spvcheck'])]}"/>
+                    <field name="employee_spv" domain="[('sales_spv', '=', True)]" attrs="{'required':[('state', 'in', ['draft','sent'])],'readonly':[('state', 'not in', ['draft'])]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="employee_assman" domain="[('sales_assman', '=', True)]" attrs="{'readonly':[('state', 'not in', ['draft'])]}" options="{'no_create': True, 'no_open':True}"/>
                     
-                    <field name="penandatangan1" domain="[('otoritas_sales.urutan', '=', 1)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale'])],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
-                    <field name="penandatangan2" domain="[('otoritas_sales.urutan', '=', 2)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale','cancel'])],'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
-                    <field name="penandatangan3" domain="[('otoritas_sales.urutan', '=', 3)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale'])],'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
-                    <field name="penandatangan4" domain="[('otoritas_sales.urutan', '=', 4)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale'])],'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
-                    <field name="penandatangan5" domain="[('otoritas_sales.urutan', '=', 5)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent','spvcheck','assmancheck','sale'])],'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
+                    <field name="penandatangan1" domain="[('otoritas_sales.urutan', '=', 1)]" attrs="{'readonly':[('state', 'not in', ['draft'])],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="penandatangan2" domain="[('otoritas_sales.urutan', '=', 2)]" attrs="{'readonly':[('state', 'not in', ['draft'])],'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="penandatangan3" domain="[('otoritas_sales.urutan', '=', 3)]" attrs="{'readonly':[('state', 'not in', ['draft'])],'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="penandatangan4" domain="[('otoritas_sales.urutan', '=', 4)]" attrs="{'readonly':[('state', 'not in', ['draft'])],'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="penandatangan5" domain="[('otoritas_sales.urutan', '=', 5)]" attrs="{'readonly':[('state', 'not in', ['draft'])],'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
                             
+                    <field name="required1" invisible="1"/>
+                    <field name="required2" invisible="1"/>
+                    <field name="required3" invisible="1"/>
+                    <field name="required4" invisible="1"/>
+                    <field name="required5" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="esa_sales_order_inherit_sales_attribut_set_admin">
+            <field name="name">esa.sales.order.inherit.sales.attribut.set.admin</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="enhanced_sales_ttd.qotationsale_enhance_field_ttd"/>
+            <field name="groups_id" eval="[(6,0, (ref('group_approval_sales_admin'),))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='tab_reference_sub3']" position="inside">
+                    <field name="employee_spv" domain="[('sales_spv', '=', True)]" readonly="0" attrs="{'required':[('state', 'in', ['draft','sent'])]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="employee_assman" domain="[('sales_assman', '=', True)]" readonly="0" options="{'no_create': True, 'no_open':True}"/>
+
+                    <field name="penandatangan1" domain="[('otoritas_sales.urutan', '=', 1)]" readonly="0" attrs="{'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="penandatangan2" domain="[('otoritas_sales.urutan', '=', 2)]" readonly="0" attrs="{'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="penandatangan3" domain="[('otoritas_sales.urutan', '=', 3)]" readonly="0" attrs="{'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="penandatangan4" domain="[('otoritas_sales.urutan', '=', 4)]" readonly="0" attrs="{'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+                    <field name="penandatangan5" domain="[('otoritas_sales.urutan', '=', 5)]" readonly="0" attrs="{'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}" options="{'no_create': True, 'no_open':True}"/>
+
                     <field name="required1" invisible="1"/>
                     <field name="required2" invisible="1"/>
                     <field name="required3" invisible="1"/>

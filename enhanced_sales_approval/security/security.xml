@@ -14,5 +14,9 @@
             <field name="name">Manager</field>
             <field name="category_id" ref="module_enhanced_sales_approval"/>
         </record>
+        <record model="res.groups" id="group_approval_sales_admin">
+            <field name="name">Admin</field>
+            <field name="category_id" ref="module_enhanced_sales_approval"/>
+        </record>
     </data>
 </odoo>
