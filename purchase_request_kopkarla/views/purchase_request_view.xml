@@ -31,7 +31,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="enhanced_purchase_request_loa_inherit_form_loa">
+        <!--<record model="ir.ui.view" id="enhanced_purchase_request_loa_inherit_form_loa">
             <field name="model">sprogroup.purchase.request</field>
             <field name="inherit_id" ref="enhanced_purchase_request_loa.enhanced_purchase_request_loa_inherit_form"/>
             <field name="groups_id" eval="[(6,0, (ref('group_purchase_request_admin'),))]"/>
@@ -59,7 +59,7 @@
                     </page>
                 </page>
             </field>
-        </record>
+        </record>-->
 
         <record model="ir.ui.view" id="view_purchase_request_employee_mapping_tree">
             <field name="name">purchase.request.employee.mapping.tree</field>
