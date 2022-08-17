@@ -31,6 +31,36 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="enhanced_purchase_request_loa_inherit_form_loa">
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="inherit_id" ref="enhanced_purchase_request_loa.enhanced_purchase_request_loa_inherit_form"/>
+            <field name="groups_id" eval="[(6,0, (ref('group_purchase_request_admin'),))]"/>
+            <field name="arch" type="xml">
+                <page name="pr_loa" position="replace">
+                    <page name="pr_loa" string="Level of Approval">
+                        <group>
+                            <group>
+                                <field name="penandatangan1" domain="[('otoritas_purchase.urutan', '=', 1)]" readonly="0" attrs="{'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
+                                <field name="penandatangan2" domain="[('otoritas_purchase.urutan', '=', 2)]" readonly="0" attrs="{'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
+                                <field name="penandatangan3" domain="[('otoritas_purchase.urutan', '=', 3)]" readonly="0" attrs="{'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
+                                <field name="penandatangan4" domain="[('otoritas_purchase.urutan', '=', 4)]" readonly="0" attrs="{'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
+                                <field name="penandatangan5" domain="[('otoritas_purchase.urutan', '=', 5)]" readonly="0" attrs="{'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="assman" domain="[('checkerPR','=',True)]" required="1" readonly="0"/>
+                                <field name="issasman" invisible="1"/>
+                                <field name="required1" invisible="1"/>
+                                <field name="required2" invisible="1"/>
+                                <field name="required3" invisible="1"/>
+                                <field name="required4" invisible="1"/>
+                                <field name="required5" invisible="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_purchase_request_employee_mapping_tree">
             <field name="name">purchase.request.employee.mapping.tree</field>
             <field name="model">purchase.request.employee.mapping</field>

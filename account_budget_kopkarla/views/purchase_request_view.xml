@@ -24,7 +24,7 @@
                     <field name="budget_request_line_id" invisible="0" groups="account.group_account_manager"/>
                 </field>
 
-                <xpath expr="//notebook/page[4]/group" position="replace">
+                <xpath expr="//notebook/page[last()]/group" position="replace">
                     <group colspan="2">
                         <group string="Accounting">
                             <field name="cost_center_id" options="{'no_create': True, 'no_open':True}" attrs="{'readonly': [('state', '!=', 'draft')], 'required': 1}"/>

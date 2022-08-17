@@ -5,5 +5,9 @@
             <field name="name">Purchase Request Type Setting</field>
             <field name="category_id" ref="sprogroup_purchase_request.module_category_sprogroup_purchase_request"/>
         </record>
+        <record id="group_purchase_request_admin" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="category_id" ref="sprogroup_purchase_request.module_category_sprogroup_purchase_request"/>
+        </record>
     </data>
 </odoo>
