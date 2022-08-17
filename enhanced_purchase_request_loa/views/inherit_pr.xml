@@ -22,14 +22,14 @@
                     <field name="tanggal_procure" readonly="1"/>
                     <field name="eksekutor" domain="[('groups_id', 'in', testx)]" string="Assign to" attrs="{'readonly': [('state', 'not in', ['leader_approved'])],'required':[('state','=','done')]}"/>
                 </xpath>
-                <xpath expr="//field[@name='create_date']" position="after">
+                <!--<xpath expr="//field[@name='create_date']" position="after">
                     <field name="coannya" attrs="{'readonly': [('state', 'not in', ['draft','to_approve'])]}"/>
-                </xpath>
+                </xpath>-->
                 <xpath expr="//field[@name='salesorder_id']" position="attributes">
                     <attribute name="attrs">{'readonly':['|',('state','!=','draft')]}</attribute>
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]" position="after">
-                    <page string="Level of Approval">
+                    <page name="pr_loa" string="Level of Approval">
                         <group>
                             <group>
                                 <field name="penandatangan1" domain="[('otoritas_purchase.urutan', '=', 1)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>

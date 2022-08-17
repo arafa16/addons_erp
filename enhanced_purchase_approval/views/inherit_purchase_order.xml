@@ -42,7 +42,7 @@
                     />
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]" position="after">
-                    <page string="Level of Approval">
+                    <page name="purchase_loa" string="Level of Approval">
                         <group>
                             <group>
                                 <field name="penandatangan1" domain="[('otoritas_purchase.urutan', '=', 1)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>

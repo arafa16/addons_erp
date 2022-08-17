@@ -93,6 +93,66 @@
             </field>
         </record>
 
+        <!--<record model="ir.ui.view" id="epa_purchase_order_loa_form_non_admin">
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="enhanced_purchase_approval.epa_purchase_order_loa_form"/>
+            <field name="groups_id" eval="[(6,0, (ref('group_purchase_controller'),ref('purchase.group_purchase_manager'),ref('purchase.group_purchase_user')))]"/>
+            <field name="arch" type="xml">
+                <page name="purchase_loa" position="after">
+                    <page name="purchase_loa_non_admin" string="Level of Approval">
+                        <group>
+                            <group>
+                                <field name="penandatangan1" domain="[('otoritas_purchase.urutan', '=', 1)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
+                                <field name="penandatangan2" domain="[('otoritas_purchase.urutan', '=', 2)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
+                                <field name="penandatangan3" domain="[('otoritas_purchase.urutan', '=', 3)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
+                                <field name="penandatangan4" domain="[('otoritas_purchase.urutan', '=', 4)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
+                                <field name="penandatangan5" domain="[('otoritas_purchase.urutan', '=', 5)]" attrs="{'readonly':['|',('state', 'not in', ['draft','sent'])],'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="checker1" required="1" domain="[('checkerPO', '=', True)]" attrs="{'readonly': [('state', 'not in', ['draft','sent'])]}"/>
+                                <field name="isassman" invisible="1"/>
+                                <field name="required1" invisible="1"/>
+                                <field name="required2" invisible="1"/>
+                                <field name="required3" invisible="1"/>
+                                <field name="required4" invisible="1"/>
+                                <field name="required5" invisible="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>-->
+
+        <record model="ir.ui.view" id="epa_purchase_order_loa_form_admin">
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="enhanced_purchase_approval.epa_purchase_order_loa_form"/>
+            <field name="groups_id" eval="[(6,0, (ref('group_approval_purchase_admin'),))]"/>
+            <field name="arch" type="xml">
+                <page name="purchase_loa" position="replace">
+                    <page name="purchase_loa" string="Level of Approval">
+                        <group>
+                            <group>
+                                <field name="penandatangan1" domain="[('otoritas_purchase.urutan', '=', 1)]" readonly="0" attrs="{'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
+                                <field name="penandatangan2" domain="[('otoritas_purchase.urutan', '=', 2)]" readonly="0" attrs="{'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
+                                <field name="penandatangan3" domain="[('otoritas_purchase.urutan', '=', 3)]" readonly="0" attrs="{'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
+                                <field name="penandatangan4" domain="[('otoritas_purchase.urutan', '=', 4)]" readonly="0" attrs="{'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
+                                <field name="penandatangan5" domain="[('otoritas_purchase.urutan', '=', 5)]" readonly="0" attrs="{'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="checker1" required="1" domain="[('checkerPO', '=', True)]" readonly="0"/>
+                                <field name="isassman" invisible="1"/>
+                                <field name="required1" invisible="1"/>
+                                <field name="required2" invisible="1"/>
+                                <field name="required3" invisible="1"/>
+                                <field name="required4" invisible="1"/>
+                                <field name="required5" invisible="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+
         <!--<record id="request_loa_confirm_kopkarla" model="ir.actions.server">
             <field name="name">Request LoA</field>
             <field name="type">ir.actions.server</field>

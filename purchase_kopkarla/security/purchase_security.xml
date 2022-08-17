@@ -6,5 +6,9 @@
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="base.module_category_purchase_management"/>
         </record>
+        <record model="res.groups" id="group_approval_purchase_admin">
+            <field name="name">Admin</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+        </record>
     </data>
 </odoo>

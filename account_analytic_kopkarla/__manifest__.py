@@ -19,7 +19,7 @@
     'depends': [
         'account_kopkarla',
         'analytic',
-        # 'sprogroup_purchase_request',
+        'sprogroup_purchase_request',
         'enhanced_purchase_request_loa',
         'project',
     ],
