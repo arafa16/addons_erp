@@ -155,29 +155,22 @@ class PurchaseOrder(models.Model):
     @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty')
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        # for order in self:
-        for order in self.env['purchase.order'].sudo().search([('name','=',self.name)]):
+        # for order in self.env['purchase.order'].sudo().search([('name','=',self.name)]):
+        for order in self:
             if order.state not in ('purchase', 'done'):
                 order.invoice_status = 'no'
                 continue
 
-            # elif all(float_compare(0, line.product_qty, precision_digits=precision) == 0 for line in order.order_line):
             if all(float_compare(0, line.product_qty, precision_digits=precision) == 0 for line in self.env['purchase.order.line'].sudo().search([('order_id','=',order.id)])):
                 order.invoice_status = 'cancel'
-            # if any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in order.order_line):
             elif any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in self.env['purchase.order.line'].sudo().search([('order_id','=',order.id)])):
                 order.invoice_status = 'to invoice'
-            # elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line) and order.invoice_ids:
             elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in self.env['purchase.order.line'].sudo().search([('order_id','=',order.id)])) and order.invoice_ids:
                 order.invoice_status = 'invoiced'
-            # elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line.filtered(lambda l: l.is_downpayment != True)) and order.invoice_ids:
-            #     order.invoice_status = 'invoiced'
-            # else:
-            #     order.invoice_status = 'no'
             else:
                 order.invoice_status = 'invoiced'
-                # for line in order.order_line.filtered(lambda l: l.is_downpayment != True):
-                for line in self.env['purchase.order.line'].sudo().search([('order_id','=',order.id)]).filtered(lambda l: l.is_downpayment != True):
+                # for line in self.env['purchase.order.line'].sudo().search([('order_id','=',order.id)]).filtered(lambda l: l.is_downpayment != True):
+                for line in order.order_line.filtered(lambda l: l.is_downpayment != True):
                     if float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 or not line.qty_invoiced:
                         order.invoice_status = 'no'
                         break
