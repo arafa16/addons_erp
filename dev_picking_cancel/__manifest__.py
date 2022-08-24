@@ -143,7 +143,7 @@ Only allowed user can do cancel process in all document like sale, purchase, pic
 Odoo Only allowed user can do cancel process in all document like sale, purchase, picking in odoo        
         
     """,
-    'depends': ['stock','sale_stock','account_kopkarla','account_cancel','purchase','sale', 'account_asset_kopkarla'],
+    'depends': ['stock','sale_stock','account_kopkarla','account_cancel','purchase','sale', 'account_asset_kopkarla','enhanced_sales_approval'],
     "data": [
         "security/security.xml",
         # "security/ir.model.access.csv",
@@ -154,6 +154,7 @@ Odoo Only allowed user can do cancel process in all document like sale, purchase
         "views/account_asset_reclass_view.xml",
         "views/account_asset_depreciation_view.xml",
         "views/payment_journal_views.xml",
+        "views/sale_views.xml",
     ],
     'demo': [],
     'test': [],

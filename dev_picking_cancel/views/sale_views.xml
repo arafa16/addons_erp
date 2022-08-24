@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sales_order_cancel">
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="enhanced_sales_approval.esa_sales_order_approval"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <button name="action_cancel" states="draft,sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale"
+                            groups="dev_picking_cancel.picking_cancel_button" type="object" string="Cancel"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
