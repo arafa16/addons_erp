@@ -1009,7 +1009,7 @@ SELECT
                         when sp.origin is not null then 
                             case 
                                 when so3.name is not null then so3.name
-                                /* else '' */
+                                else sp.origin
                             end
                         /* else m.ref */
                     end
