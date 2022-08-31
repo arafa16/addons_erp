@@ -992,21 +992,29 @@ SELECT
     CONCAT_WS(' - ', NULLIF(ml.ref, ''), NULLIF(ml.name, '')) AS label,
     cc.name AS cost_center,
     aa.name AS analytic_account,
-    case ai.type when 'out_invoice' then ai.origin 
-                 when 'out_refund' then ai.origin 
-                 when 'in_invoice' then so.name
-                 when 'in_refund' then so.name
-                 else case ml.user_type_id when 14 then ai.origin 
-                                           when 17 then so.name 
-                                           /* when 5 then so2.name */
-                                           when 5 then case when sp.sale_id is not null then sp.origin
-                                                            else case when ai2.origin is not null then ai2.origin
-                                                                      else case when so2.name is not null then so2.name 
-                                                                                else case when sp.origin is not null then so2.name else m.ref end 
-                                                                           end
-                                                                 end
-                                                       end
-                      end
+    case ai.type 
+        when 'out_invoice' then ai.origin 
+        when 'out_refund' then ai.origin 
+        when 'in_invoice' then so.name
+        when 'in_refund' then so.name
+        else
+            case 
+                when ml.user_type_id = 14 then ai.origin 
+                when ml.user_type_id = 17 then so.name 
+                when ml.user_type_id = 5 then
+                    case 
+                        when sp.sale_id is not null then sp.origin
+                        when ai2.origin is not null then ai2.origin
+                        when so2.name is not null then so2.name
+                        when sp.origin is not null then 
+                            case 
+                                when so3.name is not null then so3.name
+                                /* else '' */
+                            end
+                        /* else m.ref */
+                    end
+                else 'purnama'
+            end
     end AS sale_order,
     fr.name AS matching_number,
     ml.debit,
@@ -1106,10 +1114,10 @@ LEFT JOIN
     left join purchase_order po2 on sp.origin = po2.name
     left join purchase_requisition pr2 on po2.requisition_id = pr2.id
     left join sprogroup_purchase_request spr2 on pr2.nomor_pr = spr2.id
-    /* left join project_task pt on sp.idtask = pt.id
-    left join sale_order so2 on pt.sale_order_id = so2.id */
     left join sale_order so2 on spr2.salesorder_id = so2.id
     left join account_invoice ai2 on ml.move_id = ai2.move_id
+    left join project_task pt on sp.idtask = pt.id
+    left join sale_order so3 on pt.sale_order_id = so3.id
     /* left join stock_picking sp2 on m.ref = sp2.name */
                 """
         query_inject_move_line += """
