@@ -26,12 +26,15 @@ class BudgetRequest(models.Model):
     description = fields.Text('Description', readonly=True, states={'draft': [('readonly', False)]},)
     origin = fields.Selection([('purchase_request', 'Purchase Request'),], readonly=True, required=True, default='purchase_request')
     request_id = fields.Many2one('sprogroup.purchase.request', 'Purchase Request', ondelete='cascade', readonly=True)
+    requested_amount = fields.Float(string='Requested Amount', compute='_get_requested_amount')
+    released_amount = fields.Float(string='Released Amount') #, compute='_get_requested_amount', readonly=False)
     line_ids = fields.One2many('budget.request.line', 'budget_request_id', string='Budget Lines', copy=True,
                                readonly=True, states={'draft': [('readonly', False)]},)
     margin_ids = fields.One2many('budget.request.margin', 'budget_request_id', string='Proyeksi Margin', copy=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done'),
+        ('release', 'Released'),
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True, index=True, copy=False, default='draft')
     show_force_approval = fields.Boolean('Show Force Approval')
@@ -48,6 +51,49 @@ class BudgetRequest(models.Model):
     pek_type = fields.Many2one('enhanced.sales.pekerjaan.tabel', string='Jenis Pekerjaan', readonly=True)
     show_asset_budget = fields.Boolean('Show Asset Budget')
 
+    def _get_requested_amount(self):
+        for req in self:
+            req.requested_amount = sum([r.requested_amount if not r.is_release else 0 for r in req.line_ids])
+
+    @api.multi
+    def budget_request_release_post_action(self):
+        self.write({'state': 'done'})
+
+    @api.multi
+    def budget_request_release_cancel_action(self):
+        self.env['budget.request.line'].sudo().search([('budget_request_id', '=', self.id)]).write({'released_amount': 0})
+        self.write({'released_amount': 0, 'state': 'done'})
+
+    @api.multi
+    def budget_request_release_submit_action(self):
+        # i = 0
+        # self.env['budget.request.line'].sudo().search(
+        #     [('budget_request_id', '=', self.id), ('is_release', '=', True)]).unlink()
+        # for req in self.line_ids:
+            # i += 1
+            # release_budget = {
+            #                 'budget_request_id': self.id,
+            #                 'sequence': len(self.line_ids) + i,
+            #                 'budget_account_id': req.budget_account_id.id,
+            #                 'income_account_id': req.income_account_id.id,
+            #                 'cost_center_id': req.cost_center_id.id,
+            #                 'analytic_account_id': req.analytic_account_id.id,
+            #                 'requested_amount': -self.released_amount,
+            #                 'selected_budget_id': req.selected_budget_id.id,
+            #                 # 'available_budget': req.income_account_id,
+            #                 'is_release': True
+            #             }
+            # self.env['budget.request.line'].sudo().create(release_budget)
+        released_amount = self.released_amount
+        released_amount_total = 0
+        for req in self.line_ids:
+            req.released_amount = released_amount if req.requested_amount >= released_amount else req.requested_amount
+            released_amount -= req.released_amount
+            released_amount_total += req.released_amount
+        if released_amount:
+            self.released_amount = released_amount_total
+        self.state = 'release'
+
     @api.multi
     def budget_request_approve_action(self):
         msg = ''
@@ -60,7 +106,6 @@ class BudgetRequest(models.Model):
                               '%sAccount %s has no budget selected.\n' % (msg, req.budget_account_id.name)
                         if req.restrict_allow == 'restrict' or not req.selected_budget_id:
                             is_approved = False
-
         if is_approved:
             self.date = datetime.now()
             self.state = 'done'
@@ -129,6 +174,7 @@ class BudgetRequestLine(models.Model):
     cost_center_id = fields.Many2one("cost.center", string='Cost Center', ondelete="cascade", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete="cascade", readonly=True)
     requested_amount = fields.Float(string='Requested Amount', readonly=True)
+    released_amount = fields.Float(string='Released Amount', readonly=True)
     selected_budget_id = fields.Many2one('crossovered.budget.lines', string='Selected Budget', ondelete="cascade", readonly=True)
     available_budget = fields.Float(string='Available Budget', readonly=True)
     restrict_allow = fields.Selection([('allow','Allow'),('restrict' , 'Restricted'),('warn','Warning')],string="Budget Control", readonly=True)
@@ -136,10 +182,12 @@ class BudgetRequestLine(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done'),
+        ('release', 'Released'),
         ('cancel', 'Cancelled')
     ], string='Status', compute='_get_budget_state', method=True)
     asset_options = fields.Selection([('asset', 'Asset'),
                                       ('inventory', 'Inventory')], 'Budget Type')
+    is_release = fields.Boolean('Release Budget', default=False)
 
     @api.one
     def _get_budget_state(self):
@@ -254,7 +302,9 @@ class BudgetRequestReport(models.TransientModel):
     def populate_budget_request(self):
         query = """
             delete from budget_request_report where create_uid = %s;
-            select a.*, brl.available_budget, br.allow_unbudget
+            select a.id, a.date_start, a.cost_center_id, a.analytic_account_id,
+                    a.account_id, a.budget_request_line_id,
+                    a.request_amount - brl.released_amount as request_amount, brl.available_budget, br.allow_unbudget
             from (
                 select pr.id,
                        pr.date_start,

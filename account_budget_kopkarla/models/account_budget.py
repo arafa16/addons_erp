@@ -207,6 +207,8 @@ class BudgetLine(models.Model):
             result = 0.0
             for req in line.budget_request_ids:
                 if (req.budget_request_id.state == 'done' and req.allow_unbudget == False):
+                    result += req.requested_amount - req.released_amount
+                elif (req.budget_request_id.state == 'release'):
                     result += req.requested_amount
             line.requested_amount = -result
 
