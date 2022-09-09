@@ -1013,7 +1013,6 @@ SELECT
                             end
                         /* else m.ref */
                     end
-                else 'purnama'
             end
     end AS sale_order,
     fr.name AS matching_number,
