@@ -237,6 +237,8 @@ class AssetDepreciation(models.Model):
     def action_depreciation_undo(self):
         for line in self.depreciation_line_ids:
             line.move_posted_check = False
+            if line.asset_id.state == 'close':
+                line.asset_id.state = 'open'
         if self.move_id:
             self.move_id.button_cancel()
             self.move_id.unlink()
