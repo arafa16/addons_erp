@@ -12,7 +12,7 @@ class EnhancedSalesArea(models.Model):
     purchase_amount = fields.Float(string='# of Purchases', compute='_get_purchased', readonly=True) #, store=True)
     purchase_ids = fields.Many2many("purchase.order", string='Purchases', compute="_get_purchased", readonly=True, copy=False)
     est_invoice_date = fields.Date('Estimasi Invoice Date')
-    reva_notes = fields.Char('Catatan Proses Reva')
+    reva_notes = fields.Many2one('sale.order.reva.notes', string='Catatan Proses Reva', ondelete='restrict')
     pr_line_ids = fields.One2many('sprogroup.purchase.request', 'salesorder_id', 'PR Lines')
     pr_amount = fields.Float(string='# of Purchases', compute='_get_request', readonly=True) #, store=True)
     margin_so_pr = fields.Float(string='Margin SO-PR', compute='_get_margin', readonly=True)
@@ -299,3 +299,9 @@ class SaleOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
         }
         return res
+
+
+class SaleOrderRevaNotes(models.Model):
+    _name = 'sale.order.reva.notes'
+
+    name = fields.Char(string='Reva Notes')
