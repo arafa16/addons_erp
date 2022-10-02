@@ -181,7 +181,7 @@ class stock_move(models.Model):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
                     move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
 
-            if move.picking_id.state == 'done' or 'confirmed' and move.picking_id.picking_type_id.code in ['incoming','outgoing']:
+            if move.picking_id.state in ['done','confirmed'] and move.picking_id.picking_type_id.code in ['incoming','outgoing']:
                 pack_op = self.env['stock.move'].sudo().search(
                     [('picking_id', '=', move.picking_id.id), ('product_id', '=', move.product_id.id)])
                 self.set_quant_quantity(move, pack_op, pick_state)
