@@ -112,7 +112,8 @@ class PaymentBankBatch(models.Model):
                                  line.partner_bank_id.bank_id.bic if line.partner_bank_id.bank_id != self.journal_id.bank_id else '',
                                  line.partner_bank_id.bank_id.name, 'Jakarta',
                                  '', '', '',
-                                 'Y', line.partner_id.email if line.partner_id.email else 'dwi.istianingsih@kopkarla.co.id',
+                                 # 'Y', line.partner_id.email if line.partner_id.email else 'dwi.istianingsih@kopkarla.co.id',
+                                 'Y', 'finance.payment@kopkarla.co.id',
                                  '', '', '', '', '', '', '', '', '', '', '',
                                  '', '', '', '', '', '', '', '', '', '', '', line.description[:20]
                                 ])
