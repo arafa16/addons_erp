@@ -13,7 +13,7 @@
                     <field name="create_date"/>
                 </field>
                 <field name="product_qty" position="before">
-                    <field name="cost_center_id" options="{'no_create': True, 'no_open':True}" invisible="1"/>
+                    <field name="cost_center_id" options="{'no_create': True, 'no_open':True}" invisible="1" force_save="1"/>
                 </field>
             </field>
         </record>

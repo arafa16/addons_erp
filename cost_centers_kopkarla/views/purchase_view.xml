@@ -13,7 +13,7 @@
                         <field name="cost_center_id" options="{'no_create': True, 'no_open':True}" required="True"/>
                     </field>
                     <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='account_analytic_id']" position="before">
-                        <field name="cost_center_id"  options="{'no_create': True, 'no_open':True}" invisible="1"/>
+                        <field name="cost_center_id"  options="{'no_create': True, 'no_open':True}" invisible="1" force_save="1"/>
                     </xpath>
                 </field>
         </record>
@@ -24,7 +24,7 @@
             <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet/group/group[1]/div/field[@name='product_qty']" position="after">
-                    <field name="cost_center_id" options="{'no_quick_create':True,'no_create_edit':True}"  string="Cost Center" invisible="1"/>
+                    <field name="cost_center_id" options="{'no_quick_create':True,'no_create_edit':True}"  string="Cost Center" invisible="1" force_save="1"/>
                 </xpath>
             </field>
         </record>
