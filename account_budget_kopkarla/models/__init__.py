@@ -9,3 +9,4 @@ from . import res_config_settings
 from . import budget_request
 from . import budget_adjustment
 from . import account_move
+from . import hr_expense

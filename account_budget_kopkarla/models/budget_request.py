@@ -304,7 +304,7 @@ class BudgetRequestReport(models.TransientModel):
             delete from budget_request_report where create_uid = %s;
             select a.id, a.date_start, a.cost_center_id, a.analytic_account_id,
                     a.account_id, a.budget_request_line_id,
-                    a.request_amount - brl.released_amount as request_amount, brl.available_budget, br.allow_unbudget
+                    a.request_amount - COALESCE(brl.released_amount, 0) as request_amount, brl.available_budget, br.allow_unbudget
             from (
                 select pr.id,
                        pr.date_start,

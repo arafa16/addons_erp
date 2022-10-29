@@ -85,11 +85,24 @@
                     <field name="analytic_account_id" string="Analytic Account"/>
 
 <!--                    <filter name="budget_approval" string="Budget Approval" domain="[('state','=','to_approve')]" help="Show PR need to budget approval"/>-->
-                    <!--<separator/>-->
+                    <separator/>
+                    <filter name="month"
+                            string="This Month"
+                            domain="['&amp;', ('date_required', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date_required', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Last Month"
+                            name="last_month"
+                            domain="['&amp;', ('date_required', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date_required', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <filter string="This Year"
+                            name="year"
+                            domain="['|', ('date_required', '=', False), '&amp;',('date_required','&lt;=', time.strftime('%%Y-12-31')),('date_required','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                    <filter name="last_year"
+                            string="Last Year"
+                            domain="['&amp;', ('date_required', '&gt;=', (context_today()-relativedelta(years=1)).strftime('%Y-01-01')), ('date_required', '&lt;', context_today().strftime('%Y-01-01'))]"/>
+                    <separator/>
                     <group expand="0" string="Group By...">
-                        <!--<filter name="account" string="Account" icon="terp-personal"
+                        <filter name="account" string="Account" icon="terp-personal"
                                 domain="[]"
-                                context="{'group_by':'account_id'}"/>-->
+                                context="{'group_by':'account_id'}"/>
                         <filter name="cost_center" string="Cost Center" icon="terp-personal"
                                 domain="[]"
                                 context="{'group_by':'cost_center_id'}"/>

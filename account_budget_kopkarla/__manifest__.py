@@ -23,6 +23,7 @@ Support following feature:
     'depends': ['account_budget',
                 'cost_centers_kopkarla',
                 'enhanced_purchase_request_loa',
+                'hr_expense_kopkarla',
                 ],
     'data': [
         "views/account_budget_view.xml",
@@ -36,6 +37,7 @@ Support following feature:
         "views/account_budget_request_approval.xml",
         "views/account_budget_available.xml",
         "views/account_budget_adjustment.xml",
+        "views/expense_budget_view.xml",
         "data/ir_sequence_data.xml",
         "security/ir.model.access.csv",
         "views/purchase_request_so_view.xml",
