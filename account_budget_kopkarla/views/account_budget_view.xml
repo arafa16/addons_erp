@@ -169,8 +169,9 @@
                 <xpath expr="//tree" position="replace">
                     <tree string="Budget Lines">
                         <field name="crossovered_budget_id" invisible="1"/>
-                        <field name="general_budget_id"/>
-                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="general_budget_id" invisible="1"/>
+                        <field name="cost_center_id" invisible="1"/>
+                        <field name="analytic_account_id" invisible="1"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                         <field name="paid_date" groups="base.group_no_one"/>
@@ -245,8 +246,11 @@
             <field name="domain">[('state','=','ready')]</field>
             <field name="view_id" ref="view_crossovered_budget_line_tree_ledger_analysis"/>
             <field name="search_view_id" ref="account_budget.view_crossovered_budget_line_search"/>
-            <field name="context">{ 'search_default_budget_id':True,
-                                    'search_default_budget_position':True }</field>
+            <field name="context">{ 'search_default_budget_position':True,
+                                    'search_default_cost_center': True,
+                                    'search_default_analytic_account': True,
+                                    'search_default_this_month': True,
+                }</field>
         </record>
 
         <record model="ir.ui.view" id="view_account_analytic_account_form_inherit_budget">
@@ -331,8 +335,6 @@
             </field>-->
         </record>
 
-
-
         <record model="ir.ui.view" id="view_budget_post_group_tree">
             <field name="name">budget.post.group.tree</field>
             <field name="model">account.budget.post.group</field>
@@ -392,6 +394,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="action_budget_post_report" model="ir.actions.act_window">
             <field name="name">Budgetary Position COA List</field>
             <field name="res_model">account.budget.post.list</field>

@@ -5,7 +5,9 @@
             <field name="name">purchase.budget.request.tree</field>
             <field name="model">budget.request.report</field>
             <field name="arch" type="xml">
-                <tree string="Budget Request" create="false" delete="false">
+                <tree string="Budget Request" create="false" delete="false"
+                      default_order='account_id, cost_center_id, analytic_account_id'
+                >
                     <!--<header>
                         <button string="Populate Data" name="populate_budget_request" object="object" class="btn-success"/>
                     </header>-->
@@ -26,15 +28,15 @@
             <field name="model">budget.request.report</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Budget Request">
-                    <field name="request_id" string="Purchase Request"/>
                     <field name="account_id" string="Account"/>
                     <field name="cost_center_id" string="Cost Center"/>
                     <field name="analytic_account_id" string="Analytic Account"/>
+                    <field name="request_id" string="Purchase Request"/>
 
                     <filter name="budgeted_request" string="Request Budgeted" domain="[('unbudget','=',False)]"/>
                     <filter name="unbudgeted_request" string="Request Unbudgeted" domain="[('unbudget','=',True)]"/>
                     <separator/>
-                    <filter name="month"
+                    <filter name="this_month"
                             string="This Month"
                             domain="['&amp;', ('date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
                     <filter string="Last Month"
@@ -48,9 +50,9 @@
                             domain="['&amp;', ('date', '&gt;=', (context_today()-relativedelta(years=1)).strftime('%Y-01-01')), ('date', '&lt;', context_today().strftime('%Y-01-01'))]"/>
                     <separator/>
                     <group expand="0" string="Group By...">
-                        <!--<filter name="account" string="Account" icon="terp-personal"
+                        <filter name="account" string="Account" icon="terp-personal"
                                 domain="[]"
-                                context="{'group_by':'account_id'}"/>-->
+                                context="{'group_by':'account_id'}"/>
                         <filter name="cost_center" string="Cost Center" icon="terp-personal"
                                 domain="[]"
                                 context="{'group_by':'cost_center_id'}"/>
@@ -66,20 +68,22 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_purchase_budget_request">
-            <field name="name">Purchase Budget Request</field>
+            <field name="name">Budget Usage by PR</field>
             <field name="res_model">budget.request.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="purchase_budget_request_tree"/>
             <field name="search_view_id" ref="purchase_budget_request_search"/>
-            <field name="context">{ 'search_default_cost_center':True,
-                                    'search_default_analytic_account':True,
-                                    'search_default_request':True,}</field>
+            <field name="context">{ 'search_default_account': True,
+                                    'search_default_cost_center': True,
+                                    'search_default_analytic_account': True,
+                                    'search_default_this_month': True,
+                }</field>
         </record>
 
         <menuitem parent="account_budget_kopkarla.menu_budget_reports"
             id="menu_act_budget_request"
-            name="Budget Request Details"
+            name="Budget Usage by PR"
             action="act_purchase_budget_request" sequence="5"
             groups="account.group_account_user"/>
     </data>

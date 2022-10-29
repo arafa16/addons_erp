@@ -282,7 +282,7 @@ class BudgetRequestReport(models.TransientModel):
     account_id = fields.Many2one('account.account', 'Budget Account', readonly=True)
     budget_request_line_id = fields.Many2one('budget.request.line', string='Budget Request Line', index=True, ondelete='cascade')
     request_amount = fields.Float(string='Request Amount', readonly=True)
-    budget_amount = fields.Float(string='Budget Amount', readonly=True)
+    budget_amount = fields.Float(string='Available Budget', readonly=True, group_operator=False)
     unbudget = fields.Boolean(string="Unbudget", readonly=True)
 
     @api.model
@@ -302,25 +302,26 @@ class BudgetRequestReport(models.TransientModel):
     def populate_budget_request(self):
         query = """
             delete from budget_request_report where create_uid = %s;
-            select a.id, a.date_start, a.cost_center_id, a.analytic_account_id,
+            select a.id, a.date_required, a.cost_center_id, a.analytic_account_id,
                     a.account_id, a.budget_request_line_id,
                     a.request_amount - COALESCE(brl.released_amount, 0) as request_amount, brl.available_budget, br.allow_unbudget
             from (
                 select pr.id,
-                       pr.date_start,
-                       pr.cost_center_id,
-                       pr.analytic_account_id,
+                       prl.date_required,
+                       prl.cost_center_id,
+                       prl.analytic_account_id,
                        prl.account_id,
                        prl.budget_request_line_id,
                        sum(prl.product_qty * prl.cost_product) as request_amount
                 from sprogroup_purchase_request_line prl
                          inner join sprogroup_purchase_request pr on prl.request_id = pr.id
                 where pr.state in ('leader_request', 'leader_approved', 'done')
-                      and pr.date_start >= '1 Jan 2021' --and br.allow_unbudget = False
-                group by pr.id, pr.date_start, pr.cost_center_id, pr.analytic_account_id,
+                      and prl.date_required >= '1 Jan 2021' --and br.allow_unbudget = False
+                group by pr.id, prl.date_required, pr.cost_center_id, pr.analytic_account_id,
                       prl.account_id, prl.budget_request_line_id--, br.allow_unbudget, br.id
             ) a left join budget_request_line brl on a.budget_request_line_id = brl.id
                 left join budget_request br on brl.budget_request_id = br.id
+            order by a.account_id, a.cost_center_id, a.analytic_account_id, a.budget_request_line_id
         """
         cr = self.env.cr
         params = (self.env.user.id,)

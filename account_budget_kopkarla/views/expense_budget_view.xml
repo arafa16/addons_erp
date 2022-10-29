@@ -29,13 +29,14 @@
             <field eval="50" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Expense">
+                    <field name="account_id"/>
                     <field name="name" string="Expenses" filter_domain="['|',('employee_id','ilike',self),('name','ilike',self)]"/>
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="product_id"/>
                     <!--<field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>-->
                     <separator/>
-                    <filter name="month"
+                    <filter name="this_month"
                             string="This Month"
                             domain="['&amp;', ('accounting_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('accounting_date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
                     <filter string="Last Month"
@@ -79,9 +80,11 @@
             <field name="view_id" ref="view_expenses_budget_tree"/>
             <field name="search_view_id" ref="view_hr_expense_filter_budget"/>
             <field name="domain">[('state', 'in', ['post','done'])]</field>
-            <field name="context">{ 'search_default_account':True,
-                                    'search_default_cost_center':True,
-                                    'search_default_analytic_account':True }</field>
+            <field name="context">{ 'search_default_account': True,
+                                    'search_default_cost_center': True,
+                                    'search_default_analytic_account': True,
+                                    'search_default_this_month': True,
+                }</field>
         </record>
 
         <menuitem parent="account_budget_kopkarla.menu_budget_reports"

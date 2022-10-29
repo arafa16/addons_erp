@@ -55,14 +55,14 @@
             <field name="name">sprogroup.purchase.request.line.tree</field>
             <field name="model">sprogroup.purchase.request.line</field>
             <field name="arch" type="xml">
-                <tree string="Purchase Request Detail">
+                <tree string="Purchase Request Detail" default_order='account_id, cost_center_id, analytic_account_id, request_id desc'>
                     <!--<field name="account_id"/>
                     <field name="cost_center_id"/>
                     <field name="analytic_account_id"/>-->
                     <field name="product_id"/>
                     <field name="name"/>
                     <!--<field name="coannya"/>-->
-                    <field name="product_qty"/>
+                    <field name="product_qty" sum="False"/>
                     <field name="product_uom_id"/>
                     <field name="cost_product"/>
                     <field name="subtotal"/>
@@ -79,14 +79,14 @@
             <field name="model">sprogroup.purchase.request.line</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Request Line">
+                    <field name="account_id" string="Account"/>
                     <field name="request_id" string="Purchase Request"/>
-                    <!--<field name="account_id" string="Account"/>-->
                     <field name="cost_center_id" string="Cost Center"/>
                     <field name="analytic_account_id" string="Analytic Account"/>
 
 <!--                    <filter name="budget_approval" string="Budget Approval" domain="[('state','=','to_approve')]" help="Show PR need to budget approval"/>-->
                     <separator/>
-                    <filter name="month"
+                    <filter name="this_month"
                             string="This Month"
                             domain="['&amp;', ('date_required', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date_required', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
                     <filter string="Last Month"
@@ -115,21 +115,23 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_purchase_request_line_tree">
-            <field name="name">Purchase Request Details</field>
+            <field name="name">PR By Product</field>
             <field name="res_model">sprogroup.purchase.request.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="purchase_request_line_tree"/>
             <field name="search_view_id" ref="purchase_request_line_search"/>
             <field name="domain">[('state', 'in', ['leader_request','leader_approved','done'])]</field>
-            <field name="context">{ 'search_default_account':True,
-                                    'search_default_cost_center':True,
-                                    'search_default_analytic_account':True }</field>
+            <field name="context">{ 'search_default_account': True,
+                                    'search_default_cost_center': True,
+                                    'search_default_analytic_account': True,
+                                    'search_default_this_month': True,
+                }</field>
         </record>
 
         <menuitem parent="account_budget_kopkarla.menu_budget_reports"
             id="menu_act_purchase_request_line_tree"
-            name="Purchase Request Details"
+            name="PR By Product"
             action="act_purchase_request_line_tree" sequence="4"
             groups="account.group_account_user"/>
     </data>

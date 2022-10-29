@@ -8,7 +8,9 @@
                 <tree string="Available Budgets" create="false" edit="false" delete="false"
                       decoration-danger="state=='draft'"
                       decoration-info="state=='ready'"
-                      decoration-muted="state=='close'">
+                      decoration-muted="state=='close'"
+                      default_order='general_budget_id, cost_center_id, analytic_account_id'
+                >
                     <field name="crossovered_budget_id" invisible="1"/>
                     <field name="general_budget_id" invisible="1"/>
                     <field name="state" invisible="1"/>
@@ -23,6 +25,7 @@
                     <field name="planned_changes_amount" widget="monetary" string="Adjustment"/>
                     <field name="planned_amount_sum" widget="monetary" string="Budget"/>
                     <field name="requested_amount" widget="monetary" string="Requested"/>
+                    <field name="expense_amount" widget="monetary" string="Expense"/>
                     <field name="request_percentage" widget="monetary" string="Achievement"/>
                     <field name="requested_amount_unbudget" widget="monetary" string="Requested (Unbudget)"/>
                     <!--<field name="theoritical_amount" widget="monetary"/>-->
@@ -36,9 +39,24 @@
             <field name="model">crossovered.budget.lines</field>
             <field name="arch" type="xml">
                 <search string="Budget Lines">
+                    <field name="general_budget_id"/>
                     <field name="cost_center_id"/>
-                    <field name="analytic_account_id"/>
-                    <field name="crossovered_budget_id"/>
+                    <!--<field name="analytic_account_id"/>
+                    <field name="crossovered_budget_id"/>-->
+                    <separator/>
+                    <filter name="this_month"
+                            string="This Month"
+                            domain="['&amp;', ('date_from', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date_from', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Last Month"
+                            name="last_month"
+                            domain="['&amp;', ('date_from', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date_from', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <filter string="This Year"
+                            name="year"
+                            domain="['|', ('date_from', '=', False), '&amp;',('date_from','&lt;=', time.strftime('%%Y-12-31')),('date_from','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                    <filter name="last_year"
+                            string="Last Year"
+                            domain="['&amp;', ('date_from', '&gt;=', (context_today()-relativedelta(years=1)).strftime('%Y-01-01')), ('date_from', '&lt;', context_today().strftime('%Y-01-01'))]"/>
+                    <separator/>
                     <group expand="0" string="Group By">
                         <filter name="budget_id" string="Budgets" domain="[]" context="{'group_by':'crossovered_budget_id'}"/>
                         <filter name="budget_position" string="Budget Position" domain="[]" context="{'group_by':'general_budget_id'}"/>
@@ -87,8 +105,11 @@
             <field name="view_mode">tree,pivot,graph</field>
             <field name="view_id" ref="view_account_budget_request_tree"/>
             <field name="domain">[('state','=','ready'),('budget_direction','=','cost')]</field>
-            <field name="context">{ 'search_default_budget_id':True,
-                                    'search_default_budget_position':True }</field>
+            <field name="context">{ 'search_default_budget_position': True,
+                                    'search_default_cost_center': True,
+                                    'search_default_analytic_account': True,
+                                    'search_default_this_month': True,
+                }</field>
             <field name="search_view_id" ref="view_crossovered_budget_line_search"/>
         </record>
     </data>

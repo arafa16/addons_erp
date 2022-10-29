@@ -97,6 +97,7 @@ class BudgetLine(models.Model):
     # commitment_amount = fields.Float(compute='_compute_commitment_amount', string='Commitment Amount', digits=0)
     requested_amount = fields.Float(digits=0, compute="_compute_budgeted_requested_amount") #, store=True)
     requested_amount_unbudget = fields.Float(digits=0, compute="_compute_unbudgeted_requested_amount") #, store=True)
+    expense_amount = fields.Float(digits=0, compute="_compute_budgeted_expense_amount") #, store=True)
     avail_req_amount = fields.Float(digits=0, compute="_compute_avail_req_amount", string="Available Amount")
     commitment_amount = fields.Float(digits=0, compute="_compute_practical_amount")
     available_amount = fields.Float(digits=0, compute="_compute_practical_amount", string="Available Amount")
@@ -112,14 +113,14 @@ class BudgetLine(models.Model):
     budget_direction = fields.Selection([('income', 'Income'), ('cost', 'Cost / Expense')], string='Direction', related='group_id.direction')
 
     _fields_to_compute = ['commitment_amount', 'available_amount', 'planned_changes_amount',
-                          'planned_amount_sum', 'requested_amount', 'requested_amount_unbudget',
+                          'planned_amount_sum', 'requested_amount', 'requested_amount_unbudget', 'expense_amount',
                           'avail_req_amount', 'practical_amount', 'theoritical_amount']
 
     @api.multi
     def _compute_request_percentage(self):
         for line in self:
             if line.planned_amount_sum != 0.00:
-                line.request_percentage = float((line.requested_amount or 0.0) / line.planned_amount_sum) * 100
+                line.request_percentage = float(((line.requested_amount + line.expense_amount) or 0.0) / line.planned_amount_sum) * 100
             else:
                 line.request_percentage = 0.00
 
@@ -220,6 +221,20 @@ class BudgetLine(models.Model):
                 if (req.budget_request_id.state == 'done' and req.allow_unbudget == True):
                     result += req.requested_amount
             line.requested_amount_unbudget = -result
+
+    @api.multi
+    def _compute_budgeted_expense_amount(self):
+        for line in self:
+            expense_ids = self.env['hr.expense'].sudo().search([('accounting_date','>=',line.date_from),
+                                                                ('accounting_date','<=',line.date_to),
+                                                                ('account_id','in',line.general_budget_id.account_ids.ids),
+                                                                ('cost_center_id','=',line.cost_center_id.id),
+                                                                ('analytic_account_id','=',line.analytic_account_id.id),
+                                                                ('state','in',['post','done'])])
+            if expense_ids:
+                line.expense_amount = -sum(expense_ids.mapped('total_amount'))
+            else:
+                line.expense_amount = 0
 
     @api.multi
     def _compute_avail_req_amount(self):

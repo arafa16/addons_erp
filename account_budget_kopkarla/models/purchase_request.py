@@ -313,7 +313,7 @@ class PurchaseRequest(models.Model):
 class PurchaseRequestLine(models.Model):
     _inherit = "sprogroup.purchase.request.line"
 
-    # account_id = fields.Many2one('account.account', string='Account', compute='_get_invoice_line_account', store=True)
+    account_id = fields.Many2one('account.account') #, string='Account', compute='_get_invoice_line_account', store=True)
     budget_request_line_id = fields.Many2one('budget.request.line', string='Budget', readonly=True, ondelete='set null')
     state = fields.Selection(related='request_id.state', store=True)
     # coannya = fields.Many2one('account.account', string='Chart of Account', related='request_id.coannya', store=True)
