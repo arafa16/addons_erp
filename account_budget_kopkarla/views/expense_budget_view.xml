@@ -15,7 +15,7 @@
                     <field name="name"/>
                     <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="date"/>
-                    <field name="sheet_id" invisible="not context.get('show_report', False)"/>
+                    <field name="sheet_id"/>
                     <field name="employee_id"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
