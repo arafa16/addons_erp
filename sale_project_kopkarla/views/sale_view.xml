@@ -101,6 +101,9 @@
                         force_save="1" options="{'no_create': True, 'no_open':True}"
                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>
                 </xpath>
+                <xpath expr="//tree/field[@name='product_uom']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
                 <xpath expr="//sheet/notebook" position="inside">
                     <page string="BAST" attrs="{'invisible': [('state', 'not in', ['sale','done'])]}">
                         <group colspan="2">
