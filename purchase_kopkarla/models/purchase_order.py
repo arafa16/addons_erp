@@ -165,7 +165,7 @@ class PurchaseOrder(models.Model):
                 order.invoice_status = 'cancel'
             elif any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in self.env['purchase.order.line'].sudo().search([('order_id','=',order.id)])):
                 order.invoice_status = 'to invoice'
-            elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in self.env['purchase.order.line'].sudo().search([('order_id','=',order.id)])) and order.invoice_ids:
+            elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == 0 for line in self.env['purchase.order.line'].sudo().search([('order_id','=',order.id)])) and order.invoice_ids:
                 order.invoice_status = 'invoiced'
             else:
                 order.invoice_status = 'invoiced'
