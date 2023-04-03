@@ -2,72 +2,107 @@
 <odoo>
     <data>
         <template id="enhanced_purchase_approval_loa_print" inherit_id="purchase.report_purchaseorder_document">
-                <xpath expr="//div[hasclass('page')]" position="after">
-                    <div class="row">
-                        <div t-if="o.required1 and not o.required2" class="col-xs-4">
-                            <div style="padding-bottom:90px; text-align:center;">
-                                Asisten Manager
-                            </div>
-                            <div style=" text-align:center;">
-                                (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan1"/></span> )
-                            </div>
+            <xpath expr="//div[hasclass('page')]/div[2]" position="replace">
+                <div class="row" style="font-size: 12px;">
+                    <div class="col-xs-3">
+                        <strong>Invoice address:</strong>
+                        <div t-if="o.dest_address_id">
+                            <div t-field="o.dest_address_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
-                        <div t-if="o.required2 and not o.required3" class="col-xs-4">
-                            <div style="padding-bottom:90px; text-align:center;">
-                                Manager
-                            </div>
-                            <div style=" text-align:center;">
-                                (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan2"/></span> )
-                            </div>
-                        </div>
-                        <div t-if="o.required3 and not o.required4" class="col-xs-4">
-                            <div style="padding-bottom:90px; text-align:center;">
-                                General Manager
-                            </div>
-                            <div style=" text-align:center;">
-                                (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan3"/></span> )
-                            </div>
-                        </div>
-                        <div t-if="o.required4 and not o.required5" class="col-xs-4">
-                            <div style="padding-bottom:90px; text-align:center;">
-                                Pengurus/Direktur
-                            </div>
-                            <div style=" text-align:center;">
-                                (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan4"/></span> )
-                            </div>
-                        </div>
-                        <div t-if="o.required5" class="col-xs-4">
-                            <div style="padding-bottom:90px; text-align:center;">
-                                Ketua Pengurus
-                            </div>
-                            <div style=" text-align:center;">
-                                (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan5"/></span> )
-                            </div>
-                        </div>
-                        <div class="col-xs-4"></div>
-                        <div class="col-xs-4">
-                            <div style="padding-bottom:90px; text-align:center;">
-                                Vendor
-                            </div>
-                            <div style=" text-align:center;">
-                                (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.partner_id"/></span> )
-                            </div>
+
+                        <div t-if="not o.dest_address_id and o.picking_type_id and o.picking_type_id.warehouse_id">
+                            <span t-field="o.picking_type_id.warehouse_id.name"/>
+                            <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                                t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                     </div>
-                </xpath>
-                <xpath expr="//div[@t-if='o.date_order']" position="after">
-                    <div t-if="o.payment_term_id" class="col-xs-3">
-                        <strong>Payment Term:</strong>
-                        <p t-field="o.payment_term_id"/>
+                    <div class="col-xs-3">
+                        <strong>Direct address:</strong>
+                        <div t-if="o.langsung_alamat">
+                            <div t-field="o.langsung_alamat"/>
+                                <!--t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>-->
+                        </div>
+
+                        <!--<div t-if="not o.dest_address_id and o.picking_type_id and o.picking_type_id.warehouse_id">
+                            <span t-field="o.picking_type_id.warehouse_id.name"/>
+                            <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                                t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        </div>-->
                     </div>
-                </xpath>
-                <xpath expr="//p[@t-field='o.date_order']" position="attributes">
-                    <attribute name="t-options">{"widget": "date"}</attribute>
-                </xpath>
-                <xpath expr="//span[@t-field='line.date_planned']" position="attributes">
-                    <attribute name="t-options">{"widget": "date"}</attribute>
-                    <attribute name="style">white-space:nowrap</attribute>
-                </xpath>
+                    <div class="col-xs-5 col-xs-offset-1">
+                        <div t-field="o.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                            <p t-if="o.partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></p>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]" position="after">
+                <div class="row">
+                    <div t-if="o.required1 and not o.required2" class="col-xs-4">
+                        <div style="padding-bottom:90px; text-align:center;">
+                            Asisten Manager
+                        </div>
+                        <div style=" text-align:center;">
+                            (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan1"/></span> )
+                        </div>
+                    </div>
+                    <div t-if="o.required2 and not o.required3" class="col-xs-4">
+                        <div style="padding-bottom:90px; text-align:center;">
+                            Manager
+                        </div>
+                        <div style=" text-align:center;">
+                            (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan2"/></span> )
+                        </div>
+                    </div>
+                    <div t-if="o.required3 and not o.required4" class="col-xs-4">
+                        <div style="padding-bottom:90px; text-align:center;">
+                            General Manager
+                        </div>
+                        <div style=" text-align:center;">
+                            (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan3"/></span> )
+                        </div>
+                    </div>
+                    <div t-if="o.required4 and not o.required5" class="col-xs-4">
+                        <div style="padding-bottom:90px; text-align:center;">
+                            Pengurus/Direktur
+                        </div>
+                        <div style=" text-align:center;">
+                            (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan4"/></span> )
+                        </div>
+                    </div>
+                    <div t-if="o.required5" class="col-xs-4">
+                        <div style="padding-bottom:90px; text-align:center;">
+                            Ketua Pengurus
+                        </div>
+                        <div style=" text-align:center;">
+                            (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.penandatangan5"/></span> )
+                        </div>
+                    </div>
+                    <div class="col-xs-4"></div>
+                    <div class="col-xs-4">
+                        <div style="padding-bottom:90px; text-align:center;">
+                            Vendor
+                        </div>
+                        <div style=" text-align:center;">
+                            (  <span style="text-decoration:underline; font-weight:bold; "><span t-field="o.partner_id"/></span> )
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@t-if='o.date_order']" position="after">
+                <div t-if="o.payment_term_id" class="col-xs-3">
+                    <strong>Payment Term:</strong>
+                    <p t-field="o.payment_term_id"/>
+                </div>
+            </xpath>
+            <xpath expr="//p[@t-field='o.date_order']" position="attributes">
+                <attribute name="t-options">{"widget": "date"}</attribute>
+            </xpath>
+            <xpath expr="//span[@t-field='line.date_planned']" position="attributes">
+                <attribute name="t-options">{"widget": "date"}</attribute>
+                <attribute name="style">white-space:nowrap</attribute>
+            </xpath>
         </template>
         <template id="enhanced_purchase_rfk_print" inherit_id="purchase.report_purchasequotation_document">
             <xpath expr="//div[hasclass('page')]/h2[1]" position="replace">
