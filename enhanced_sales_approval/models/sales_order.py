@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 class SalesOrder(models.Model):
     _inherit = 'sale.order'
-    state = fields.Selection(selection_add_after={'sent': [('spvcheck', 'SPV Check'),('assmancheck', 'Assman Check'),('requestloa', 'Request LoA'),('loaconfirmed', 'LoA Confirmed')]})
+    state = fields.Selection(selection_add_after={'draft': [('spvcheck', 'SPV Check'),('assmancheck', 'Assman Check'),('requestloa', 'Request LoA'),('loaconfirmed', 'LoA Confirmed')]})
     is_spv = fields.Boolean(string='Is Supervisor?', compute='check_spv')
     is_assman = fields.Boolean(string='Is Assman?', compute='check_assman')
     employee_spv = fields.Many2one('hr.employee', string='SPV Check')
@@ -106,7 +106,6 @@ class SalesOrder(models.Model):
                 else:
                     if loa5.batas_bawah <= amount_x:
                         self.required5 = True
-
 
     def check_spv(self):
         if self._uid == self.employee_spv.user_id.id:
@@ -319,3 +318,8 @@ class SalesOrder(models.Model):
 
     def button_action_baypass(self):
         self.state = 'loaconfirmed'
+
+    @api.multi
+    def print_quotation(self):
+        self.filtered(lambda s: s.state == 'loaconfirmed').write({'state': 'sent'})
+        return self.env.ref('sale.action_report_saleorder').report_action(self)

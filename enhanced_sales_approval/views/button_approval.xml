@@ -31,24 +31,26 @@
                         <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
                                 type="action" context="{'default_advance_payment_method': 'percentage'}"
                                 attrs="{'invisible': ['|','|',('allowInvoice','=',False),('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                        <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="loaconfirmed" class="btn-primary"/>
                         <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                        <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary o_sale_print"/>
+                        <button name="print_quotation" string="Print" type="object" states="loaconfirmed" class="btn-primary o_sale_print"/>
                         <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                        <button name="print_quotation" string="Print" type="object" states="sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale" class="o_sale_print"/>
-                        <button name="action_quotation_send" string="Send by Email" type="object" states="sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale"/>
+                        <!--<button name="print_quotation" string="Print" type="object" states="sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale" class="o_sale_print"/>-->
+                        <button name="print_quotation" string="Print" type="object" states="sent,sale" class="o_sale_print"/>
+                        <!--<button name="action_quotation_send" string="Send by Email" type="object" states="sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale"/>-->
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
                         <!--<button name="action_cancel" states="draft,sent,spvcheck,assmancheck,requestloa,loaconfirmed,sale" type="object" string="Cancel"/>-->
                         <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                         <button name="action_done" type="object" string="Lock" states="sale"
                             help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
                         <button name="action_unlock" type="object" string="Unlock" states="done" groups="sales_team.group_sale_manager"/>
 
-                        <button name="action_confirm" id="action_confirm" string="Confirm Sale" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in','loaconfirmed')]}"/>
+                        <button name="action_confirm" id="action_confirm" string="Confirm Sale" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in','sent')]}"/>
                         <button name="button_action_spv_check"
                                 string="SPV Request Check"
                                 type="object"
                                 style="color:#FFFFFF; background-color:#00897B;"
-                                attrs="{'invisible': [('state', 'not in', ['draft','sent'])]}"
+                                attrs="{'invisible': [('state', 'not in', ['draft'])]}"
                         />
                         <button name="button_action_spv_approved"
                                 string="SPV Approved"
