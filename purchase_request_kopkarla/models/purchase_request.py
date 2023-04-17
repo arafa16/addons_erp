@@ -172,24 +172,25 @@ class SprogroupPurchaseRequestLine(models.Model):
             else:
                 self.account_id = self.product_id.categ_id.property_account_expense_categ_id.id
         elif self.product_id.id:
-            category_id = self.product_id.categ_id
-            request_type = self.env['purchase.request.type'].sudo().search([('prod_categ_id', '=', category_id.id)], limit=1)
-            if request_type.id:
-                while not request_type.id:
-                    category_id = category_id.parent_id
-                    request_type = self.env['purchase.request.type'].sudo().search([('prod_categ_id', '=', category_id.id)], limit=1)
-            if request_type.id:
-                if self.request_id.request_type == 'trade':
-                    request_expense_id = request_type.account_trade_request_id.id
-                elif self.request_id.request_type == 'datacom':
-                    request_expense_id = request_type.account_datacom_request_id.id
-                else: # self.request_id.request_type == 'overhead':
-                    request_expense_id = request_type.account_overhead_request_id.id
-                # else:
-                #     request_expense_id = False
-                if not request_expense_id:
-                    request_expense_id = self.product_id.categ_id.property_account_expense_categ_id.id
-                self.account_id = request_expense_id
+            if self.request_id.request_type:
+                category_id = self.product_id.categ_id
+                request_type = self.env['purchase.request.type'].sudo().search([('prod_categ_id', '=', category_id.id)], limit=1)
+                if request_type.id:
+                    while not request_type.id:
+                        category_id = category_id.parent_id
+                        request_type = self.env['purchase.request.type'].sudo().search([('prod_categ_id', '=', category_id.id)], limit=1)
+                if request_type.id:
+                    if self.request_id.request_type == 'trade':
+                        request_expense_id = request_type.account_trade_request_id.id
+                    elif self.request_id.request_type == 'datacom':
+                        request_expense_id = request_type.account_datacom_request_id.id
+                    else: # self.request_id.request_type == 'overhead':
+                        request_expense_id = request_type.account_overhead_request_id.id
+                    # else:
+                    #     request_expense_id = False
+                    if not request_expense_id:
+                        request_expense_id = self.product_id.categ_id.property_account_expense_categ_id.id
+                    self.account_id = request_expense_id
             else:
                 if self.product_id.id:
                     account_id = False
