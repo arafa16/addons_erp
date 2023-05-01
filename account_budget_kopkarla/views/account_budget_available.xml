@@ -24,6 +24,29 @@
             </field>
         </record>
 
+        <record id="view_account_budget_available_tree_expense" model="ir.ui.view">
+            <field name="name">account.budget.available.tree</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Available Budgets" create="false" edit="false" delete="false"
+                      decoration-danger="state=='draft'"
+                      decoration-info="state=='ready'"
+                      decoration-muted="state=='close'">
+                    <field name="state" invisible="1"/>
+                    <field name="group_id" invisible="1"/>
+                    <field name="general_budget_id"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="restrict_allow"/>
+                    <field name="planned_amount_sum" widget="monetary" sum="Total Plan Amount"/>
+                    <field name="requested_amount" widget="monetary" sum="Total Request Amount"/>
+                    <field name="avail_req_amount" widget="monetary" sum="Total Available Amount"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_account_budget_available_form" model="ir.ui.view">
             <field name="name">account.budget.available.form</field>
             <field name="model">crossovered.budget.lines</field>
@@ -51,6 +74,7 @@
                             </group>
                             <group string="Requested Amount">
                                 <field name="requested_amount"/>
+                                <field name="expense_amount"/>
                                 <field name="avail_req_amount"/>
                             </group>
                             <group string="Realisasi Amount">
@@ -64,11 +88,16 @@
                                 <field name="budget_request_ids">
                                     <tree string="Requested Budgets" decoration-danger="state=='draft'">
                                         <field name="budget_request_id"/>
-                                        <field name="purchase_request_line_ids" widget="many2many_tags"/>
+                                        <field name="create_date"/>
+                                        <!--<field name="purchase_request_line_ids" widget="many2many_tags"/>-->
                                         <field name="budget_account_id"/>
                                         <field name="cost_center_id"/>
                                         <field name="analytic_account_id"/>
-                                        <field name="requested_amount"/>
+                                        <field name="allow_unbudget"/>
+                                        <field name="available_running_budget"/>
+                                        <field name="requested_amount" sum="Requested Amount"/>
+                                        <field name="outstanding_running_budget"/>
+                                        <field name="available_budget" invisible="1"/>
                                         <field name="state"/>
                                     </tree>
                                 </field>

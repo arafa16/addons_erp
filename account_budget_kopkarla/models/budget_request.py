@@ -24,8 +24,9 @@ class BudgetRequest(models.Model):
     date = fields.Datetime('Date', required=True, index=True, copy=False, default=fields.Datetime.now,
                            readonly=True, states={'draft': [('readonly', False)]},)
     description = fields.Text('Description', readonly=True, states={'draft': [('readonly', False)]},)
-    origin = fields.Selection([('purchase_request', 'Purchase Request'),], readonly=True, required=True, default='purchase_request')
+    origin = fields.Selection([('purchase_request', 'Purchase Request'),('expense_request', 'Expense Request'),], readonly=True, required=True, default='purchase_request')
     request_id = fields.Many2one('sprogroup.purchase.request', 'Purchase Request', ondelete='cascade', readonly=True)
+    sheet_id = fields.Many2one('hr.expense.sheet', 'Expense Request', ondelete='cascade', readonly=True)
     requested_amount = fields.Float(string='Requested Amount', compute='_get_requested_amount')
     released_amount = fields.Float(string='Released Amount') #, compute='_get_requested_amount', readonly=False)
     line_ids = fields.One2many('budget.request.line', 'budget_request_id', string='Budget Lines', copy=True,
@@ -66,24 +67,6 @@ class BudgetRequest(models.Model):
 
     @api.multi
     def budget_request_release_submit_action(self):
-        # i = 0
-        # self.env['budget.request.line'].sudo().search(
-        #     [('budget_request_id', '=', self.id), ('is_release', '=', True)]).unlink()
-        # for req in self.line_ids:
-            # i += 1
-            # release_budget = {
-            #                 'budget_request_id': self.id,
-            #                 'sequence': len(self.line_ids) + i,
-            #                 'budget_account_id': req.budget_account_id.id,
-            #                 'income_account_id': req.income_account_id.id,
-            #                 'cost_center_id': req.cost_center_id.id,
-            #                 'analytic_account_id': req.analytic_account_id.id,
-            #                 'requested_amount': -self.released_amount,
-            #                 'selected_budget_id': req.selected_budget_id.id,
-            #                 # 'available_budget': req.income_account_id,
-            #                 'is_release': True
-            #             }
-            # self.env['budget.request.line'].sudo().create(release_budget)
         released_amount = self.released_amount
         released_amount_total = 0
         for req in self.line_ids:
@@ -101,7 +84,7 @@ class BudgetRequest(models.Model):
         if self.env.context.get('force') == 0:
             for req in self.line_ids:
                 if req.restrict_allow != 'allow':
-                    if req.requested_amount > req.available_budget:
+                    if req.requested_amount > req.available_running_budget: # req.available_budget:
                         msg = (req.selected_budget_id and '%sRequested amount on %s is larger than available budget.\n' % (msg, req.budget_account_id.name)) or \
                               '%sAccount %s has no budget selected.\n' % (msg, req.budget_account_id.name)
                         if req.restrict_allow == 'restrict' or not req.selected_budget_id:
@@ -177,6 +160,8 @@ class BudgetRequestLine(models.Model):
     released_amount = fields.Float(string='Released Amount', readonly=True)
     selected_budget_id = fields.Many2one('crossovered.budget.lines', string='Selected Budget', ondelete="cascade", readonly=True)
     available_budget = fields.Float(string='Available Budget', readonly=True)
+    available_running_budget = fields.Float(string='Budget Awal', readonly=True, compute='_get_available_running_budget')
+    outstanding_running_budget = fields.Float(string='Sisa Budget', readonly=True, compute='_get_available_running_budget')
     restrict_allow = fields.Selection([('allow','Allow'),('restrict' , 'Restricted'),('warn','Warning')],string="Budget Control", readonly=True)
     allow_unbudget = fields.Boolean(string="Allow Unbudget", related='budget_request_id.allow_unbudget')
     state = fields.Selection([
@@ -188,6 +173,14 @@ class BudgetRequestLine(models.Model):
     asset_options = fields.Selection([('asset', 'Asset'),
                                       ('inventory', 'Inventory')], 'Budget Type')
     is_release = fields.Boolean('Release Budget', default=False)
+
+    def _get_sum_requested_budget(self, selected_budget_id, until_period):
+        return sum(self.env['budget.request.line'].search([('selected_budget_id', '=', selected_budget_id), ('create_date', '<', until_period)]).mapped('requested_amount'))
+
+    def _get_available_running_budget(self):
+        for line in self:
+            line.available_running_budget = abs(line.selected_budget_id.planned_amount_sum) - self._get_sum_requested_budget(line.selected_budget_id.id, line.create_date)
+            line.outstanding_running_budget = line.available_running_budget - (line.requested_amount if not line.allow_unbudget else 0)
 
     @api.one
     def _get_budget_state(self):
@@ -246,11 +239,6 @@ class BudgetRequestLine(models.Model):
     #     for rec in requested_recs:
     #         result += rec.requested_amount
     #     return result
-
-    #
-    # @api.multi
-    # def show_available_budget(self):
-    #     a = 1
 
 
 class BudgetRequestMargin(models.Model):

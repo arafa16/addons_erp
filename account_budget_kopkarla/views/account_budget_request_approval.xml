@@ -204,7 +204,8 @@
                                         <field name="asset_options" attrs="{'column_invisible': [('parent.show_asset_budget', '=', False)]}"/>
                                         <field name="requested_amount" string="Requested"/>
                                         <field name="released_amount" string="Released" attrs="{'column_invisible': [('parent.state', '=', 'draft')]}"/>
-                                        <field name="available_budget" string="Budget" force_save="1"/>
+                                        <field name="available_budget" string="Budget" force_save="1" invisible="1"/>
+                                        <field name="available_running_budget" string="Budget"/>
                                         <field name="restrict_allow" string="Control" force_save="1"/>
                                         <field name="selected_budget_id" options="{'no_create': True}" force_save="1"/>
                                         <!--<button string="..." name="show_available_budget" type="object" class="oe_highlight"/>-->
