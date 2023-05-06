@@ -108,7 +108,7 @@
         <menuitem parent="menu_budget_documents"
             id="menu_act_budget_adjustment_view"
             name="Budgets Adjustment"
-            action="act_budget_adjustment_view" sequence="2"
+            action="act_budget_adjustment_view" sequence="4"
             groups="account.group_account_user"/>
     </data>
 </odoo>

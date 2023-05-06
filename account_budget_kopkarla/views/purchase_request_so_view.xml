@@ -44,7 +44,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="budget_approval_for_purchase_request_action">
-            <field name="name">Budget Approval for Purchase Request</field>
+            <field name="name">Purchase Request to Budget Approval</field>
             <field name="res_model">sprogroup.purchase.request</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -56,9 +56,9 @@
 
         <menuitem 
             id="budget_approval_for_purchase_request_menuitem"
-            name="Budget Approval"
+            name="PR to Budget Approval"
             parent="menu_budget_documents"
-            sequence="1"
+            sequence="2"
             action="budget_approval_for_purchase_request_action"
         />
     </data>

@@ -77,23 +77,25 @@ class BudgetRequest(models.Model):
             self.released_amount = released_amount_total
         self.state = 'release'
 
-    @api.multi
-    def budget_request_approve_action(self):
+    def _budget_request_approve_action(self):
         msg = ''
         is_approved = True
-        if self.env.context.get('force') == 0:
+        if self.env.context.get('force') == 0 or not self.allow_unbudget:
             for req in self.line_ids:
                 if req.restrict_allow != 'allow':
                     if req.requested_amount > req.available_running_budget: # req.available_budget:
-                        msg = (req.selected_budget_id and '%sRequested amount on %s is larger than available budget.\n' % (msg, req.budget_account_id.name)) or \
+                        msg = (req.selected_budget_id and 'Requested amount Rp %s,- lebih besar dari available budget Rp %s,-.\n' % ('{:,.0f}'.format(req.requested_amount), '{:,.0f}'.format(req.available_running_budget))) or \
                               '%sAccount %s has no budget selected.\n' % (msg, req.budget_account_id.name)
                         if req.restrict_allow == 'restrict' or not req.selected_budget_id:
                             is_approved = False
         if is_approved:
             self.date = datetime.now()
             self.state = 'done'
-            self.request_id.budget_request_id = self.id
-            self.request_id.request_budget_approval()
+            if self.origin == 'purchase_request':
+                self.request_id.budget_request_id = self.id
+                self.request_id.request_budget_approval()
+            elif self.origin == 'expense_request':
+                self.sheet_id.state = 'approve'
             if msg:
                 view = self.env.ref('sh_message.sh_message_wizard')
                 view_id = view and view.id or False
@@ -109,8 +111,24 @@ class BudgetRequest(models.Model):
                     'context': {'message': msg},
                 }
         else:
-            msg = '%s\nBudget requested is not approved yet.' % msg
+            msg = '%s\nBudget requested tidak di approved.' % msg
             raise UserError(msg)
+
+    @api.multi
+    def budget_request_approve_action(self):
+        self._budget_request_approve_action()
+        action = self.env['ir.actions.act_window'].for_xml_id('account_budget_kopkarla', 'act_budget_request')
+        return action
+
+    @api.multi
+    def budget_request_reject_action(self):
+        if self.origin == 'purchase_request':
+            self.request_id.button_action_request_budget_reject()
+        else:
+            self.sheet_id.state = 'cancel'
+            self.unlink()
+        action = self.env['ir.actions.act_window'].for_xml_id('account_budget_kopkarla', 'act_budget_request')
+        return action
 
     @api.onchange('date')
     def _onchange_date(self):

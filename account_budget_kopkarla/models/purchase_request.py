@@ -92,8 +92,7 @@ class PurchaseRequest(models.Model):
                 break
         self.coannya = expense_account_id
 
-    @api.multi
-    def button_action_request_budget_confirm(self):
+    def request_budget_create(self):
         budget_request_id = self.env['budget.request'].search([('request_id', '=', self.id)])
         if budget_request_id:
             budget_request_id.line_ids.unlink()
@@ -212,6 +211,9 @@ class PurchaseRequest(models.Model):
                 if line.account_id == budget_request_line_saved.budget_account_id:
                     line.budget_request_line_id = budget_request_line_saved.id
 
+    @api.multi
+    def button_action_request_budget_confirm(self):
+        budget_request_id = self.env['budget.request'].search([('request_id', '=', self.id)])
         budget_approval_view_id = self.env.ref('account_budget_kopkarla.account_budget_approval_form')
         return {
             'name': _('Budget Approval'),
@@ -223,6 +225,11 @@ class PurchaseRequest(models.Model):
             'target': 'new', #'current', #
             'res_id': budget_request_id.id,
         }
+
+    @api.multi
+    def button_action_request_budget_check(self):
+        super(PurchaseRequest, self).button_action_request_budget_check()
+        self.request_budget_create()
 
     def request_budget_approval(self):
         if self.assigned_to.id == self._uid:

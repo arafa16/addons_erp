@@ -5,6 +5,9 @@
             <field name="model">hr.expense.sheet</field>
             <field name="inherit_id" ref="hr_expense_kopkarla.view_hr_expense_sheet_form_inherit_advance_expense"/>
             <field name="arch" type="xml">
+                <button name="cancel" position="before">
+                    <button string="Request Budget Approval" name="budget_approval" states="submit" type="object" groups="hr_expense.group_hr_expense_user"/>
+                </button>
                 <xpath expr="//sheet/div" position="inside">
                     <!--<field name="budget_request_id" invisible="1"/>
                     <button name="show_selected_budget" type="object" class="oe_stat_button" icon="fa-codepen"

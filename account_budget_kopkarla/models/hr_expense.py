@@ -1,10 +1,12 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class HrExpenseSheet(models.Model):
     _inherit = "hr.expense.sheet"
 
     active_budget_count = fields.Integer(string='Active Budget', compute='_compute_active_budget_count',)
+    state = fields.Selection(selection_add_after={'submit': [('budget', 'Budget')]})
 
     def _compute_active_budget_count(self):
         budget_model = self.env['crossovered.budget.lines']
@@ -56,11 +58,58 @@ class HrExpenseSheet(models.Model):
             'context': context,
         }
 
+    def update_budget(self, state):
+        expenses = self.env['hr.expense'].read_group(
+            domain=[('budget_lines_id', '!=', False), ('sheet_id', '=', self.id)],
+            fields=['budget_lines_id', 'total_amount'],
+            groupby=['budget_lines_id']
+        )
+        for exp in expenses:
+            expense = self.env['hr.expense'].search([('sheet_id', '=', self.id), ('budget_lines_id', '=', exp.get('budget_lines_id')[0])], limit=1)
+            line_id = {
+                'budget_account_id': expense.account_id.id,
+                'cost_center_id': self.cost_center_id.id,
+                'analytic_account_id': self.analytic_account_id.id,
+                'selected_budget_id': expense.budget_lines_id.id,
+                'restrict_allow': expense.budget_lines_id.restrict_allow,
+                'requested_amount': exp.get('total_amount'),
+            }
+            budget_request_id = self.env['budget.request'].create({
+                'name': 'Budget Expense %s' % self.name,
+                'date': self.report_date,
+                'origin': 'expense_request',
+                'sheet_id': self.id,
+                'state': state,
+                'line_ids': [[0, 0, line_id]],
+            })
+            if state == 'done' and budget_request_id.line_ids[0].outstanding_running_budget < 0 and expense.budget_lines_id.restrict_allow == 'restrict':
+                raise UserError(_("Budget %s kurang Rp %s." % (expense.budget_lines_id.display_name, '{:,.2f}'.format(abs(budget_request_id.line_ids[0].outstanding_running_budget)))))
+
+            self.env['hr.expense'].search([('sheet_id', '=', self.id), ('budget_lines_id', '=', exp.get('budget_lines_id')[0])]).update({'budget_request_line_id': budget_request_id.line_ids[0].id})
+
+    @api.multi
+    def budget_approval(self):
+        for sheet in self:
+            sheet.state = 'budget'
+            sheet.update_budget('draft')
+
     @api.multi
     def cancel(self):
         for budget_request_line_id in self.expense_line_ids.filtered(lambda b: b.budget_request_line_id).mapped('budget_request_line_id'):
             budget_request_line_id.budget_request_id.unlink()
         super(HrExpenseSheet, self).cancel()
+
+    @api.multi
+    def refuse_sheet(self, reason):
+        budget_id = self.env['budget.request'].sudo().search([('sheet_id', '=', self.id)])
+        if budget_id:
+            budget_id.unlink()
+        super(HrExpenseSheet, self).refuse_sheet(reason)
+
+    @api.multi
+    def approve_expense_sheets(self):
+        self.update_budget('done')
+        super(HrExpenseSheet, self).approve_expense_sheets()
 
 
 class HrExpense(models.Model):

@@ -35,6 +35,7 @@ Support following feature:
         "views/res_users_view.xml",
         "views/res_config_settings_view.xml",
         "views/account_budget_request_approval.xml",
+        "views/account_budget_request_release_approval.xml",
         "views/account_budget_available.xml",
         "views/account_budget_adjustment.xml",
         "views/expense_budget_view.xml",
