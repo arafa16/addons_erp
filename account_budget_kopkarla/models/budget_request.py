@@ -117,8 +117,9 @@ class BudgetRequest(models.Model):
     @api.multi
     def budget_request_approve_action(self):
         self._budget_request_approve_action()
-        action = self.env['ir.actions.act_window'].for_xml_id('account_budget_kopkarla', 'act_budget_request')
-        return action
+        if not self.env.context.get('pr', False):
+            action = self.env['ir.actions.act_window'].for_xml_id('account_budget_kopkarla', 'act_budget_request')
+            return action
 
     @api.multi
     def budget_request_reject_action(self):
