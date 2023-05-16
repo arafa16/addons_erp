@@ -194,7 +194,7 @@ class BudgetRequestLine(models.Model):
     is_release = fields.Boolean('Release Budget', default=False)
 
     def _get_sum_requested_budget(self, selected_budget_id, until_period):
-        return sum(self.env['budget.request.line'].search([('selected_budget_id', '=', selected_budget_id), ('create_date', '<', until_period)]).mapped('requested_amount'))
+        return sum(self.env['budget.request.line'].search([('selected_budget_id', '=', selected_budget_id), ('create_date', '<', until_period), ('state', '=', 'done')]).mapped('requested_amount'))
 
     def _get_available_running_budget(self):
         for line in self:
