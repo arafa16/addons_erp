@@ -193,13 +193,13 @@ class BudgetRequestLine(models.Model):
                                       ('inventory', 'Inventory')], 'Budget Type')
     is_release = fields.Boolean('Release Budget', default=False)
 
-    def _get_sum_requested_budget(self, selected_budget_id, until_period):
-        return sum(self.env['budget.request.line'].search([('selected_budget_id', '=', selected_budget_id), ('create_date', '<', until_period), ('state', '=', 'done')]).mapped('requested_amount'))
-
     def _get_available_running_budget(self):
+        available_running_budget = abs(self[0].selected_budget_id.planned_amount_sum)
         for line in self:
-            line.available_running_budget = abs(line.selected_budget_id.planned_amount_sum) - self._get_sum_requested_budget(line.selected_budget_id.id, line.create_date)
+            requested_amount = line.requested_amount
+            line.available_running_budget = available_running_budget
             line.outstanding_running_budget = line.available_running_budget - (line.requested_amount if not line.allow_unbudget else 0)
+            available_running_budget = available_running_budget - requested_amount if line.state == 'done' else available_running_budget
 
     @api.one
     def _get_budget_state(self):
