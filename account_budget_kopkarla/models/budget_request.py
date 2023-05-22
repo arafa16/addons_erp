@@ -195,7 +195,10 @@ class BudgetRequestLine(models.Model):
 
     def _get_available_running_budget(self):
         available_running_budget = abs(self[0].selected_budget_id.planned_amount_sum)
-        for line in self:
+        budget_request_ids = self.env['budget.request.line'].search([('selected_budget_id', '=', self[0].selected_budget_id.id)])
+                                                                   # ('budget_request_id.state', '=', 'done'),
+                                                                   # ('allow_unbudget', '=', False)
+        for line in budget_request_ids:
             requested_amount = line.requested_amount
             line.available_running_budget = available_running_budget
             line.outstanding_running_budget = line.available_running_budget - (line.requested_amount if not line.allow_unbudget else 0)
