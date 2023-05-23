@@ -194,15 +194,14 @@ class BudgetRequestLine(models.Model):
     is_release = fields.Boolean('Release Budget', default=False)
 
     def _get_available_running_budget(self):
-        available_running_budget = abs(self[0].selected_budget_id.planned_amount_sum)
-        budget_request_ids = self.env['budget.request.line'].search([('selected_budget_id', '=', self[0].selected_budget_id.id)])
-                                                                   # ('budget_request_id.state', '=', 'done'),
-                                                                   # ('allow_unbudget', '=', False)
-        for line in budget_request_ids:
-            requested_amount = line.requested_amount
-            line.available_running_budget = available_running_budget
-            line.outstanding_running_budget = line.available_running_budget - (line.requested_amount if not line.allow_unbudget else 0)
-            available_running_budget = available_running_budget - requested_amount if line.state == 'done' else available_running_budget
+        for budget in self:
+            available_running_budget = abs(budget.selected_budget_id.planned_amount_sum)
+            budget_request_ids = self.env['budget.request.line'].search([('selected_budget_id', '=', budget.selected_budget_id.id)])
+            for line in budget_request_ids:
+                requested_amount = line.requested_amount
+                line.available_running_budget = available_running_budget
+                line.outstanding_running_budget = line.available_running_budget - (line.requested_amount if not line.allow_unbudget else 0)
+                available_running_budget = available_running_budget - requested_amount if line.state == 'done' else available_running_budget
 
     @api.one
     def _get_budget_state(self):
