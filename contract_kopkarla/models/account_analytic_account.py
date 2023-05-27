@@ -25,3 +25,37 @@ class AccountAnalyticAccount(models.Model):
                 analytic.penandatangan = sale.penandatangan2.id
             else:
                 analytic.penandatangan = sale.penandatangan1.id
+
+    @api.model
+    def _prepare_invoice_line(self, line, invoice_id):
+        invoice_line = self.env['account.invoice.line'].new({
+            'invoice_id': invoice_id,
+            'product_id': line.product_id.id,
+            'quantity': line.quantity,
+            'uom_id': line.uom_id.id,
+            'discount': line.discount,
+        })
+        # Get other invoice line values from product onchange
+        invoice_line._onchange_product_id()
+        invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
+
+        if invoice_line.product_id.asset_category_id.account_asset_id:
+            accounts = invoice_line.product_id.product_tmpl_id.get_product_accounts(invoice_line.invoice_id.fiscal_position_id)
+            if invoice_line.invoice_id.type in ('out_invoice', 'out_refund'):
+                invoice_line_vals['account_id'] = accounts['income'].id
+
+        # Insert markers
+        contract = line.analytic_account_id
+        lang_obj = self.env['res.lang']
+        lang = lang_obj.search(
+            [('code', '=', contract.partner_id.lang)])
+        date_format = lang.date_format or '%m/%d/%Y'
+        name = self._insert_markers(line, date_format)
+        invoice_line_vals.update({
+            'name': name,
+            # 'account_analytic_id': contract.id,
+            'account_analytic_id': contract.parent_id.id,
+            'cost_center_id': contract.sale_order_id.cost_center_id.id,
+            'price_unit': line.price_unit,
+        })
+        return invoice_line_vals
