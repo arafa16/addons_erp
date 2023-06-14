@@ -182,7 +182,6 @@
                         </div>
                         <group>
                             <group>
-                                <field name="state" invisible="1"/>
                                 <field name="date"/>
                                 <field name="description"/>
                                 <field name="requested_amount"/>
@@ -193,6 +192,7 @@
                                 <field name="origin"/>
                                 <field name="request_id"/>
                                 <field name="allow_unbudget" attrs="{'invisible': [('show_force_approval', '=', False)]}"/>
+                                <field name="state"/>
                             </group>
                         </group>
                         <notebook>
