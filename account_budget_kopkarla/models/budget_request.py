@@ -326,7 +326,7 @@ class BudgetRequestReport(models.TransientModel):
                          inner join sprogroup_purchase_request pr on prl.request_id = pr.id
                 where pr.state in ('leader_request', 'leader_approved', 'done')
                       and prl.date_required >= '1 Jan 2021' --and br.allow_unbudget = False
-                group by pr.id, prl.date_required, pr.cost_center_id, pr.analytic_account_id,
+                group by pr.id, prl.date_required, prl.cost_center_id, prl.analytic_account_id,
                       prl.account_id, prl.budget_request_line_id--, br.allow_unbudget, br.id
             ) a left join budget_request_line brl on a.budget_request_line_id = brl.id
                 left join budget_request br on brl.budget_request_id = br.id
