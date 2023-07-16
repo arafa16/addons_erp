@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="org_chart_organization.org_chart_template">
+    <div id="chart-container"></div>
+    <script type="text/javascript">
+      $(function() {
+        <!-- Get Department Data -->
+        var datascource = department_data.values;
+
+        $('#chart-container').orgchart({
+          'data' : datascource,
+          'nodeContent': 'title',
+          'toggleSiblingsResp': true
+        });
+
+      });
+    </script>
+  </t>
+</templates>
