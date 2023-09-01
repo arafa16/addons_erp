@@ -26,6 +26,8 @@ class PaymentBankBatch(models.Model):
     export_filename = fields.Char(string="Exported File",)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True, store=True)
     text_amount = fields.Char(string="Terbilang", required=False, compute="amount_to_words")
+    approver1_id = fields.Many2one('hr.employee', string='Approver 1', default=lambda self: self.env['res.config.settings'].get_values().get('default_batch_payment1_by'))
+    approver2_id = fields.Many2one('hr.employee', string='Approver 2', default=lambda self: self.env['res.config.settings'].get_values().get('default_batch_payment2_by'))
 
     def titlecase(self, s):
         return re.sub(r"[A-Za-z]+('[A-Za-z]+)?", lambda mo: mo.group(0)[0].upper() + mo.group(0)[1:].lower(), s)

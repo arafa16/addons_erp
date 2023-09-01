@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_batch_form" model="ir.ui.view">
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account_kopkarla.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='account_invoicing']" position="inside">
+                <h2>Batch Payment Default Approver</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Batch payment approver 1">
+                        <div class="o_setting_right_pane">
+                            <label string="Approver 1" for="default_batch_payment1_by"/>
+                            <div class="text-muted">
+                                Default employee for approver 1 batch payment
+                            </div>
+                            <div class="text-muted">
+                                <field name="default_batch_payment1_by" options="{'no_create': True}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Batch payment approver 2">
+                       <div class="o_setting_right_pane">
+                            <label string="Approver 2" for="default_batch_payment2_by"/>
+                            <div class="text-muted">
+                                Default employee for approver 2 batch payment
+                            </div>
+                            <div class="text-muted">
+                                <field name="default_batch_payment2_by" options="{'no_create': True}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

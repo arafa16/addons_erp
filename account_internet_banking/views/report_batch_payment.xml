@@ -61,9 +61,9 @@
                             </tr>
                             <tr>
                                 <td style="vertical-align: bottom;"><!--<span t-field="o.created_sign_by"/>--></td>
-                                <td style="vertical-align: bottom;">(LISTA DEWI S.)</td>
+                                <td style="vertical-align: bottom;">( <span t-field="o.approver1_id"/> )</td>
                                 <td style="vertical-align: bottom;"></td>
-                                <td style="vertical-align: bottom;">(M. SULWAN RISAN)</td>
+                                <td style="vertical-align: bottom;">( <span t-field="o.approver2_id"/> )</td>
                                 <td style="vertical-align: bottom;"></td>
                             </tr>
                         </table>

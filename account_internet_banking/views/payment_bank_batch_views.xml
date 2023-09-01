@@ -77,6 +77,14 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Approver">
+                                <group>
+                                    <group>
+                                        <field name="approver1_id" options="{'no_create': True}"/>
+                                        <field name="approver2_id" options="{'no_create': True}"/>
+                                    </group>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                     <!--<div class="oe_chatter">

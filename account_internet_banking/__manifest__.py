@@ -27,6 +27,7 @@ Accounting - Internet Banking
         'views/payment_journal_views.xml',
         'views/payment_bank_batch_views.xml',
         'views/report_batch_payment.xml',
+        'views/res_config_settings_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [],
