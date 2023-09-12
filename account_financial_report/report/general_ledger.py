@@ -1000,7 +1000,7 @@ SELECT
         else
             case 
                 when ml.user_type_id = 14 then ai.origin 
-                when ml.user_type_id = 17 then so.name 
+                when ml.user_type_id = 17 then (case when so.name != '' then so.name else m.name end) 
                 when ml.user_type_id = 5 then
                     case 
                         when sp.sale_id is not null then sp.origin
