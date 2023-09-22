@@ -216,14 +216,14 @@
                                             </t>
                                         </tr>
                                         <tr class="border-black">
-                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="doc.created_sign_by"/></td>
-                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.checked_sign_by"/></td>
-                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.known_sign_by"/></td>
+                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="doc.created_sign_by.user_id.signature"/><span t-field="doc.created_sign_by"/></td>
+                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.checked_sign_by.user_id.signature"/><span t-field="doc.checked_sign_by"/></td>
+                                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.known_sign_by.user_id.signature"/><span t-field="doc.known_sign_by"/></td>
                                             <t t-if="doc.done_sign_by">
-                                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.done_sign_by"/></td>
+                                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="doc.done_sign_by.user_id.signature"/><span t-field="doc.done_sign_by"/></td>
                                             </t>
                                             <t t-if="doc.management_sign_by">
-                                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="doc.management_sign_by"/></td>
+                                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="doc.management_sign_by.user_id.signature"/><span t-field="doc.management_sign_by"/></td>
                                             </t>
                                         </tr>
                                     </table>

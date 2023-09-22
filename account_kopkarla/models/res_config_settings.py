@@ -14,6 +14,8 @@ class ResConfigSettings(models.TransientModel):
     default_known_sign_by = fields.Many2one('hr.employee', string='Mengetahui')
     default_done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan')
     default_management_sign_by = fields.Many2one('hr.employee', string='Pengurus')
+    default_journal_prepair_by = fields.Many2one('hr.employee', string='Journal Prepared By')
+    default_journal_approve_by = fields.Many2one('hr.employee', string='Journal Approved By')
 
     @api.multi
     def get_values(self):
@@ -29,6 +31,8 @@ class ResConfigSettings(models.TransientModel):
                    default_known_sign_by=int(params.get_param('default_known_sign_by')),
                    default_done_sign_by=int(params.get_param('default_done_sign_by')),
                    default_management_sign_by=int(params.get_param('default_management_sign_by')),
+                   default_journal_prepair_by=int(params.get_param('default_journal_prepair_by')),
+                   default_journal_approve_by=int(params.get_param('default_journal_approve_by')),
                    )
         return res
 
@@ -45,3 +49,5 @@ class ResConfigSettings(models.TransientModel):
         set_param('default_known_sign_by', self.default_known_sign_by.id)
         set_param('default_done_sign_by', self.default_done_sign_by.id)
         set_param('default_management_sign_by', self.default_management_sign_by.id)
+        set_param('default_journal_prepair_by', self.default_journal_prepair_by.id)
+        set_param('default_journal_approve_by', self.default_journal_approve_by.id)

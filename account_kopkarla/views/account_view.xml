@@ -22,6 +22,16 @@
                 <field name="analytic_tag_ids" position="attributes">
                     <attribute name='invisible'>1</attribute>
                 </field>
+                <notebook position="inside">
+                    <page string="Approval" name="approvel">
+                        <group>
+                            <group>
+                                <field name="journal_prepair_by" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="journal_approve_by" options="{'no_create': True, 'no_open': True}"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
             </field>
         </record>
         <record id="view_account_bank_journal_form_bank_info" model="ir.ui.view">

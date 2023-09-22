@@ -74,14 +74,14 @@
                             </t>
                         </tr>
                         <tr class="border-black">
-                            <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.created_sign_by"/></td>
-                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.checked_sign_by"/></td>
-                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.known_sign_by"/></td>
+                            <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.created_sign_by.user_id.signature"/><span t-field="o.created_sign_by"/></td>
+                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.checked_sign_by.user_id.signature"/><span t-field="o.checked_sign_by"/></td>
+                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.known_sign_by.user_id.signature"/><span t-field="o.known_sign_by"/></td>
                             <t t-if="o.done_sign_by">
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.done_sign_by"/></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.done_sign_by.user_id.signature"/><span t-field="o.done_sign_by"/></td>
                             </t>
                             <t t-if="o.management_sign_by">
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by"/></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by.user_id.signature"/><span t-field="o.management_sign_by"/></td>
                             </t>
                         </tr>
                     </table>

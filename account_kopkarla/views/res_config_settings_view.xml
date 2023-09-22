@@ -37,7 +37,7 @@
                             Set default employee sign by of customer invoice.
                         </div>
                         <div class="text-muted">
-                            <field name="default_sign_by_id"/>
+                            <field name="default_sign_by_id" options="{'no_create': True, 'no_open': True}"/>
                         </div>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                         </div>
                     </div>
                 </div>
-                <h2>Default Payment Journal Sign By</h2>
+                <h2>Default Signer for Payment Journal</h2>
                 <div class="row mt16 o_settings_container">
                     <div class="col-xs-12 col-md-6 o_setting_box" title="Sign By">
                         <div class="o_setting_right_pane">
@@ -77,7 +77,7 @@
                                 Dibuat
                             </div>
                             <div class="text-muted">
-                                <field name="default_created_sign_by"/>
+                                <field name="default_created_sign_by" options="{'no_create': True, 'no_open': True}"/>
                             </div>
                         </div>
                         <div class="o_setting_right_pane">
@@ -86,7 +86,7 @@
                                 Mengetahui
                             </div>
                             <div class="text-muted">
-                                <field name="default_known_sign_by"/>
+                                <field name="default_known_sign_by" options="{'no_create': True, 'no_open': True}"/>
                             </div>
                         </div>
                         <div class="o_setting_right_pane">
@@ -95,7 +95,7 @@
                                 Pengurus
                             </div>
                             <div class="text-muted">
-                                <field name="default_management_sign_by"/>
+                                <field name="default_management_sign_by" options="{'no_create': True, 'no_open': True}"/>
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                                 Pemeriksa
                             </div>
                             <div class="text-muted">
-                                <field name="default_checked_sign_by"/>
+                                <field name="default_checked_sign_by" options="{'no_create': True, 'no_open': True}"/>
                             </div>
                         </div>
                         <div class="o_setting_right_pane">
@@ -115,7 +115,32 @@
                                 Pelaksana
                             </div>
                             <div class="text-muted">
-                                <field name="default_done_sign_by"/>
+                                <field name="default_done_sign_by" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Default Signer for Ledger Journal</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Sign By">
+                        <div class="o_setting_right_pane">
+                            <label string="Default Prepaired By" for="default_journal_prepair_by"/>
+                            <div class="text-muted">
+                                Prepare
+                            </div>
+                            <div class="text-muted">
+                                <field name="default_journal_prepair_by" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Account for over payment.">
+                        <div class="o_setting_right_pane">
+                            <label string="Default Approved By" for="default_journal_approve_by"/>
+                            <div class="text-muted">
+                                Approve
+                            </div>
+                            <div class="text-muted">
+                                <field name="default_journal_approve_by" options="{'no_create': True, 'no_open': True}"/>
                             </div>
                         </div>
                     </div>

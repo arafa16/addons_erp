@@ -2,5 +2,3 @@ id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 advance_employee,employee,model_hr_advance,base.group_user,1,1,1,1
 advance_employee_line,employee_line,model_hr_advance_line,base.group_user,1,1,1,1
 advance_officer,officer,model_hr_advance,hr_expense.group_hr_expense_user,1,1,1,1
-advance_account_hr_job,hr_job_account,hr.model_hr_job,account.group_account_user,1,0,0,0
-advance_account_hr_job_emp,hr_job_account_em,hr.model_hr_job,base.group_user,1,0,0,0
