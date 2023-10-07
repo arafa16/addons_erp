@@ -13,10 +13,7 @@ class PurchaseRequest(models.Model):
     coannya = fields.Many2one('account.account', string='Chart of Account', compute='get_account_id')
 
     budget_request_id = fields.Many2one('budget.request', 'Budget Request', ondelete='set null', readonly=True)
-    active_budget_count = fields.Integer(
-        string='Active Budget',
-        compute='_compute_active_budget_count',
-    )
+    active_budget_count = fields.Integer(string='Active Budget', compute='_compute_active_budget_count',)
 
     def show_selected_budget(self):
         budget_approval_view_id = self.env.ref('account_budget_kopkarla.account_budget_approval_form')
@@ -34,18 +31,19 @@ class PurchaseRequest(models.Model):
         }
 
     def _compute_active_budget_count(self):
-        budget_model = self.env['crossovered.budget.lines']
-        # today = fields.Date.today()
-        fetch_data = budget_model.read_group([
-                ('state', '=', 'ready'),
-                ('cost_center_id', '=', self.cost_center_id.id),
-                ('analytic_account_id', '=', self.analytic_account_id.id),
-            ],
-            [],
-            [],
-            lazy=False)
-        result = [data['__count'] for data in fetch_data]
-        self.active_budget_count = str(result[0])
+        for pr in self:
+            budget_model = self.env['crossovered.budget.lines']
+            # today = fields.Date.today()
+            fetch_data = budget_model.read_group([
+                    ('state', '=', 'ready'),
+                    ('cost_center_id', '=', pr.cost_center_id.id),
+                    ('analytic_account_id', '=', pr.analytic_account_id.id),
+                ],
+                [],
+                [],
+                lazy=False)
+            result = [data['__count'] for data in fetch_data]
+            pr.active_budget_count = str(result[0])
 
     def show_available_budget(self):
         view = self.env.ref('account_budget_kopkarla.view_account_budget_available_tree')
