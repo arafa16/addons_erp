@@ -95,6 +95,33 @@
             </field>
         </record>
 
+        <record id="view_budget_adjustment_search" model="ir.ui.view">
+            <field name="name">budget.adjustment.search</field>
+            <field name="model">budget.adjustment</field>
+            <field name="arch" type="xml">
+                <search string="Budget Adjustment">
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
+                    <separator/>
+                    <filter string="This Month" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <filter string="Last Month" name="last_month" domain="['&amp;', ('date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Budget To" name='budget_to' context="{'group_by':'budget_line_id_adj'}"/>
+                        <filter string="Cost Center To" name='cost_center_to' context="{'group_by':'cost_center_id_adj'}"/>
+                        <filter string="Analytic Account To" name='anaytic_account_to' context="{'group_by':'analytic_account_id_adj'}"/>
+                        <separator/>
+                        <filter string="Budget From" name='budget_from' context="{'group_by':'budget_line_id_src'}"/>
+                        <filter string="Cost Center From" name='cost_center_from' context="{'group_by':'cost_center_id_src'}"/>
+                        <filter string="Analytic Account From" name='anaytic_account_from' context="{'group_by':'analytic_account_id_src'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Date" context="{'group_by':'date'}"/>
+                        <separator/>
+                        <filter string="Status" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="act_budget_adjustment_view">
             <field name="name">Budgets Adjustment</field>
             <field name="res_model">budget.adjustment</field>

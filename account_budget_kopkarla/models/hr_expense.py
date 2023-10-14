@@ -93,6 +93,26 @@ class HrExpenseSheet(models.Model):
             sheet.state = 'budget'
             sheet.update_budget('draft')
 
+    @api.model
+    def create(self, vals):
+        sheet = super(HrExpenseSheet, self).create(vals)
+        for exp in sheet.expense_line_ids:
+            if not exp.budget_lines_id:
+                exp.budget_lines_id = exp._get_budget_line(exp.account_id.id, self.cost_center_id.id, self.analytic_account_id.id, self.report_date)
+            if not exp.budget_lines_id:
+                raise UserError(_("Budget is empty!"))
+        return sheet
+
+    @api.multi
+    def write(self, vals):
+        res = super(HrExpenseSheet, self).write(vals)
+        for exp in self.expense_line_ids:
+            if not exp.budget_lines_id:
+                exp.budget_lines_id = exp._get_budget_line(exp.account_id.id, self.cost_center_id.id, self.analytic_account_id.id, self.report_date)
+            if not exp.budget_lines_id:
+                raise UserError(_("Budget is empty!"))
+        return res
+
     @api.multi
     def cancel(self):
         for budget_request_line_id in self.expense_line_ids.filtered(lambda b: b.budget_request_line_id).mapped('budget_request_line_id'):
@@ -119,19 +139,52 @@ class HrExpense(models.Model):
     budget_lines_id = fields.Many2one('crossovered.budget.lines', 'Budget', compute='_get_budget_lines', store=True)
     budget_request_line_id = fields.Many2one('budget.request.line', string='Budget Request', readonly=True, ondelete='set null')
 
+    def _get_budget_line(self, account_id, cost_center_id, analytic_account_id, date):
+        budget_postition_id = self.env['account.budget.post'].sudo().search([('account_ids', '=', account_id)], limit=1)
+        if budget_postition_id:
+            budget_line_id = self.env['crossovered.budget.lines'].sudo().search([
+                ('general_budget_id', '=', budget_postition_id.id),
+                ('cost_center_id', '=', cost_center_id),
+                ('analytic_account_id', '=', analytic_account_id),
+                ('date_from', '<=', date),  # exp.accounting_date or exp.date),
+                ('date_to', '>=', date),  # exp.accounting_date or exp.date),
+                ('state', '=', 'ready'),
+            ])
+            return budget_line_id.id if budget_line_id else False
+        return False
+
     @api.onchange('product_id')
     def _get_budget_lines(self):
         for exp in self:
-            exp.budget_lines_id = False
-            budget_postition_id = self.env['account.budget.post'].sudo().search([('account_ids', '=', exp.product_id.property_account_expense_id.id)], limit=1)
-            if budget_postition_id:
-                budget_line_id = self.env['crossovered.budget.lines'].sudo().search([
-                    ('general_budget_id', '=', budget_postition_id.id),
-                    ('cost_center_id', '=', exp.sheet_id.cost_center_id.id),
-                    ('analytic_account_id', '=', exp.sheet_id.analytic_account_id.id),
-                    ('date_from', '<=', exp.sheet_id.report_date), #exp.accounting_date or exp.date),
-                    ('date_to', '>=', exp.sheet_id.report_date), #exp.accounting_date or exp.date),
-                    ('state', '=', 'ready'),
-                ])
-                if budget_line_id:
-                    exp.budget_lines_id = budget_line_id.id
+            exp.budget_lines_id = self._get_budget_line(exp.product_id.property_account_expense_id.id, exp.sheet_id.cost_center_id.id, exp.sheet_id.analytic_account_id.id, exp.sheet_id.report_date)
+            # exp.budget_lines_id = False
+            # budget_postition_id = self.env['account.budget.post'].sudo().search([('account_ids', '=', exp.product_id.property_account_expense_id.id)], limit=1)
+            # if budget_postition_id:
+            #     budget_line_id = self.env['crossovered.budget.lines'].sudo().search([
+            #         ('general_budget_id', '=', budget_postition_id.id),
+            #         ('cost_center_id', '=', exp.sheet_id.cost_center_id.id),
+            #         ('analytic_account_id', '=', exp.sheet_id.analytic_account_id.id),
+            #         ('date_from', '<=', exp.sheet_id.report_date), #exp.accounting_date or exp.date),
+            #         ('date_to', '>=', exp.sheet_id.report_date), #exp.accounting_date or exp.date),
+            #         ('state', '=', 'ready'),
+            #     ])
+            #     if budget_line_id:
+            #         exp.budget_lines_id = budget_line_id.id
+
+    @api.onchange('account_id')
+    def _get_account_budget_lines(self):
+        for exp in self:
+            exp.budget_lines_id = self._get_budget_line(exp.account_id.id, exp.sheet_id.cost_center_id.id, exp.sheet_id.analytic_account_id.id, exp.sheet_id.report_date)
+            # exp.budget_lines_id = False
+            # budget_postition_id = self.env['account.budget.post'].sudo().search([('account_ids', '=', exp.account_id.id)], limit=1)
+            # if budget_postition_id:
+            #     budget_line_id = self.env['crossovered.budget.lines'].sudo().search([
+            #         ('general_budget_id', '=', budget_postition_id.id),
+            #         ('cost_center_id', '=', exp.sheet_id.cost_center_id.id),
+            #         ('analytic_account_id', '=', exp.sheet_id.analytic_account_id.id),
+            #         ('date_from', '<=', exp.sheet_id.report_date), #exp.accounting_date or exp.date),
+            #         ('date_to', '>=', exp.sheet_id.report_date), #exp.accounting_date or exp.date),
+            #         ('state', '=', 'ready'),
+            #     ])
+            #     if budget_line_id:
+            #         exp.budget_lines_id = budget_line_id.id

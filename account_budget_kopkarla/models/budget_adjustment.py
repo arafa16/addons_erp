@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 class BudgetAdjustment(models.Model):
     _name = "budget.adjustment"
     _description = "Budget Adjustment"
+    _order = "name desc"
     _inherit = ['mail.thread']
 
     name = fields.Char(string='Budget Adjustment Number', required=True, readonly=True, copy=False, default='/', help='The name that will be used on budget adjustment')
@@ -23,7 +24,7 @@ class BudgetAdjustment(models.Model):
     ], string='Status', readonly=True, index=True, copy=False, default='draft')
     company_id = fields.Many2one('res.company', 'Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.budget.post'))
-    budget_line_id_adj = fields.Many2one('crossovered.budget.lines', string='Budget', ondelete="restrict", readonly=True, domain="[('state', '=', 'ready')]")
+    budget_line_id_adj = fields.Many2one('crossovered.budget.lines', string='Budget To', ondelete="restrict", readonly=True, domain="[('state', '=', 'ready')]", index=True)
     cost_center_id_adj = fields.Many2one("cost.center", string='Cost Center', compute='get_budget_info')
     analytic_account_id_adj = fields.Many2one('account.analytic.account', string='Analytic Account', compute='get_budget_info')
     date_from_adj = fields.Date('Start Date', compute='get_budget_info')
@@ -31,7 +32,7 @@ class BudgetAdjustment(models.Model):
     restrict_allow_adj = fields.Selection([('allow','Allow'),('restrict' , 'Restricted'),('warn','Warning')], string="Budget Control", readonly=True, default="restrict")
     avail_req_amount_adj = fields.Float(digits=0, string="Available Amount", readonly=True)
 
-    budget_line_id_src = fields.Many2one('crossovered.budget.lines', string='Budget', ondelete="restrict", readonly=True, domain="[('state', '=', 'ready')]")
+    budget_line_id_src = fields.Many2one('crossovered.budget.lines', string='Budget From', ondelete="restrict", readonly=True, domain="[('state', '=', 'ready')]", index=True)
     cost_center_id_src = fields.Many2one("cost.center", string='Cost Center', compute='get_budget_info')
     analytic_account_id_src = fields.Many2one('account.analytic.account', string='Analytic Account', compute='get_budget_info')
     date_from_src = fields.Date('Start Date', compute='get_budget_info')
@@ -146,9 +147,11 @@ class BudgetAdjustment(models.Model):
                 raise UserError(_('Budget can not reset due to it has been adjust after this adjustment.'))
             else:
                 self.budget_line_id_adj.restrict_allow = self.restrict_allow_adj
-
-        self.line_ids.unlink()
-        self.state = 'draft'
+        if abs(self.budget_line_id_adj.avail_req_amount) > abs(self.adjustment_amount):
+            self.line_ids.unlink()
+            self.state = 'draft'
+        else:
+            raise UserError(_("Budget adjustment tidak bisa dibatalkan karena sisa budget kurang dari 0."))
 
 
 class BudgetAdjustmentLine(models.Model):
