@@ -55,6 +55,7 @@
                         <field name="report_date" attrs="{'readonly': [('state', '!=', 'submit')]}"/>
                         <field name="payment_mode" widget="radio" options="{'horizontal': true}"
                                attrs="{'readonly': ['|', ('state', 'not in', ['submit','approve']), ('advance_id', '!=', False)]}"/>
+                        <field name="paid_to" options="{'no_create': True,}" attrs="{'readonly': [('state', '!=', 'submit')]}" domain="[('supplier', '=', True)]"/>
                         <field name="communication" attrs="{'readonly': [('state', '!=', 'submit')]}" string="Description"/>
                     </group>
                 </xpath>
@@ -237,8 +238,6 @@
             <field name="domain"></field>
             <field name="context"></field>
         </record>
-
-
 
         <menuitem id="hr_expense.menu_hr_expense_my_expenses" name="My Expenses" sequence="1" parent="hr_expense.menu_hr_expense_root" groups="account_kopkarla.group_hidden_object"/>
         <menuitem id="hr_expense.menu_hr_expense_my_expenses_to_submit" name="Expenses to Submit" sequence="1" parent="hr_expense.menu_hr_expense_my_expenses" action="hr_expense.hr_expense_actions_my_unsubmitted" groups="account_kopkarla.group_hidden_object"/>

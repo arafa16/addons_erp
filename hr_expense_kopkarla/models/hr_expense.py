@@ -265,6 +265,7 @@ class HrExpenseSheet(models.Model):
     known_sign_by = fields.Many2one('hr.employee', string='Mengetahui', default=lambda self: self.env['res.config.settings'].get_values().get('default_exp_known_sign_by'))
     done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan', default=lambda self: self.env['res.config.settings'].get_values().get('default_exp_done_sign_by'))
     management_sign_by = fields.Many2one('hr.employee', string='Pengurus', default=lambda self: self.env['res.config.settings'].get_values().get('default_exp_management_sign_by'))
+    paid_to = fields.Many2one('res.partner', 'Paid To')
     # state = fields.Selection([('submit', 'Submitted'),
     #                           ('approve', 'Approved'),
     #                           ('post', 'Posted'),
