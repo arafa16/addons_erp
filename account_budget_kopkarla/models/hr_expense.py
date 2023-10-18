@@ -8,6 +8,11 @@ class HrExpenseSheet(models.Model):
     active_budget_count = fields.Integer(string='Active Budget', compute='_compute_active_budget_count',)
     state = fields.Selection(selection_add_after={'submit': [('budget', 'Budget')]})
 
+    @api.onchange('cost_center_id','analytic_account_id')
+    def _onchange_budget(self):
+        for exp in self.expense_line_ids:
+            exp.budget_lines_id = exp._get_budget_line(exp.product_id.property_account_expense_id.id, self.cost_center_id.id, self.analytic_account_id.id, self.report_date)
+
     def _compute_active_budget_count(self):
         budget_model = self.env['crossovered.budget.lines']
         # today = fields.Date.today()
@@ -90,6 +95,11 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def budget_approval(self):
         for sheet in self:
+            for exp in sheet.expense_line_ids:
+                if not exp.budget_lines_id:
+                    exp.budget_lines_id = exp._get_budget_line(exp.account_id.id, sheet.cost_center_id.id, sheet.analytic_account_id.id, sheet.report_date)
+                if not exp.budget_lines_id:
+                    raise UserError(_("Budget is empty!"))
             sheet.state = 'budget'
             sheet.update_budget('draft')
 
@@ -99,8 +109,8 @@ class HrExpenseSheet(models.Model):
         for exp in sheet.expense_line_ids:
             if not exp.budget_lines_id:
                 exp.budget_lines_id = exp._get_budget_line(exp.account_id.id, self.cost_center_id.id, self.analytic_account_id.id, self.report_date)
-            if not exp.budget_lines_id:
-                raise UserError(_("Budget is empty!"))
+            # if not exp.budget_lines_id:
+            #     raise UserError(_("Budget is empty!"))
         return sheet
 
     @api.multi
@@ -109,8 +119,8 @@ class HrExpenseSheet(models.Model):
         for exp in self.expense_line_ids:
             if not exp.budget_lines_id:
                 exp.budget_lines_id = exp._get_budget_line(exp.account_id.id, self.cost_center_id.id, self.analytic_account_id.id, self.report_date)
-            if not exp.budget_lines_id:
-                raise UserError(_("Budget is empty!"))
+            # if not exp.budget_lines_id:
+            #     raise UserError(_("Budget is empty!"))
         return res
 
     @api.multi
@@ -128,6 +138,12 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def approve_expense_sheets(self):
+        for sheet in self:
+            for exp in sheet.expense_line_ids:
+                if not exp.budget_lines_id:
+                    exp.budget_lines_id = exp._get_budget_line(exp.account_id.id, sheet.cost_center_id.id, sheet.analytic_account_id.id, sheet.report_date)
+                if not exp.budget_lines_id:
+                    raise UserError(_("Budget is empty!"))
         self.update_budget('done')
         super(HrExpenseSheet, self).approve_expense_sheets()
 
