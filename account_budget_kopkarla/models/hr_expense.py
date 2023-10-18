@@ -8,7 +8,7 @@ class HrExpenseSheet(models.Model):
     active_budget_count = fields.Integer(string='Active Budget', compute='_compute_active_budget_count',)
     state = fields.Selection(selection_add_after={'submit': [('budget', 'Budget')]})
 
-    @api.onchange('cost_center_id','analytic_account_id')
+    @api.onchange('cost_center_id','analytic_account_id','report_date')
     def _onchange_budget(self):
         for exp in self.expense_line_ids:
             exp.budget_lines_id = exp._get_budget_line(exp.product_id.property_account_expense_id.id, self.cost_center_id.id, self.analytic_account_id.id, self.report_date)
