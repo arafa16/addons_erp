@@ -37,8 +37,12 @@
         <xpath expr="//div[hasclass('page')]/div" position="after">
             <div class="row mt32 mb32">
                 <div class="col-xs-12">
+                    <strong>Paid To:</strong>
+                    <span t-field="o.paid_to"/>
+                </div>
+                <div class="col-xs-12">
                     <strong>Description:</strong>
-                    <p t-field="o.communication"/>
+                    <span t-field="o.communication"/>
                 </div>
             </div>
         </xpath>
