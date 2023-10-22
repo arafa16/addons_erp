@@ -18,6 +18,8 @@ class ResConfigSettings(models.TransientModel):
     default_exp_done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan')
     default_exp_management_sign_by = fields.Many2one('hr.employee', string='Pengurus')
 
+    default_product_unbudget = fields.Many2one('product.product', string='Product Un-Budget')
+
     @api.multi
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
@@ -43,6 +45,7 @@ class ResConfigSettings(models.TransientModel):
             default_exp_known_sign_by = literal_eval(get_param('default_exp_known_sign_by', default='False')),
             default_exp_done_sign_by = literal_eval(get_param('default_exp_done_sign_by', default='False')),
             default_exp_management_sign_by = literal_eval(get_param('default_exp_management_sign_by', default='False')),
+            default_product_unbudget = literal_eval(get_param('default_product_unbudget', default='False')),
         )
         # res = super(ResConfigSettings, self).get_values()
         # params = self.env['ir.config_parameter'].sudo()
@@ -62,3 +65,4 @@ class ResConfigSettings(models.TransientModel):
         set_param('default_exp_known_sign_by', self.default_exp_known_sign_by.id)
         set_param('default_exp_done_sign_by', self.default_exp_done_sign_by.id)
         set_param('default_exp_management_sign_by', self.default_exp_management_sign_by.id)
+        set_param('default_product_unbudget', self.default_product_unbudget.id)

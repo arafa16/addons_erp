@@ -57,6 +57,7 @@
                                attrs="{'readonly': ['|', ('state', 'not in', ['submit','approve']), ('advance_id', '!=', False)]}"/>
                         <field name="paid_to" options="{'no_create': True,}" attrs="{'readonly': [('state', '!=', 'submit')]}" domain="[('supplier', '=', True)]"/>
                         <field name="communication" attrs="{'readonly': [('state', '!=', 'submit')]}" string="Description"/>
+                        <field name="is_unbudget"/>
                     </group>
                 </xpath>
                 <xpath expr="//button[@name='action_get_attachment_view']" position="replace"/>

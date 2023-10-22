@@ -223,6 +223,16 @@ class HrExpense(models.Model):
 class HrExpenseSheet(models.Model):
     _inherit = "hr.expense.sheet"
 
+    is_unbudget = fields.Boolean('Unbudget', compute='_get_unbudget')
+
+    def _get_unbudget(self):
+        self.is_unbudget = True
+        product_unbudget_id = self.env['ir.config_parameter'].sudo().get_param('default_product_unbudget')
+        if product_unbudget_id:
+            line = self.expense_line_ids.filtered(lambda x: x.product_id.id != int(product_unbudget_id))
+            if line:
+                self.is_unbudget = False
+
     @api.model
     def _default_partner(self):
         partner_id = self.env['ir.config_parameter'].sudo().get_param('default_expense_partner_id')
@@ -481,6 +491,7 @@ class HrExpenseSheet(models.Model):
         for line in self.advance_id.advance_line_ids:
             value = {
                 'product_id': line.product_id.id,
+                'account_id': line.product_id.property_account_expense_id.id,
                 'name': line.description,
                 'date': self.report_date,
                 'employee_id': self.employee_id.id,

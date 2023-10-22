@@ -139,11 +139,12 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def approve_expense_sheets(self):
         for sheet in self:
-            for exp in sheet.expense_line_ids:
-                if not exp.budget_lines_id:
-                    exp.budget_lines_id = exp._get_budget_line(exp.account_id.id, sheet.cost_center_id.id, sheet.analytic_account_id.id, sheet.report_date)
-                if not exp.budget_lines_id:
-                    raise UserError(_("Budget is empty!"))
+            if not sheet.is_unbudget:
+                for exp in sheet.expense_line_ids:
+                    if not exp.budget_lines_id:
+                        exp.budget_lines_id = exp._get_budget_line(exp.account_id.id, sheet.cost_center_id.id, sheet.analytic_account_id.id, sheet.report_date)
+                    if not exp.budget_lines_id:
+                        raise UserError(_("Budget is empty!"))
         self.update_budget('done')
         super(HrExpenseSheet, self).approve_expense_sheets()
 

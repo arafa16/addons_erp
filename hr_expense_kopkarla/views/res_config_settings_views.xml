@@ -33,6 +33,16 @@
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='module_sale_management']/../../.." position="after">
+                    <h2>Product Un-Budget</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Product Un-Budget">
+                            <label for="default_product_unbudget"/>
+                            <field name="default_product_unbudget"/>
+                            <div class="text-muted">
+                                Default product un-budget.
+                            </div>
+                        </div>
+                    </div>
                     <h2>Cash Advance</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-xs-12 col-md-6 o_setting_box" title="Open cash advance">

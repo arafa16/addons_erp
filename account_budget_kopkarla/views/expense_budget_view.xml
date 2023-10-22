@@ -6,7 +6,9 @@
             <field name="inherit_id" ref="hr_expense_kopkarla.view_hr_expense_sheet_form_inherit_advance_expense"/>
             <field name="arch" type="xml">
                 <button name="cancel" position="before">
-                    <button string="Request Budget Approval" name="budget_approval" states="submit" type="object" groups="hr_expense.group_hr_expense_user"/>
+                    <button string="Request Budget Approval" name="budget_approval"
+                            type="object" attrs="{'invisible': ['|', ('is_unbudget','=',True), ('state','!=','submit')]}"
+                            groups="hr_expense.group_hr_expense_user"/>
                 </button>
                 <xpath expr="//sheet/div" position="inside">
                     <!--<field name="budget_request_id" invisible="1"/>
