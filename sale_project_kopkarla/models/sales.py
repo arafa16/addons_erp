@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 class EnhancedSalesArea(models.Model):
     _inherit = "sale.order"
 
+    # proj_type = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', domain="[('jenis_so', '=', jenis_so)]")
     partner_invoice_name = fields.Char(string='Customer Invoice', related='partner_invoice_id.name', store=True)
     bast_no = fields.Char(string='BAST No.')
     bast_date = fields.Date(string='BAST Date')
@@ -35,6 +36,8 @@ class EnhancedSalesArea(models.Model):
             ('E', 'Cancel')
         ],
         string='Task Status', related='task_id.kanban_baru', store=True)
+
+    tgl_due_po  = fields.Date(string='Due Date PO')
 
     @api.multi
     def convert_to_project(self):

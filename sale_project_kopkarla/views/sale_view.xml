@@ -121,14 +121,17 @@
                     <group string="Status REVA" name="info_reva">
                         <field name="type_reva" required="1"/>
                         <field name="stat_reva" required="1" options="{'no_create': True, 'no_open':True}" domain="[('jenis', '=', type_reva)]"/>
-                        <field name="est_invoice_date"/>
-                        <field name="reva_notes"/>
+                        <!--<field name="est_invoice_date"/>
+                        <field name="reva_notes"/>-->
                     </group>
                     <group string="Status Task" name="info_task">
-                        <field name="status_stage"/>
-                        <field name="status_pelaksanaan"/>
+                        <field name="status_stage" readonly="True"/>
+                        <field name="status_pelaksanaan" readonly="True"/>
                     </group>
                 </group>
+                <field name="tgl_spk" position="after">
+                    <field name="tgl_due_po" attrs="{'readonly':[('stat_spk','=',False)]}"/>
+                </field>
             </field>
         </record>
 

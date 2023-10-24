@@ -46,11 +46,11 @@ class SaleRevaReport(models.Model):
     state = fields.Selection([
         ('cancel', 'Cancelled'),
         ('draft', 'Draft Quotation'),
-        ('sent', 'Quotation Sent'),
         ('spvcheck', 'SPV Check'),
         ('assmancheck', 'Assman Check'),
         ('requestloa', 'Request LoA'),
         ('loaconfirmed', 'LoA Confirmed'),
+        ('sent', 'Quotation Sent'),
         ('sale', 'Sales Order'),
         ('done', 'Sales Done'),
         ], string='Status', readonly=True)
