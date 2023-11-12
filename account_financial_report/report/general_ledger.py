@@ -1000,7 +1000,12 @@ SELECT
         else
             case 
                 when ml.user_type_id = 14 then ai.origin 
-                when ml.user_type_id = 17 then (case when so.name != '' then so.name else ai2.origin end) 
+                when ml.user_type_id = 17 then (case when ml.expense_id is not null then (select o.name
+                                                                                          from hr_expense e inner join hr_expense_sheet s on e.sheet_id = s.id
+                                                                                                            left join sale_order o on s.order_id = o.id
+                                                                                          where e.id = ml.expense_id)
+                                                     when so.name != '' then so.name 
+                                                     else ai2.origin end) 
                 when ml.user_type_id = 5 then
                     case 
                         when sp.sale_id is not null then sp.origin
