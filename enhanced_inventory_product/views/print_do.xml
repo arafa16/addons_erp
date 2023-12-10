@@ -12,9 +12,14 @@
                     <h3>
                         <span t-field="o.name"/>
                     </h3>
-                    <div style="text-align:right;">
-                        <span t-field="o.sale_id.spk_sementara"/>
-                    </div>
+                    <t t-if="o.sale_id">
+                        <div>
+                            <table>
+                                <tr><td style="width: 60%"/><td><span t-field="o.sale_id.spk_sementara"/></td></tr>
+                                <tr><td/><td>PO: <span t-field="o.sale_id.nomor_spk"/></td></tr>
+                            </table>
+                        </div>
+                    </t>
                 </xpath>
                 <xpath expr="//th[@name='td_sched_date_h']" position="after">
                     <th name="td_print_date_now">
