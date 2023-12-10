@@ -14,8 +14,8 @@
                     </h3>
                     <t t-if="o.sale_id">
                         <div>
-                            <table>
-                                <tr><td><span t-field="o.sale_id.spk_sementara"/></td></tr>
+                            <table width="100%">
+                                <tr><td width="100%"><span t-field="o.sale_id.spk_sementara"/></td></tr>
                                 <tr><td>PO: <span t-field="o.sale_id.nomor_spk"/></td></tr>
                             </table>
                         </div>
