@@ -147,7 +147,7 @@ class BudgetAdjustment(models.Model):
                 raise UserError(_('Budget can not reset due to it has been adjust after this adjustment.'))
             else:
                 self.budget_line_id_adj.restrict_allow = self.restrict_allow_adj
-        if abs(self.budget_line_id_adj.avail_req_amount) > abs(self.adjustment_amount):
+        if abs(self.budget_line_id_adj.avail_req_amount) >= abs(self.adjustment_amount):
             self.line_ids.unlink()
             self.state = 'draft'
         else:
@@ -167,6 +167,28 @@ class BudgetAdjustmentLine(models.Model):
     date_to = fields.Date('End Date', compute='get_budget_info')
     restrict = fields.Selection([('allow','Allow'),('restrict' , 'Restricted'),('warn','Warning')], string="Adjustment Control")
     amount = fields.Float(digits=0, string="Adjustment Amount")
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('done', 'Done'),
+    ], string='Status', related='budget_adjusment_id.state')
+    budget_line_opponent_id = fields.Many2one('crossovered.budget.lines', string='Budget Opponent', compute='_get_opponent')
+    cost_center_opponent_id = fields.Many2one("cost.center", string='Cost Center', compute='_get_opponent')
+    analytic_account_opponent_id = fields.Many2one('account.analytic.account', string='Analytic Account', compute='_get_opponent')
+    date_from_opponent = fields.Date('Start Date', compute='_get_opponent')
+    date_to_opponent = fields.Date('End Date', compute='_get_opponent')
+    # restrict = fields.Selection([('allow','Allow'),('restrict' , 'Restricted'),('warn','Warning')], string="Adjustment Control")
+    amount_opponent = fields.Float(digits=0, string="Adjustment Amount", compute='_get_opponent')
+
+    def _get_opponent(self):
+        for line in self:
+            line_opponent = line.budget_adjusment_id.line_ids.filtered(lambda l: l.budget_line_id != line.budget_line_id)
+            line.budget_line_opponent_id = line_opponent.budget_line_id
+            line.cost_center_opponent_id = line_opponent.cost_center_id
+            line.analytic_account_opponent_id = line_opponent.analytic_account_id
+            line.date_from_opponent = line_opponent.date_from
+            line.date_to_opponent = line_opponent.date_to
+            line.amount_opponent = line_opponent.amount
 
     @api.multi
     def get_budget_info(self):

@@ -102,6 +102,20 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Adjustment Budgets">
+                                <field name="adjustment_line_ids">
+                                    <tree string="Adjustment Budgets">
+                                        <field name="budget_adjusment_id"/>
+                                        <field name="budget_line_opponent_id"/>
+                                        <field name="cost_center_opponent_id"/>
+                                        <field name="analytic_account_opponent_id"/>
+                                        <field name="date_from_opponent"/>
+                                        <field name="date_to_opponent"/>
+                                        <field name="amount_opponent" sum="Amount"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
