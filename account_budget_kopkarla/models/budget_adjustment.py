@@ -179,6 +179,7 @@ class BudgetAdjustmentLine(models.Model):
     date_to_opponent = fields.Date('End Date', compute='_get_opponent')
     # restrict = fields.Selection([('allow','Allow'),('restrict' , 'Restricted'),('warn','Warning')], string="Adjustment Control")
     amount_opponent = fields.Float(digits=0, string="Adjustment Amount", compute='_get_opponent')
+    posted_date = fields.Datetime('Posted Date', related='budget_adjusment_id.write_date', store=True)
 
     def _get_opponent(self):
         for line in self:

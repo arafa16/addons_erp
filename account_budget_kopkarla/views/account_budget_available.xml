@@ -103,8 +103,9 @@
                                 </field>
                             </page>
                             <page string="Adjustment Budgets">
-                                <field name="adjustment_line_ids">
+                                <field name="adjustment_line_ids" default_order="posted_date">
                                     <tree string="Adjustment Budgets">
+                                        <field name="posted_date"/>
                                         <field name="budget_adjusment_id"/>
                                         <field name="budget_line_opponent_id"/>
                                         <field name="cost_center_opponent_id"/>
