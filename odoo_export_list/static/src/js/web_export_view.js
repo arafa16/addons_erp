@@ -34,12 +34,14 @@ odoo.define('web_export_view', function (require) {
 					 var export_columns_names = [];
 					 var columns_tab = [];
 					 var rows_tab = [];
-           // find the first tr of table for the columns labels
-					 view.$el.find('th.o_list_record_selector ').closest('tr').each(function (i, el) {
+
+           			 // find the first tr of table for the columns labels
+           			 view.$el.find('thead.tableFloatingHeaderOriginal ').closest('thead').each(function (i, el) {
+					 // view.$el.find('th.o_list_record_selector ').closest('tr').each(function (i, el) {
 							 var ihtml = el.innerHTML + ''; // get html content of the tr
 							 var extractedTdArray = ihtml.split("</th>") // split tr in array of th
 
-               // get the text content of each th
+               		 		// get the text content of each th
 							 extractedTdArray.forEach(function(elt){
 								 var val = elt.substring(elt.indexOf(">") + 1)
 								 if(val){
@@ -59,7 +61,19 @@ odoo.define('web_export_view', function (require) {
 								 var val = elt.substring(elt.indexOf(">") + 1) // get the td content
 								 if(val != undefined){
 									 if(val.indexOf(">") < 0 ){ // if the content of the td is not html content
+									 	 val = val.replace('&nbsp;', " ");
 										 rows_tab.push(val)
+									 }else{
+									 	var extractedspan = val.split("</span>")
+									 	extractedspan.forEach(function(elt){
+									 		var val_2 = elt.substring(elt.indexOf(">") + 1)
+									 		if(val_2 != ''){
+										 		if(val_2.indexOf(">") < 0 ){
+										 			val_2 = val_2.replace('&nbsp;', " ");
+										 			rows_tab.push(val_2)
+										 		}
+									 		}
+									 	});
 									 }
 								 }
 							 });
@@ -75,8 +89,20 @@ odoo.define('web_export_view', function (require) {
 									 var val = elt.substring(elt.indexOf(">") + 1)
 									 if(val != undefined){
 										 if(val.indexOf(">") <0 ){
+										 	 val = val.replace('&nbsp;', " ");
 											 rows_tab.push(val)
 										 }
+									 }else{
+									 	var extractedspan = val.split("</span>")
+									 	extractedspan.forEach(function(elt){
+									 		var val_2 = elt.substring(elt.indexOf(">") + 1)
+									 		if(val_2 != ''){
+										 		if(val_2.indexOf(">") < 0 ){
+										 			val_2 = val_2.replace('&nbsp;', " ");
+										 			rows_tab.push(val_2)
+										 		}
+									 		}
+									 	});
 									 }
 								 });
 								 export_rows.push(rows_tab)
