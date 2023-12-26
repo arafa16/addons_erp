@@ -15,7 +15,7 @@
                     <field name="unit_security_amount" attrs="{'invisible':[('product_id','=', False)], 'required':[('product_id','!=', False)]}" widget="monetary"/>
                     <field name="quantity" placeholder="Quantity" required="1"/>
                     <field name="rental_tenure_type" widget="radio" options="{'horizontal': true}" string="Tenure Type" required="1"/>
-                    <field name="rental_tenure_id" placeholder="Rental Tenure" attrs="{'required':[('rental_tenure_type','=', 'standard')], 'invisible':[('product_id','=', False)],}" options="{'horizontal': true}" string="Rental Scheme" widget="radio"/>
+                    <field name="rental_tenure_id" placeholder="Rental Tenure" attrs="{'required':[('rental_tenure_type','=', 'standard')], 'invisible':[('product_id','=', False)],}" options="{'horizontal': false}" string="Rental Scheme" widget="radio"/>
                     <label for="rental_tenure" attrs="{'invisible':[('rental_tenure_type','=', 'standard')]}"/>
                     <div class="oe_inline" style="display:flex;">
                         <span>
@@ -27,7 +27,7 @@
                     </div>
                 </group>
                 <footer>
-                    <button name="action_add_rental_product" string="Add Rental Product" type="object" class="oe_highlight"/>
+                    <button name="action_add_rental_product" string="Add Rental Product X" type="object" class="oe_highlight"/>
                     <button string="Cancel" class="oe_link" special="cancel" />
                 </footer>
             </form>

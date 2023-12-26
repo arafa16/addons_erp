@@ -17,7 +17,7 @@
                 <group>
                     <field name="rental_qty" placeholder="Quantity" required="1" readonly="1"/>
                     <field name="rental_tenure_type" widget="radio" options="{'horizontal': true}" string="Tenure Type" required="1"/>
-                    <field name="rental_tenure_id" placeholder="Rental Tenure" attrs="{'required':[('rental_tenure_type','=', 'standard')]}" options="{'horizontal': true}" string="Rental Scheme" widget="radio"/>
+                    <field name="rental_tenure_id" placeholder="Rental Tenure" attrs="{'required':[('rental_tenure_type','=', 'standard')]}" options="{'horizontal': false}" string="Rental Scheme" widget="radio"/>
                     <label for="rental_tenure" attrs="{'invisible':[('rental_tenure_type','=', 'standard')]}"/>
                     <div class="oe_inline" style="display:flex;">
                         <span>
