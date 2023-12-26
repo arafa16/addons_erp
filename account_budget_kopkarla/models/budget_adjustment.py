@@ -30,7 +30,7 @@ class BudgetAdjustment(models.Model):
     date_from_adj = fields.Date('Start Date', compute='get_budget_info')
     date_to_adj = fields.Date('End Date', compute='get_budget_info')
     restrict_allow_adj = fields.Selection([('allow','Allow'),('restrict' , 'Restricted'),('warn','Warning')], string="Budget Control", readonly=True, default="restrict")
-    avail_req_amount_adj = fields.Float(digits=0, string="Available Amount", readonly=True)
+    avail_req_amount_adj = fields.Float(digits=0, string="Available Amount", related='budget_line_id_adj.avail_req_amount')
 
     budget_line_id_src = fields.Many2one('crossovered.budget.lines', string='Budget From', ondelete="restrict", readonly=True, domain="[('state', '=', 'ready')]", index=True)
     cost_center_id_src = fields.Many2one("cost.center", string='Cost Center', compute='get_budget_info')
@@ -38,7 +38,7 @@ class BudgetAdjustment(models.Model):
     date_from_src = fields.Date('Start Date', compute='get_budget_info')
     date_to_src = fields.Date('End Date', compute='get_budget_info')
     restrict_allow_src = fields.Selection([('allow','Allow'),('restrict' , 'Restricted'),('warn','Warning')], string="Budget Control", readonly=True, default="restrict")
-    avail_req_amount_src = fields.Float(digits=0, string="Available Amount", readonly=True)
+    avail_req_amount_src = fields.Float(digits=0, string="Available Amount", related='budget_line_id_src.avail_req_amount')
     description = fields.Text(string='Description')
 
     line_ids = fields.One2many('budget.adjustment.line', 'budget_adjusment_id')
@@ -109,9 +109,15 @@ class BudgetAdjustment(models.Model):
             if self.adjustment_restrict == self.restrict_allow_adj:
                 raise UserError(_('Adjustment control must be different with budget to adjust.'))
         elif not self.adjustment_amount:
-            raise UserError(_('Adjustment amount can not be zero.'))
-        elif self.budget_line_id_src and abs(self.adjustment_amount) > abs(self.avail_req_amount_src):
-            raise UserError(_('Absolute adjustment amount can not greater than absolute avaiable amount.'))
+            raise UserError(_('Nilai adjustment tidak boleh 0!!!'))
+        # elif self.budget_line_id_src and abs(self.adjustment_amount) > abs(self.avail_req_amount_src):
+        #     raise UserError(_('Sisa Budget Source tidak cukup!!!'))
+        elif self.adjustment_amount > 0:
+            if self.adjustment_amount + self.avail_req_amount_adj > 0:
+                raise UserError(_('Sisa Budget to adjust tidak cukup!!!'))
+        elif self.adjustment_amount < 0:
+            if self.adjustment_amount - self.avail_req_amount_src < 0:
+                raise UserError(_('Sisa Budget Source tidak cukup!!!'))
 
     @api.multi
     def _generate_budget_adjustment_line(self):

@@ -27,7 +27,6 @@ Support following feature:
                 ],
     'data': [
         "views/account_budget_view.xml",
-        "views/account_budget_request_analysis.xml",
         "views/account_budget_menus.xml",
         "views/purchase_request_view.xml",
         # "views/purchase_order_view.xml",
@@ -37,6 +36,7 @@ Support following feature:
         "views/account_budget_request_approval.xml",
         "views/account_budget_request_release_approval.xml",
         "views/account_budget_available.xml",
+        "views/account_budget_request_analysis.xml",
         "views/account_budget_adjustment.xml",
         "views/expense_budget_view.xml",
         "data/ir_sequence_data.xml",

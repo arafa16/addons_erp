@@ -146,7 +146,7 @@ class BudgetLine(models.Model):
             budget_adjustment.date_from_adj = self.date_from
             budget_adjustment.date_to_adj = self.date_to
             budget_adjustment.restrict_allow_adj = self.restrict_allow
-            budget_adjustment.avail_req_amount_adj = self.avail_req_amount
+            # budget_adjustment.avail_req_amount_adj = self.avail_req_amount
         else:
             budget_adjustment.budget_line_id_src = self.id
             budget_adjustment.cost_center_id_src = self.cost_center_id.id
@@ -154,7 +154,7 @@ class BudgetLine(models.Model):
             budget_adjustment.date_from_src = self.date_from
             budget_adjustment.date_to_src = self.date_to
             budget_adjustment.restrict_allow_src = self.restrict_allow
-            budget_adjustment.avail_req_amount_src = self.avail_req_amount
+            # budget_adjustment.avail_req_amount_src = self.avail_req_amount
         # return self.env.ref('account_budget_kopkarla.act_budget_adjustment_view').read()[0]
         # return self.env.context.get('action')
         view = self.env.ref('account_budget_kopkarla.view_account_budget_adjustment_form')

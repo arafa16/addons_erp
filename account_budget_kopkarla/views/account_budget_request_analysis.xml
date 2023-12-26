@@ -102,7 +102,7 @@
             <field name="name">Budgets Request Analysis</field>
             <field name="res_model">crossovered.budget.lines</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
             <field name="view_id" ref="view_account_budget_request_tree"/>
             <field name="domain">[('state','=','ready'),('budget_direction','=','cost')]</field>
             <field name="context">{ 'search_default_budget_position': True,
