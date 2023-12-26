@@ -58,9 +58,9 @@ odoo.define('web_export_view', function (require) {
 							 var ihtml = el.innerHTML + '';
 							 var extractedData = ihtml.split("</td>")
 							 extractedData.forEach(function(elt){
-								 var val = elt.substring(elt.indexOf(">") + 1) // get the td content
+								 var val = elt.substring(elt.indexOf(">") + 1)
 								 if(val != undefined){
-									 if(val.indexOf(">") < 0 ){ // if the content of the td is not html content
+									 if(val.indexOf(">") < 0){
 									 	 val = val.replace('&nbsp;', " ");
 										 rows_tab.push(val)
 									 }else{
@@ -88,22 +88,22 @@ odoo.define('web_export_view', function (require) {
 								 extractedData.forEach(function(elt){
 									 var val = elt.substring(elt.indexOf(">") + 1)
 									 if(val != undefined){
-										 if(val.indexOf(">") <0 ){
+										 if(val.indexOf(">") < 0){
 										 	 val = val.replace('&nbsp;', " ");
 											 rows_tab.push(val)
-										 }
-									 }else{
-									 	var extractedspan = val.split("</span>")
-									 	extractedspan.forEach(function(elt){
-									 		var val_2 = elt.substring(elt.indexOf(">") + 1)
-									 		if(val_2 != ''){
-										 		if(val_2.indexOf(">") < 0 ){
-										 			val_2 = val_2.replace('&nbsp;', " ");
-										 			rows_tab.push(val_2)
-										 		}
-									 		}
-									 	});
-									 }
+                                         }else{
+                                            var extractedspan = val.split("</span>")
+                                            extractedspan.forEach(function(elt){
+                                                var val_2 = elt.substring(elt.indexOf(">") + 1)
+                                                if(val_2 != ''){
+                                                    if(val_2.indexOf(">") < 0 ){
+                                                        val_2 = val_2.replace('&nbsp;', " ");
+                                                        rows_tab.push(val_2)
+                                                    }
+                                                }
+                                            });
+                                         }
+                                    }
 								 });
 								 export_rows.push(rows_tab)
 						 });
