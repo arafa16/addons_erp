@@ -27,7 +27,7 @@
                     </div>
                 </group>
                 <footer>
-                    <button name="action_add_rental_product" string="Add Rental Product X" type="object" class="oe_highlight"/>
+                    <button name="action_add_rental_product" string="Add Rental Product" type="object" class="oe_highlight"/>
                     <button string="Cancel" class="oe_link" special="cancel" />
                 </footer>
             </form>
