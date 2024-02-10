@@ -12,7 +12,8 @@ Use Purchase Request module for requesting product.
     'summary': 'Purchase request type',
     'website': 'https://www.tbdigitalindo.co.id',
     'depends': ['sprogroup_purchase_request','cost_centers_kopkarla',
-                'account_analytic_kopkarla','account_budget_kopkarla','enhanced_purchase_request_loa'],
+                'account_analytic_kopkarla','account_budget_kopkarla',
+                'enhanced_purchase_request','enhanced_purchase_request_loa'],
     'data': [
         'views/purchase_request_type_view.xml',
         'views/purchase_request_view.xml',
