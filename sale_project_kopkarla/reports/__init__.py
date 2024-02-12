@@ -2,3 +2,4 @@
 
 # from . import sale_margin_report
 from . import sale_reva_report
+from . import sale_report_instance_qweb

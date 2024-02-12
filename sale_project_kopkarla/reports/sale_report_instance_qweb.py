@@ -13,10 +13,10 @@ class Report(models.Model):
     _inherit = "ir.actions.report"
 
     def render_qweb_pdf(self, res_ids=None, data=None):
-        if self.report_name == "enhanced_purchase_request.template_purchase_request_dokumen":
+        if self.report_name == "sale.report_saleorder":
             if not res_ids:
                 res_ids = self.env.context.get("active_ids")
-            pr_report_instance = self.env["sprogroup.purchase.request"].browse(res_ids)[0]
+            so_report_instance = self.env["sale.order"].browse(res_ids)[0]
             # context = dict(
             #     pr_report_instance._context_with_filters(),
             #     landscape=pr_report_instance.landscape_pdf,
@@ -26,8 +26,8 @@ class Report(models.Model):
             # return super(Report, self.with_context(context)).render_qweb_pdf(
             #     res_ids, data=None
             # )
-            if pr_report_instance.state not in ('leader_approved', 'done'):
-                raise UserError("Status PR belum LoA Approved atau Procure Received!")
+            if so_report_instance.state not in ('loaconfirmed', 'sent', 'sale', 'done'):
+                raise UserError("SO tidak bisa di cetak karena status belum LoA Confirmed!")
             return super(Report, self).render_qweb_pdf(
                 res_ids, data=None
             )
