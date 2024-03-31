@@ -106,9 +106,15 @@ class StockPickingEnhanced(models.Model):
                         prodmr[0].direserve = doc.reserved_availability
                     aa = self.env['em.onhand'].search([('barang_id','=',idres),('task_idx','=',self.idtask.id)])
                     if len(aa) > 0:
-                        aa[0].quantity = aa[0].quantity +  doc.quantity_done
+                        aa[0].quantity = aa[0].quantity + doc.quantity_done
+                        aa[0].cost_center_id = doc.cost_center_id.id
+                        aa[0].analytic_account_id = doc.analytic_account_id.id
                     else:
-                        isix = {'barang_id':idres,'quantity':doc.quantity_done,'task_idx':self.idtask.id}
+                        isix = {'barang_id':idres,
+                                'quantity':doc.quantity_done,
+                                'cost_center_id':doc.cost_center_id.id,
+                                'analytic_account_id':doc.analytic_account_id.id,
+                                'task_idx':self.idtask.id}
                         self.env['em.onhand'].create(isix)
         if len(self.idreturn) > 0:
             for doc in self.move_lines:
@@ -121,6 +127,8 @@ class StockPickingEnhanced(models.Model):
                 aa = self.env['em.onhand'].search([('barang_id','=',doc.product_id.id),('task_idx','=',self.idreturn.task_idx.id)])
                 if len(aa) > 0:
                     aa[0].ret = aa[0].ret + doc.quantity_done
+                    aa[0].cost_center_id = doc.cost_center_id.id
+                    aa[0].analytic_account_id = doc.analytic_account_id.id
                 ww = 4
             # update dokumen return jadi done
             self.idreturn.stat = 'done'

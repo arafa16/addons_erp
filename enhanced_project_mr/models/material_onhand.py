@@ -11,4 +11,7 @@ class EnhancedmaterialOnhand(models.Model):
     ret = fields.Integer(string='Return')
     ret_pros = fields.Integer(string='Return Proses')
     task_idx = fields.Many2one('project.task', string='Project Task')
+    cost_center_id = fields.Many2one("cost.center", string="Cost Center",)
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete="cascade")
+
     _sql_constraints = [('unique_product_own_list', 'unique(barang_id,task_idx)', 'Error! Multiple Produk pada Task yang sama!')]

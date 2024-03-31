@@ -10,7 +10,9 @@
     'enhanced_sales_convert_project',
     'enhanced_project_task_badges',
     'enhanced_project_cost',
-    'enhanced_purchase_approval'
+    'enhanced_purchase_approval',
+    'cost_centers_kopkarla',
+    'account_analytic_kopkarla'
   ],
   'data': [
     'views/project_task_type.xml',

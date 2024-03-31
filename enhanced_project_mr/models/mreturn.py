@@ -35,35 +35,43 @@ class EnhancedMaterialReturn(models.Model):
                 if boleh == True:
                     wh = self.gudang_return.get_warehouse().id
                     oprtipe = self.env['stock.picking.type'].search([('warehouse_id','=',wh),('code','=','incoming')])
-                    gudvendor = self.env['stock.location'].search([('usage','=','supplier')])
+                    # gudvendor = self.env['stock.location'].search([('usage','=','supplier')])
+                    gudvendor = self.env['stock.location'].search([('usage','=','customer')]) # <-- seharusnya gudang customer
                     if len(gudvendor) > 0:
                         if len(oprtipe) > 0:
                             isian = {}
-                            isian['idreturn'] = self.id
                             isian['company_id'] = self.gudang_return.company_id.id
                             isian['is_locked'] = True
                             isian['location_dest_id'] = self.gudang_return.id
                             isian['location_id'] = gudvendor.id
                             isian['move_type'] = 'direct'
-                            isian['note'] = self.task_idx.name
-                            isian['origin'] = self.task_idx.sale_order_id.name
+                            isian['note'] = "%s - %s" % (self.name, self.task_idx.name)
+                            isian['origin'] = self.task_idx.name
                             isian['owner_id'] = False
-                            isian['partner_id'] = self.task_idx.partner_id.id
+                            isian['partner_id'] = self.task_idx.related_cust.id
                             isian['picking_type_id'] = oprtipe[0].id
                             isian['priority'] = '1' 
+                            isian['idreturn'] = self.id
+                            isian['idtask'] = self.task_idx.id
+                            isian['mr_responsible'] = self.create_uid.id
+                            isian['cost_center_id'] = getoh.cost_center_id.id or self.task_idx.cost_center_id.id
+                            isian['analytic_account_id'] = getoh.analytic_account_id.id or self.task_idx.analytic_account_id.id
                             isiline = []
                             for baris in self.return_ids:
                                 isiappend = []
                                 isiappend.append(0)
                                 isiappend.append('virtual_200'+str(baris.id))
                                 isibaris = {}
+                                isibaris['location_dest_id'] = self.gudang_return.id
                                 isibaris['location_id'] = gudvendor.id
-                                isibaris['name'] = baris.barang_id.name
                                 isibaris['picking_type_id'] = oprtipe[0].id
+                                isibaris['name'] = baris.barang_id.name
                                 isibaris['product_id'] = baris.barang_id.id
                                 isibaris['product_uom'] = baris.barang_id.uom_id.id
                                 isibaris['product_uom_qty'] = baris.ret_pros
                                 isibaris['state'] = 'draft'
+                                isibaris['cost_center_id'] = getoh.cost_center_id.id or self.task_idx.cost_center_id.id
+                                isibaris['analytic_account_id'] = getoh.analytic_account_id.id or self.task_idx.analytic_account_id.id
                                 isiappend.append(isibaris)
                                 isiline.append(isiappend)
                             isian['move_lines'] = isiline

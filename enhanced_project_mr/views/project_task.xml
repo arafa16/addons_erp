@@ -42,10 +42,12 @@
                         </field>
                     </page>
                     <page name="material_onhand_tab" string="Material Usage">
-                        <group string="Material On Hand">
+                        <group string="Material Usage">
                             <field name="barangown" nolabel="1" readonly="1">
                                 <tree>
                                     <field name="barang_id"/>
+                                    <field name="cost_center_id"/>
+                                    <field name="analytic_account_id"/>
                                     <field name="quantity"/>
                                     <field name="ret"/>
                                 </tree>
