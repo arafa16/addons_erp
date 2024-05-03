@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 class SalesOrderESCP(models.Model):
     _inherit = 'sale.order'
 
-    task_id = fields.Many2one('project.task', "Task", readonly=True)
+    task_id = fields.Many2one('project.task', "Task", readonly=False, copy=False)
     kanbanbaru = fields.Selection(selection=[('A', 'Not Started'),('B', 'On Progress'),('C', 'Stop Clock'),('D', 'Done'),('E', 'Cancel')],related='task_id.kanban_baru',string='Status Pelaksanaan')
 
     @api.multi
