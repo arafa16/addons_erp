@@ -11,12 +11,12 @@
                         <group name="page_info_project">
                             <group string="Project Type" attrs="{'invisible': [('jenis_so', 'not in', ['Project'])]}">
                                 <field name="nojar"/>
-                                <field name="proj_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" />
-                                <field name="ord_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" />
-                                <field name="pek_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" />
+                                <field name="proj_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}"/>
+                                <field name="ord_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}"/>
+                                <field name="pek_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}"/>
                             </group>
                             <group string="Trading Type" attrs="{'invisible': [('jenis_so', 'not in', ['datacom'])]}">
-                                <field name="proj_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" string="Jenis Trading"/>
+                                <field name="proj_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" string="Jenis Trading" options="{'no_create': True}"/>
                             </group>
                             <group string="Informasi S.P.K" name="info_spk">
                                 <field name="spk_sementara" string="SPK User"/>
