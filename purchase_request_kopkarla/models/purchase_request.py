@@ -165,6 +165,7 @@ class SprogroupPurchaseRequestLine(models.Model):
 
     @api.onchange('product_id')
     def _get_account_id(self):
+        result = {}
         if self.request_id.salesorder_id.id:
             if self.request_id.salesorder_id.proj_type and self.request_id.salesorder_id.proj_type.project_account_id:
                 project_expense_id = self.request_id.salesorder_id.proj_type.project_account_id.id
@@ -211,6 +212,12 @@ class SprogroupPurchaseRequestLine(models.Model):
                             )
                     self.account_id = account_id
 
+        if not self.product_id:
+            return result
+        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
+        result['domain'] = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+
+        return result
 
 class purchase_request_employees_mapping(models.Model):
     _name = 'purchase.request.employee.mapping'
