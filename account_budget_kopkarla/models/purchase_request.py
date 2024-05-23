@@ -126,13 +126,20 @@ class PurchaseRequest(models.Model):
                 purchase_requests = self.env['sprogroup.purchase.request'].sudo().search([('salesorder_id', '=', self.salesorder_id.id),
                                                                                           ('state', '!=', 'rejected')])
                 for pr in purchase_requests:
+                    doc_name = ('%s' % ','.join([po.name for po in pr.nomor_po_m2o])) if pr.nomor_po_m2o else False
+                    if not doc_name:
+                        doc_name = pr.name
+                        amount = pr.amount_total
+                    else:
+                        doc_name = pr.name + ': {0:,.2f}'.format(pr.amount_total) + ' -> %s' % doc_name
+                        amount = sum(po.amount_untaxed for po in pr.nomor_po_m2o)
                     budget_request_margin = {
                         'budget_request_id': budget_request_id.id,
-                        'name': pr.name,
-                        'amount': pr.amount_total,
+                        'name': doc_name,
+                        'amount': amount,
                         'state': dict(self.env['sprogroup.purchase.request'].fields_get(allfields=['state'])['state']['selection'])[pr.state]
                     }
-                    margin -= pr.amount_total
+                    margin -= amount
                     self.env['budget.request.margin'].create(budget_request_margin)
                 budget_request_margin = {
                     'budget_request_id': budget_request_id.id,
