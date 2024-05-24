@@ -115,13 +115,11 @@ table#ksListViewTable tbody td {
   padding: .8rem; font-size: 1.4rem;
   */
 /*color: #444; background: #eee;*//*
-
 }
 table#ksListViewTable tbody tr:not(:last-child) {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
-
 @media screen and (max-width: 600px) {
   table#ksListViewTable caption { background-image: none; }
   table#ksListViewTable thead { display: none; }
@@ -131,7 +129,6 @@ table#ksListViewTable tbody tr:not(:last-child) {
   table#ksListViewTable tbody tr td:first-child {
     */
 /*background: #666; color: #fff;*//*
-
   }
 	table#ksListViewTable tbody td:before {
     content: attr(data-th);
@@ -281,6 +278,19 @@ table#ksListViewTable tbody tr:not(:last-child) {
 }
 
 .ks_date_filters_menu_drop_down {
-    max-height: 500px !important;
+    max-height: 300px !important;
     overflow: auto !important;
+    background-clip:unset;
+}
+
+select {
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   background-image: url('/ks_dashboard_ninja/static/description/arrow_drop_down.svg');
+   background-repeat: no-repeat !important;
+    background-position: 110% center;
+    padding-right: 10px !important;
+    background-size: 17px;
+
 }

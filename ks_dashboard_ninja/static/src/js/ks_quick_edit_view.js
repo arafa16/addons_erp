@@ -5,7 +5,6 @@ odoo.define('ks_dashboard_ninja.quick_edit_view', function (require) {
     var Widget = require("web.Widget");
     var _t = core._t;
     var QWeb = core.qweb;
-
     var data = require('web.data');
     var QuickCreateFormView = require('web.FormView');
     var Context = require('web.Context')
@@ -71,57 +70,54 @@ odoo.define('ks_dashboard_ninja.quick_edit_view', function (require) {
         },
 
         //This Function is replacing Controllers to intercept in between to fetch changed data and update our item view.
-        _confirmChange: function(id, fields, e){
-                   if (e.name === 'discard_changes' && e.target.reset) {
-            // the target of the discard event is a field widget.  In that
-            // case, we simply want to reset the specific field widget,
-            // not the full view
-                    return  e.target.reset(this.controller.model.get(e.target.dataPointID), e, true);
-                }
+        _confirmChange: function(id, fields, e) {
+            if (e.name === 'discard_changes' && e.target.reset) {
+                // the target of the discard event is a field widget.  In that
+                // case, we simply want to reset the specific field widget,
+                // not the full view
+                return e.target.reset(this.controller.model.get(e.target.dataPointID), e, true);
+            }
 
-                var state = this.controller.model.get(this.controller.handle);
-                this.controller.renderer.confirmChange(state, id, fields, e);
-                return this.ks_Update_item();
+            var state = this.controller.model.get(this.controller.handle);
+            this.controller.renderer.confirmChange(state, id, fields, e);
+            return this.ks_Update_item();
         },
 
-        ks_Update_item : function(){
+        ks_Update_item: function() {
             var self = this;
             var ksChanges = this.controller.renderer.state.data;
 
-            if(ksChanges['name']) this.item['name']=ksChanges['name'];
+            if (ksChanges['name']) this.item['name'] = ksChanges['name'];
 
             self.item['ks_font_color'] = ksChanges['ks_font_color'];
             self.item['ks_icon_select'] = ksChanges['ks_icon_select'];
             self.item['ks_icon'] = ksChanges['ks_icon'];
-            self.item['ks_model_id'] = ksChanges['ks_model_id'];
             self.item['ks_background_color'] = ksChanges['ks_background_color'];
             self.item['ks_default_icon_color'] = ksChanges['ks_default_icon_color'];
-            if(ksChanges['ks_layout']) self.item['ks_layout'] = ksChanges['ks_layout'];
+            self.item['ks_layout'] = ksChanges['ks_layout'];
             self.item['ks_record_count'] = ksChanges['ks_record_count'];
 
-            if(ksChanges['ks_list_view_data']) self.item['ks_list_view_data'] = ksChanges['ks_list_view_data'];
+            if (ksChanges['ks_list_view_data']) self.item['ks_list_view_data'] = ksChanges['ks_list_view_data'];
 
-            if(ksChanges['ks_chart_data']) self.item['ks_chart_data'] = ksChanges['ks_chart_data'];
+            if (ksChanges['ks_chart_data']) self.item['ks_chart_data'] = ksChanges['ks_chart_data'];
 
-            if(ksChanges['ks_kpi_data']) self.item['ks_kpi_data'] = ksChanges['ks_kpi_data'];
+            if (ksChanges['ks_kpi_data']) self.item['ks_kpi_data'] = ksChanges['ks_kpi_data'];
 
-            if(ksChanges['ks_list_view_type']) self.item['ks_list_view_type'] = ksChanges['ks_list_view_type'];
+            if (ksChanges['ks_list_view_type']) self.item['ks_list_view_type'] = ksChanges['ks_list_view_type'];
 
-            self.item['ks_chart_item_color'] = ksChanges['ks_chart_item_color'];
+            if (ksChanges['ks_chart_item_color']) self.item['ks_chart_item_color'] = ksChanges['ks_chart_item_color'];
 
-//            self.item['ks_kpi_data'] = ksChanges['ks_kpi_data'];
             self.ksUpdateItemView();
 
         },
 
-
-        start: function () {
+        start: function() {
             var self = this;
             this._super.apply(this, arguments);
 
         },
 
-        renderElement : function(){
+        renderElement: function() {
             var self = this;
             self._super.apply(this, arguments);
             self.controller.appendTo(self.$el.find(".ks_item_field_info"));
@@ -129,7 +125,7 @@ odoo.define('ks_dashboard_ninja.quick_edit_view', function (require) {
             self.trigger('canBeRendered', {});
         },
 
-        ksUpdateItemView : function(){
+        ksUpdateItemView: function() {
             var self = this;
             self.ksDashboardController.ksUpdateDashboardItem([self.item.id]);
             self.item_el = $.find(`#${self.item.id}.ks_dashboarditem_id`);
@@ -143,22 +139,24 @@ odoo.define('ks_dashboard_ninja.quick_edit_view', function (require) {
         },
 
 
-        ksOnQuickEditViewAction : function(e){
+        ksOnQuickEditViewAction: function(e) {
             var self = this;
             self.need_reset = false;
-            var options =  {'need_item_reload' : false}
-            if(e.currentTarget.dataset['ksItemAction'] === 'saveItemInfo'){
-                this.controller.saveRecord().then(function(){
+            var options = {
+                'need_item_reload': false
+            }
+            if (e.currentTarget.dataset['ksItemAction'] === 'saveItemInfo') {
+                this.controller.saveRecord().then(function() {
                     self.ksDiscardChanges();
                 })
-            }else if(e.currentTarget.dataset['ksItemAction'] === 'fullItemInfo'){
+            } else if (e.currentTarget.dataset['ksItemAction'] === 'fullItemInfo') {
                 this.trigger('openFullItemForm', {});
-            }else{
+            } else {
                 self.ksDiscardChanges();
             }
         },
 
-        destroy: function (options) {
+        destroy: function(options) {
             this.trigger('canBeDestroyed', {});
             this.controller.destroy();
             this.controller = undefined;

@@ -68,3 +68,12 @@
 .ks_color_white {
     border: 1px solid #bdbdbd
 }
+.ks_dashboard_top_settings > button > .dropdown-menu {
+    position: absolute;
+    will-change: transform;
+    bottom: auto;
+    top: 0px;
+    right: auto;
+    left: 0px;
+    transform: translate3d(-85px, -8px, 0px);
+}

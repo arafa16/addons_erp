@@ -5,6 +5,7 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
     var _t = core._t;
     var QWeb = core.qweb;
     var field_utils = require('web.field_utils');
+    var config = require('web.config');
     var KsGlobalFunction = require('ks_dashboard_ninja.KsGlobalFunction');
 
     KsDashboardNinja.include({
@@ -12,9 +13,168 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
         events : _.extend(KsDashboardNinja.prototype.events, {
             'click .ks_start_tv_dashboard': 'startTvDashboard',
             'click .ks_stop_tv_dashboard': 'ksStopTvDashboard',
+            'click .ks_dn_asc': '_ksSortAscOrder',
+            'click .ks_dn_desc': '_ksSortDescOrder',
         }),
 
-        rendertvDashboard: function(){
+       _ksRenderNoItemView: function() {
+            $('.ks_dashboard_items_list').remove();
+            var self = this;
+            self.$el.find('.ks_dashboard_link').addClass("d-none");
+            self.$el.find('.ks_dashboard_edit_layout').addClass("d-none");
+            self.$el.find('.ks_start_tv_dashboard').addClass("ks_hide_display");
+
+            $(QWeb.render('ksNoItemView')).appendTo(self.$el)
+
+        },
+
+         _ksSortAscOrder: function(e) {
+            var self = this;
+            var ks_value_offfset = $(e.currentTarget.parentElement.parentElement.parentElement.offsetParent).find('.ks_pager').find('.ks_counter').find('.ks_value').text();
+            var offset = 0;
+            var initial_count = 0;
+            if (ks_value_offfset)
+            {
+                initial_count = parseInt(ks_value_offfset.split('-')[0])
+                offset = parseInt(ks_value_offfset.split('-')[1])
+            }
+
+            var item_id = e.currentTarget.dataset.itemId;
+            var field = e.currentTarget.dataset.fields;
+            var context = self.getContext();
+            var searchList = []
+            var searchField = []
+            var user_id = odoo.session_info.uid;
+            var context = self.getContext();
+            context.user_id = user_id;
+            context.offset = offset;
+            context.initial_count = initial_count;
+
+            var store = e.currentTarget.dataset.store;
+            context.field = field;
+            context.sort_order = "ASC"
+            var ks_domain = self.ksGetParamsForItemFetch(parseInt(item_id));
+            if (store == "true") {
+                self._rpc({
+                    model: 'ks_dashboard_ninja.item',
+                    method: 'ks_get_list_data_orderby_extend',
+                    args: [
+                        [parseInt(item_id)], ks_domain
+                    ],
+                    context: context,
+                }).then(function(result) {
+                    if (result) {
+                        var list_view_data = result;
+                        var $listBody = self._ksListViewBody(list_view_data, item_id);
+                        $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".ks_table_body").empty();
+                        $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".ks_table_body").append($listBody);
+                        }
+                }.bind(this));
+
+                $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".ks_sort_up[data-fields=" + field + "]").removeClass('ks_plus')
+                $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".ks_sort_down[data-fields=" + field + "]").addClass('ks_plus')
+                $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".list_header[data-fields=" + field + "]").removeClass('ks_dn_asc')
+                $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".list_header[data-fields=" + field + "]").addClass('ks_dn_desc')
+            }
+        },
+
+        _ksSortDescOrder: function(e) {
+            var self = this;
+            var ks_value_offfset = $(e.currentTarget.parentElement.parentElement.parentElement.offsetParent).find('.ks_pager').find('.ks_counter').find('.ks_value').text();
+            var offset = 0;
+            var initial_count = 0;
+            if (ks_value_offfset)
+            {
+                initial_count = parseInt(ks_value_offfset.split('-')[0])
+                offset = parseInt(ks_value_offfset.split('-')[1])
+            }
+            var item_id = e.currentTarget.dataset.itemId;
+            var field = e.currentTarget.dataset.fields;
+            var context = self.getContext();
+            var user_id = odoo.session_info.uid;
+            var context = self.getContext();
+            context.user_id = user_id;
+            context.offset = offset;
+            context.initial_count = initial_count;
+            var store = e.currentTarget.dataset.store;
+            context.field = field;
+            context.sort_order = "DESC";
+            var ks_domain = self.ksGetParamsForItemFetch(parseInt(item_id));
+            if (store == "true") {
+                self._rpc({
+                    model: 'ks_dashboard_ninja.item',
+                    method: 'ks_get_list_data_orderby_extend',
+                    args: [
+                        [parseInt(item_id)], ks_domain
+                    ],
+                    context: context,
+                }).then(function(result) {
+                    if (result){
+                        var list_view_data = result;
+                        var $listBody = self._ksListViewBody(list_view_data, item_id);
+                        $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".ks_table_body").empty();
+                        $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".ks_table_body").append($listBody);
+                    }
+                }.bind(this));
+                $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".ks_sort_down[data-fields=" + field + "]").removeClass('ks_plus')
+                $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".ks_sort_up[data-fields=" + field + "]").addClass('ks_plus')
+                $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".list_header[data-fields=" + field + "]").addClass('ks_dn_asc')
+                $(self.$el.find(".grid-stack-item[data-gs-id=" + item_id + "]").children()[0]).find(".list_header[data-fields=" + field + "]").removeClass('ks_dn_desc')
+            }
+        },
+       _ksListViewBody: function(list_view_data, item_id) {
+            var self = this;
+            var itemid = item_id
+            var  ks_data_calculation_type = self.ks_dashboard_data.ks_item_data[item_id].ks_data_calculation_type;
+            var list_view_type = self.ks_dashboard_data.ks_item_data[item_id].ks_list_view_type
+            if (list_view_type === "ungrouped" && list_view_data) {
+                if (list_view_data.date_index) {
+                    var index_data = list_view_data.date_index;
+                    for (var i = 0; i < index_data.length; i++) {
+                        for (var j = 0; j < list_view_data.data_rows.length; j++) {
+                            var index = index_data[i]
+                            var date = list_view_data.data_rows[j]["data"][index]
+                            if (date){
+                             if( list_view_data.fields_type[index] === 'date'){
+                                    list_view_data.data_rows[j]["data"][index] = field_utils.format.date(moment(moment(date).utc(true)._d), {}, {
+                                timezone: false
+                            });}else{
+                                list_view_data.data_rows[j]["data"][index] = field_utils.format.datetime(moment(moment(date).utc(true)._d), {}, {
+                                timezone: false
+                            });
+                            }
+
+                             }else {
+                                list_view_data.data_rows[j]["data"][index] = "";
+                            }
+                        }
+                    }
+                }
+            }
+            if (list_view_data) {
+                for (var i = 0; i < list_view_data.data_rows.length; i++) {
+                    for (var j = 0; j < list_view_data.data_rows[0]["data"].length; j++) {
+                        if (typeof(list_view_data.data_rows[i].data[j]) === "number" || list_view_data.data_rows[i].data[j]) {
+                            if (typeof(list_view_data.data_rows[i].data[j]) === "number") {
+                                list_view_data.data_rows[i].data[j] = field_utils.format.float(list_view_data.data_rows[i].data[j], Float64Array)
+                            }
+                        } else {
+                            list_view_data.data_rows[i].data[j] = "";
+                        }
+                    }
+                }
+            }
+            var $ksitemBody = $(QWeb.render('ks_list_view_tmpl', {
+                        list_view_data: list_view_data,
+                        item_id: itemid,
+                        calculation_type: ks_data_calculation_type,
+                        isDrill: self.ks_dashboard_data.ks_item_data[item_id]['isDrill'],
+                        list_type: list_view_type,
+                    }));
+            return $ksitemBody;
+       },
+
+       rendertvDashboard: function(){
             var self = this;
             this.$el.find('.ks_float_tv').remove();
             this.container_owl = $(QWeb.render('ks_owl_carssel'));
@@ -118,7 +278,9 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
             var self = this;
             var speed = self.ks_dashboard_data.ks_croessel_speed ? parseInt(self.ks_dashboard_data.ks_croessel_speed) : 5000
             $('.ks_float_tv').removeClass('d-none');
+
             $('.owl-carousel').owlCarousel({
+                rtl: $('.o_rtl').length>0,
                 loop:true,
                 nav:true,
                 dots:false,
@@ -145,28 +307,35 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
                 var item_data = self.ks_dashboard_data.ks_item_data[ids[i]]
                 if (item_data['ks_dashboard_item_type'] == 'ks_list_view') {
                     var item_view = self.$el.find(".grid-stack-item[data-gs-id=" + item_data.id + "]");
-                    var name = item_data.name ?item_data.name : item_data.ks_model_display_name;
-                    item_view.children().find('.ks_chart_heading').prop('title', name);
-                    item_view.children().find('.ks_chart_heading').text(name);
                     item_view.find('.card-body').empty();
+                    var name = item_data.name ?item_data.name : item_data.ks_model_display_name;
+                    item_view.children().find('.ks_list_view_heading').prop('title', name);
+                    item_view.children().find('.ks_list_view_heading').text(name);
+                    item_view.find('.ks_dashboard_item_drill_up').addClass('d-none')
+                    item_view.find('.ks_dashboard_item_action_export').removeClass('d-none')
+                    item_view.find('.ks_dashboard_quick_edit_action_popup ').removeClass('d-none')
                     item_view.find('.card-body').append(self.renderListViewData(item_data));
-                    var ks_length = JSON.parse(item_data['ks_list_view_data']).data_rows.length;
-                    if(item_data['ks_data_calculation_type'] === 'custom'){
-                        if (item_data['ks_list_view_type'] === 'ungrouped' && JSON.parse(item_data['ks_list_view_data']).data_rows.length) {
+                    var rows = JSON.parse(item_data['ks_list_view_data']).data_rows;
+                    var ks_length = rows ? rows.length : false;
+                        if (ks_length) {
                             if (item_view.find('.ks_pager_name')) {
                                 item_view.find('.ks_pager_name').empty();
                                 var $ks_pager_container = QWeb.render('ks_pager_template', {
                                     item_id: ids[i],
-                                    intial_count: 15,
+                                    intial_count: item_data.ks_pagination_limit,
                                     offset : 1
                                 })
                                 item_view.find('.ks_pager_name').append($($ks_pager_container));
                             }
-                            if (ks_length < 15) item_view.find('.ks_load_next').addClass('ks_event_offer_list');
-                            item_view.find('.ks_value').text("1-" + JSON.parse(item_data['ks_list_view_data']).data_rows.length);
-                        } else {
-                            item_view.find('.ks_pager').addClass('d-none');
-                        }
+                            if (ks_length < item_data.ks_pagination_limit) item_view.find('.ks_load_next').addClass('ks_event_offer_list');
+                                item_view.find('.ks_value').text("1-" + JSON.parse(item_data['ks_list_view_data']).data_rows.length);
+
+                            if (item_data.ks_record_data_limit == item_data.ks_pagination_limit || item_data.ks_record_count==item_data.ks_pagination_limit) {
+                                item_view.find('.ks_load_next').addClass('ks_event_offer_list');
+                            }
+                    }
+                    else{
+                        item_view.find('.ks_pager').addClass('d-none');
                     }
                 } else if (item_data['ks_dashboard_item_type'] == 'ks_tile') {
                     var item_view = self._ksRenderDashboardTile(item_data);
@@ -185,7 +354,6 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
 
         renderListViewData: function(item) {
             var self = this;
-                        var self = this;
             var list_view_data = JSON.parse(item.ks_list_view_data);
             var item_id = item.id,
                 data_rows = list_view_data.data_rows,
@@ -198,17 +366,18 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
                             var index = index_data[i]
                             var date = list_view_data.data_rows[j]["data"][index]
                             if (date){
-                             if( list_view_data.fields_type[i] === 'date'){
-                                    list_view_data.data_rows[j]["data"][index] = field_utils.format.date(moment(moment(date).utc(true)._d), {}, {
-                                timezone: false
-                            });}else{
-                                list_view_data.data_rows[j]["data"][index] = field_utils.format.datetime(moment(moment(date).utc(true)._d), {}, {
-                                timezone: false
-                            });
+                                 if( list_view_data.fields_type[index] === 'date'){
+                                        list_view_data.data_rows[j]["data"][index] = field_utils.format.date(moment(moment(date).utc(true)._d), {}, {
+                                    timezone: false
+                                });}else{
+                                    list_view_data.data_rows[j]["data"][index] = field_utils.format.datetime(moment(moment(date).utc(true)._d), {}, {
+                                    timezone: false
+                                });
+                                }
+
+                            }else {
+                                list_view_data.data_rows[j]["data"][index] = "";
                             }
-                         }else {
-                            list_view_data.data_rows[j]["data"][index] = "";
-                           }
                         }
                     }
                 }
@@ -218,7 +387,7 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
                     for (var j = 0; j < list_view_data.data_rows[0]["data"].length; j++) {
                         if (typeof(list_view_data.data_rows[i].data[j]) === "number" || list_view_data.data_rows[i].data[j]) {
                             if (typeof(list_view_data.data_rows[i].data[j]) === "number") {
-                                list_view_data.data_rows[i].data[j] = field_utils.format.float(list_view_data.data_rows[i].data[j], Float64Array)
+                                list_view_data.data_rows[i].data[j] = field_utils.format.float(list_view_data.data_rows[i].data[j], Float64Array,{digits: [0, item.ks_precision_digits]})
                             }
                         } else {
                             list_view_data.data_rows[i].data[j] = "";
@@ -249,11 +418,23 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
                 item_id: item_id,
                 list_type: item.ks_list_view_type,
                 calculation_type: item.ks_data_calculation_type,
+                isDrill: self.ks_dashboard_data.ks_item_data[item_id]['isDrill']
             }));
-            this.list_container = $ksItemContainer;
+            self.list_container = $ksItemContainer;
+            if (list_view_data) {
+                var $ksitemBody = self.ksListViewBody(list_view_data,item_id)
+                self.list_container.find('.ks_table_body').append($ksitemBody)
+            }
 
-            if (item.ks_list_view_type === "ungrouped") {
+            if (item.ks_list_view_type === "ungrouped" && item.ks_data_calculation_type === 'custom') {
                 $ksItemContainer.find('.ks_list_canvas_click').removeClass('ks_list_canvas_click');
+            }
+            if (item.ks_goal_liness){
+                $ksItemContainer.find('.ks_sort_icon').addClass('d-none')
+                $ksItemContainer.find('.ks_sort_down').removeClass('ks_sort_down')
+                $ksItemContainer.find('.ks_sort_up').removeClass('ks_sort_up')
+                $ksItemContainer.find('.list_header').removeClass('ks_dn_asc');
+
             }
 
             if (!item.ks_show_records) {
@@ -268,9 +449,9 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
                 pager =  false,
                 item_id = item.id,
                 data_rows = list_view_data.data_rows,
-                length = data_rows.length,
+                length = data_rows ? data_rows.length : false,
                 item_title = item.name;
-            var $ksItemContainer = self.renderListViewData(item)
+//            var $ksItemContainer = self.renderListViewData(item)
             var $ks_gridstack_container = $(QWeb.render('ks_gridstack_list_tv_view_container', {
                 ks_chart_title: item_title,
                 ksIsDashboardManager: self.ks_dashboard_data.ks_dashboard_manager,
@@ -279,7 +460,11 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
             }));
 
             var $container = self.renderListViewData(item);
-            $container.find('.ks_list_canvas_click').removeClass('ks_list_canvas_click');
+            $container.find('.list_header').removeClass('ks_dn_asc');
+            if (item.ks_data_calculation_type === 'custom'){
+                $container.find('.ks_list_canvas_click').removeClass('ks_list_canvas_click');
+            }
+            $container.find('.ks_sort_icon').addClass('d-none');
             $ks_gridstack_container.find('.card-body').append($container);
 
             return $ks_gridstack_container
@@ -288,10 +473,10 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
         _renderListView: function(item, grid){
            var self = this;
             var list_view_data = JSON.parse(item.ks_list_view_data),
-                pager = item.ks_list_view_type === "ungrouped" ? true : false,
+                pager = true,
                 item_id = item.id,
                 data_rows = list_view_data.data_rows,
-                length = data_rows.length,
+                length = data_rows ? data_rows.length : 0,
                 item_title = item.name;
             var $ksItemContainer = self.renderListViewData(item)
             var $ks_gridstack_container = $(QWeb.render('ks_gridstack_list_view_container', {
@@ -306,14 +491,29 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
                 calculation_type: item.ks_data_calculation_type,
             })).addClass('ks_dashboarditem_id');
 
-            if (length < 15) {
+
+            if (item.ks_pagination_limit < length  ) {
                 $ks_gridstack_container.find('.ks_load_next').addClass('ks_event_offer_list');
+            }
+            if (length < item.ks_pagination_limit ) {
+                $ks_gridstack_container.find('.ks_load_next').addClass('ks_event_offer_list');
+            }
+            if (item.ks_record_data_limit === item.ks_pagination_limit){
+                   $ks_gridstack_container.find('.ks_load_next').addClass('ks_event_offer_list');
             }
             if (length == 0){
                 $ks_gridstack_container.find('.ks_pager').addClass('d-none');
             }
+            if (item.ks_pagination_limit == 0){
+                $ks_gridstack_container.find('.ks_pager_name').addClass('d-none');
+            }
+
             $ks_gridstack_container.find('.card-body').append($ksItemContainer);
-            if (pager){
+//            if (pager){
+//                $ks_gridstack_container.find('.ks_list_canvas_click').removeClass('ks_list_canvas_click');
+//            }
+
+            if (item.ks_data_calculation_type === 'query' || item.ks_list_view_type === "ungrouped"){
                 $ks_gridstack_container.find('.ks_list_canvas_click').removeClass('ks_list_canvas_click');
             }
 
@@ -367,6 +567,26 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
         _rendertvChart($ks_gridstack_container,item){
             var self = this;
             var chart_data = JSON.parse(item.ks_chart_data);
+            if (item.ks_chart_cumulative_field){
+                for (var i=0; i< chart_data.datasets.length; i++){
+                    var ks_temp_com = 0
+                    var data = []
+                    var datasets = {}
+                    if (chart_data.datasets[i].ks_chart_cumulative_field){
+                        for (var j=0; j < chart_data.datasets[i].data.length; j++)
+                            {
+                                ks_temp_com = ks_temp_com + chart_data.datasets[i].data[j];
+                                data.push(ks_temp_com);
+                            }
+                            datasets.label =  'Cumulative' + chart_data.datasets[i].label;
+                            datasets.data = data;
+                            if (item.ks_chart_cumulative){
+                                datasets.type =  'line';
+                            }
+                            chart_data.datasets.push(datasets);
+                    }
+                }
+            }
             var isDrill = item.isDrill ? item.isDrill : false;
             var chart_id = item.id,
                 chart_title = item.name;
@@ -432,15 +652,16 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
                                 if (ks_selection === 'monetary'){
                                     var ks_currency_id = chart_data.ks_currency;
                                     var ks_data = KsGlobalFunction.ksNumFormatter(value,1);
+                                    var ks_data = KsGlobalFunction._onKsGlobalFormatter(value, item.ks_data_formatting, item.ks_precision_digits);
                                     ks_data = KsGlobalFunction.ks_monetary(ks_data, ks_currency_id);
                                     return ks_data;
                                 }
                                 else if (ks_selection === 'custom'){
                                     var ks_field = chart_data.ks_field;
-                                    return KsGlobalFunction.ksNumFormatter(value,1) +' '+ ks_field;
+                                    return KsGlobalFunction._onKsGlobalFormatter(value, item.ks_data_formatting, item.ks_precision_digits) +' '+ ks_field;
                                 }
                                 else {
-                                    return KsGlobalFunction.ksNumFormatter(value,1);
+                                    return KsGlobalFunction._onKsGlobalFormatter(value, item.ks_data_formatting, item.ks_precision_digits);
                                 }
                             },
                         }
@@ -467,6 +688,9 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
                     animation: {
                         easing: 'easeInQuad',
                     },
+                    legend: {
+                            display: item.ks_hide_legend
+                        },
                     scales: scales,
                     layout: {
                         padding: {
@@ -505,4 +729,5 @@ odoo.define('ks_dn_advance.ks_tv_dashboard', function(require){
 
         },
     })
+    return KsDashboardNinja;
 })

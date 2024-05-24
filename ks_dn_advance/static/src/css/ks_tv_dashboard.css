@@ -59,7 +59,8 @@
     top: 1vh;
     background:transparent;
 }
-}
+
+
 
 .ks_tv_item.d-flex{
     width:100%;
@@ -194,7 +195,7 @@
 }
 
 .ks_start_tv_dashboard {
-    margin-left: 5px;
+    margin-right: -3px;
 }
 
 .justify-content-center {
@@ -217,3 +218,50 @@
 .ks_table_layput_3 {
     table-layout: auto !important;
 }
+
+
+/*RTL Crowsel related CSS */
+.owl-carousel.owl-rtl {
+    direction: ltr !important;
+}
+
+/*monkey patch : RTL right click not updating chart*/
+.owl-carousel.owl-rtl .fa-angle-left {
+    display: none !important;
+}
+
+.ks_minus {
+    display: none! important;
+}
+
+.ks_plus {
+    display: none! important;
+}
+
+
+.ks_border_aliceblue{
+    border: aliceblue !important;
+}
+
+.list_header {
+    white-space: nowrap !important;
+}
+
+.table thead button.ks_list_heder_hover{
+    opacity: 0;
+    transition: all ease-in-out 0.5s;
+}
+
+.table thead th:hover button.ks_list_heder_hover{
+    opacity: 1;
+}
+
+.ks_hide_display {
+    display:none !important;
+}
+
+.ks_dashboard_icon>img {
+    width: 50px;
+    height: 50px;
+}
+

@@ -28,9 +28,11 @@
                     <th>
                         Chart Type
                     </th>
-                    <th>
-                        Group
-                    </th>
+                   <t t-if="ks_is_group_column">
+                        <th>
+                            Group
+                        </th>
+                    </t>
                 </tr>
             </thead>
             <tbody class="ks_y_axis">
@@ -47,9 +49,11 @@
                                 <t t-set="value" t-value="label_rows[table_row]['chart_type'][chart_type[table_row]]"/>
                             </t>
                         </td>
-                        <td t-att-id="table_row" contenteditable="true" class="ks_stack_group">
-                            <t t-esc="label_rows[table_row]['group']"/>
-                        </td>
+                         <t t-if="ks_is_group_column">
+                            <td t-att-id="table_row" contenteditable="true" class="ks_stack_group">
+                                <t t-esc="label_rows[table_row]['group']"/>
+                            </td>
+                         </t>
                     </tr>
                 </t>
             </tbody>

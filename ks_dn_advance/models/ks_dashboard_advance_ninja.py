@@ -1,8 +1,9 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 import datetime
 import json
-
+from odoo.tools.safe_eval import safe_eval
 
 class KsDashboardNinjaAdvance(models.Model):
     _inherit = "ks_dashboard_ninja.board"
@@ -16,8 +17,8 @@ class KsDashboardNinjaAdvance(models.Model):
                                           ('60000', '1 minute'),
                                           ], string="Slide Interval", default = '5000')
 
-    def ks_fetch_item_data(self, rec):
-         item = super(KsDashboardNinjaAdvance, self).ks_fetch_item_data(rec)
+    def ks_fetch_item_data(self, rec, params={}):
+         item = super(KsDashboardNinjaAdvance, self).ks_fetch_item_data(rec, params)
 
          item["ks_data_calculation_type"] = rec.ks_data_calculation_type
          item['ks_list_view_layout'] = rec.ks_list_view_layout
@@ -32,12 +33,15 @@ class KsDashboardNinjaAdvance(models.Model):
         item['ks_xlabels'] = rec.ks_xlabels
         item['ks_ylabels'] = rec.ks_ylabels
         item['ks_list_view_layout'] = rec.ks_list_view_layout
+        item['ks_is_date_ranges'] = rec.ks_is_date_ranges
+        item['ks_query_start_date'] = rec.ks_query_start_date if rec.ks_query_start_date else False
+        item['ks_query_end_date'] = rec.ks_query_end_date if rec.ks_query_end_date else False
 
         return item
 
     @api.model
     def ks_fetch_dashboard_data(self,ks_dashboard_id, ks_item_domain=False):
-        dashboard_data = super(KsDashboardNinjaAdvance, self).ks_fetch_dashboard_data(ks_dashboard_id,ks_item_domain)
+        dashboard_data = super(KsDashboardNinjaAdvance, self).ks_fetch_dashboard_data(ks_dashboard_id, ks_item_domain)
         dashboard_data['ks_croessel_speed'] = self.browse(ks_dashboard_id).ks_croessel_speed
 
         return dashboard_data
@@ -123,10 +127,18 @@ class KsDashboardNinjaAdvance(models.Model):
             if not all(key in data for key in ks_dashboard_key):
                 raise ValidationError(
                     _("Current Json File is not properly formatted according to Dashboard Ninja Model."))
+            ks_dashboard_top_menu_id = data.get('ks_dashboard_top_menu_id', False)
+            if ks_dashboard_top_menu_id:
+                try:
+                    self.env['ir.ui.menu'].browse(ks_dashboard_top_menu_id).name
+                    ks_dashboard_top_menu_id = self.env['ir.ui.menu'].browse(ks_dashboard_top_menu_id)
+                except Exception:
+                    ks_dashboard_top_menu_id = False
+
             vals = {
                 'name': data['name'],
                 'ks_dashboard_menu_name': data['ks_dashboard_menu_name'],
-                'ks_dashboard_top_menu_id': self.env.ref("ks_dashboard_ninja.board_menu_root").id,
+                'ks_dashboard_top_menu_id': ks_dashboard_top_menu_id.id if ks_dashboard_top_menu_id else self.env.ref("ks_dashboard_ninja.board_menu_root").id,
                 'ks_dashboard_active': True,
                 'ks_gridstack_config': data['ks_gridstack_config'],
                 'ks_dashboard_default_template': self.env.ref("ks_dashboard_ninja.ks_blank").id,
@@ -140,7 +152,7 @@ class KsDashboardNinjaAdvance(models.Model):
             dashboard_id = self.create(vals)
 
             if data['ks_gridstack_config']:
-                ks_gridstack_config = eval(data['ks_gridstack_config'])
+                ks_gridstack_config = safe_eval(data['ks_gridstack_config'])
             ks_grid_stack_config = {}
 
             item_ids = []

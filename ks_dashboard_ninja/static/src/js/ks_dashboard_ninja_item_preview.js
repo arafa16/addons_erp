@@ -13,6 +13,7 @@ odoo.define('ks_dashboard_ninja_list.ks_dashboard_item_preview', function (requi
     var KsItemPreview = AbstractField.extend({
 
         supportedFieldTypes: ['integer'],
+        resetOnAnyFieldChange: true,
 
         file_type_magic_word: {
             '/': 'jpg',
@@ -71,7 +72,50 @@ odoo.define('ks_dashboard_ninja_list.ks_dashboard_item_preview', function (requi
             }
         },
 
-        ks_get_dark_color: function (color, opacity, percent) { // deprecated. See below.
+//        Indian format shorthand function
+        ksNumIndianFormatter: function(num, digits) {
+            var negative;
+            var si = [{
+                value: 1,
+                symbol: ""
+            },
+            {
+                value: 1E3,
+                symbol: "Th"
+            },
+            {
+                value: 1E5,
+                symbol: "Lakh"
+            },
+            {
+                value: 1E7,
+                symbol: "Cr"
+            },
+            {
+                value: 1E9,
+                symbol: 'Arab'
+            }
+            ];
+            if (num < 0) {
+                num = Math.abs(num)
+                negative = true
+            }
+            var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+            var i;
+            for (i = si.length-1; i > 0; i--) {
+                if (num >= si[i].value) {
+                    break;
+                }
+            }
+            if (negative) {
+                return "-" + (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+            } else {
+                return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+            }
+
+        },
+
+        ks_get_dark_color: function(color, opacity, percent) { // deprecated. See below.
             var num = parseInt(color.slice(1), 16),
                 amt = Math.round(2.55 * percent),
                 R = (num >> 16) + amt,
@@ -97,6 +141,7 @@ odoo.define('ks_dashboard_ninja_list.ks_dashboard_item_preview', function (requi
                 icon_select: field.ks_icon_select,
                 default_icon: field.ks_default_icon,
                 icon_color: ks_rgba_icon_color,
+                count_tooltip: field.ks_record_count,
             }
             if (field.ks_icon) {
 
@@ -121,13 +166,22 @@ odoo.define('ks_dashboard_ninja_list.ks_dashboard_item_preview', function (requi
                     item_info['name'] = "Name";
                 }
             }
-
+//            if (field.ks_data_format == 'exact'){
+//                item_info['count'] = field.ks_record_count;
+//            }else{
+//                if (field.ks_data_format == 'indian'){
+//                    item_info['count'] = self.ksNumIndianFormatter( field.ks_record_count, 1);
+//                }else{
+//                    item_info['count'] = self.ksNumFormatter(field.ks_record_count, 1);
+//                }
+//            }
+            item_info['count'] = self._onKsGlobalFormatter(field.ks_record_count, field.ks_data_format, field.ks_precision_digits);
 
 
             switch (field.ks_layout) {
                 case 'layout1':
                     $val = $(QWeb.render('ks_db_list_preview_layout1', item_info));
-                    $val.css({
+                        $val.css({
                         "background-color": ks_rgba_background_color,
                         "color": ks_rgba_font_color
                     });
@@ -198,9 +252,22 @@ odoo.define('ks_dashboard_ninja_list.ks_dashboard_item_preview', function (requi
             self.$el.append(QWeb.render('ks_db_item_preview_footer_note'));
         },
 
-
+        _onKsGlobalFormatter: function(ks_record_count, ks_data_format, ks_precision_digits){
+            var self = this;
+            if (ks_data_format == 'exact'){
+//                return ks_record_count;
+                return field_utils.format.float(ks_record_count, Float64Array, {digits: [0, ks_precision_digits]});
+            }else{
+                if (ks_data_format == 'indian'){
+                    return self.ksNumIndianFormatter( ks_record_count, 1);
+                }else if (ks_data_format == 'colombian'){
+                    return self.ksNumColombianFormatter( ks_record_count, 1, ks_precision_digits);
+                }else{
+                    return self.ksNumFormatter(ks_record_count, 1);
+                }
+            }
+        },
         _renderReadonly: function ($val) {
-
             var self = this;
             var ks_icon_url;
             this._rpc({
@@ -212,7 +279,6 @@ odoo.define('ks_dashboard_ninja_list.ks_dashboard_item_preview', function (requi
                 $val.find('.ks_db_list_image').attr('src', ks_icon_url)
                 self.$el.append($val)
             });
-
         },
 
 

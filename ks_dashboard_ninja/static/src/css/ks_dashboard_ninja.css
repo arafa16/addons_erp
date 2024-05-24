@@ -22,7 +22,6 @@
 .font-weight-bold{
 font-weight : bold;
 }
-
 .ks_dashboard_header_name {
         margin: 0;
         max-width: 35%;
@@ -404,7 +403,7 @@ font-weight : bold;
 
 
 /* Date Filter Selection CSS*/
-#ks_date_filter_selection{
+#ks_date_filter_selection, #ks_dn_filter_selection{
     font-family: inherit;
     font-weight: bold;
     padding: 0px 8px 0px 8px;
@@ -425,10 +424,10 @@ font-weight : bold;
     align-items: center;
 }
 
-.ks_date_filter_selected > span{
+.ks_date_filter_selected > span, .ks_layout_selected > span{
     font-weight: bold;
 }
-.ks_date_filter_selected > span::before{
+.ks_date_filter_selected > span::before, .ks_layout_selected > span::before{
     font-family: FontAwesome;
     position: absolute;
     left: 6px;
@@ -639,7 +638,7 @@ font-weight : bold;
     top: 0px;*/
     color : black;
     will-change: transform;
-        width: max-content;
+    width: max-content;
 }
 
 .ks_dashboard_item_action > .caret{
@@ -855,7 +854,6 @@ font-weight : bold;
 
 body .ks-show-dropdown {
     overflow-x: visible !important;
-    overflow-y: visible !important;
 }
 
 .ks-move-duplicate-dropdown {
@@ -863,4 +861,7 @@ body .ks-show-dropdown {
     min-width: 120px !important;
     max-width: 175px;
     position: absolute !important;
+}
+#ks_add_item_selection{
+    left: -85px;
 }

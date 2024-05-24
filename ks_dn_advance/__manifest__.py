@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Dashboard Ninja Advance",
+	'name': 'Dashboard Ninja Advance',
 
-    'summary': """
-    This app allow you to present your complex data in form of Charts or list view on Dashboards with awesome
-                        query feature of Dashboard Ninja.
-    """,
+	'summary': """
+		Dashboard Ninja Advance for Odoo allows you to showcase your complex data in form of 
+        interactive and engaging charts or list views. Manage the complicated data of your 
+        business and get a detailed insight into your sale. Dashboard Ninja Advance, 
+        Dashboard Ninja, Modern Odoo Dashboards, Powerful Dashboard, Beautiful Dashboard,
+        Modern Dashboard, Chart Dashboard, Graph Dashboard, Pie Chart Dashboard, Ninja Dashboard.
+""",
 
-    'description': """
-        Best Odoo Dashboard Apps
+	'description': """
+Best Odoo Dashboard Apps
         Slider Dashboard Apps
         Odoo Query Dashboard Apps
         Display Dashboard Apps
@@ -37,8 +40,8 @@
         Dashboard apps
         Dashboards for Websites
         HR Dashboard Apps
-        Sales Dashboard Apps 
-        inventory Dashboard Apps 
+        Sales Dashboard Apps
+        inventory Dashboard Apps
         Lead Dashboards
         Opportunity Dashboards
         CRM Dashboards
@@ -46,7 +49,7 @@
         POS Dashboards
         Web Dynamic Apps,
         Report Import/Export,
-        Date Filter Apps    
+        Date Filter Apps
         Tile Dashboard Apps
         Dashboard Widgets,
         Dashboard Manager Apps,
@@ -57,7 +60,7 @@
         Project management Apps
         Visualization charts
         Finance Dashboard
-        Accounting Report 
+        Accounting Report
         Accounting Valuation
         Accounting Quantities
         Dashboard for Odoo
@@ -73,7 +76,7 @@
         Product Dashboard
         Sales Dashboard
         Best Dashboard Apps
-        Inventory Report 
+        Inventory Report
         Inventory Valuation
         Inventory Quantities
         V11 Dashboard
@@ -81,32 +84,35 @@
         Odoo Dashboard v11.0
         New Odoo Dashboard Apps
         Dashboard Ninja Advance
+""",
 
-    """,
+	'author': 'Ksolves India Ltd.',
 
-    'author': "Ksolves India Pvt. Ltd.",
-    'license': 'OPL-1',
-    'currency': 'EUR',
-    'price': 49,
-    'website': "https://www.ksolves.com",
-    'maintainer': 'Ksolves India Pvt. Ltd.',
-    'live_test_url': 'http://dashboardninja10.kappso.com/web',
-    'category': 'Tools',
-    'version': '11.0.1.0.2',
-    'support': 'sales@ksolves.com',
-    'images': ['static/description/banner.gif'],
+	'license': 'OPL-1',
 
-    'depends': ['ks_dashboard_ninja'],
+	'currency': 'EUR',
 
-    'data': [
-        'views/ks_dashboard_tv_assets.xml',
-        'views/ks_dashboard_ninja_item_view_inherit.xml',
-    ],
+	'price': '149',
 
-    'qweb': [
-        'static/src/xml/ks_dashboard_tv_ninja.xml',
-        'static/src/xml/ks_query_templates.xml',
-    ],
+	'website': 'https://store.ksolves.com/',
 
+	'maintainer': 'Ksolves India Ltd.',
 
+	'live_test_url': 'https://dn15demo.kappso.com/web/demo_login',
+
+	'category': 'Tools',
+
+	'version': '11.0.1.1.3',
+
+	'support': 'sales@ksolves.com',
+
+	'images': ['static/description/Dashboard ninja advance banner.gif'],
+
+	'depends': ['ks_dashboard_ninja'],
+
+	'data': ['views/ks_dashboard_tv_assets.xml', 'views/ks_dashboard_ninja_item_view_inherit.xml', 'views/ks_dashboard_form_view_inherit.xml'],
+
+	'qweb': ['static/src/xml/ks_dashboard_tv_ninja.xml', 'static/src/xml/ks_query_templates.xml'],
+
+	'uninstall_hook': 'ks_dna_uninstall_hook',
 }

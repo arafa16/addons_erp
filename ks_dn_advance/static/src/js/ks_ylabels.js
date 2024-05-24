@@ -34,6 +34,7 @@ odoo.define("ks_dashboard_ninja.ks_ylabels", function(require){
                             label_rows: self.ks_columns,
                             chart_type: self.ks_rows_chart_type,
                             mode: self.mode,
+                            ks_is_group_column: ks_query_result.ks_is_group_column
                         }));
 
                         self.ks_rows_keys.forEach(function(key){
