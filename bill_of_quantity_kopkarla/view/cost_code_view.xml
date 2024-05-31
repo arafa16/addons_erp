@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_cost_code_tree" model="ir.ui.view">
+            <field name="name">cost.code.tree</field>
+            <field name="model">cost.code</field>
+            <field name="type">tree</field>
+            <!--<field name="priority" eval="8"/>-->
+            <field name="arch" type="xml">
+                <tree string="Cost Code" editable="bottom">
+                    <field name="key"/>
+                    <field name="cost_header_id"/>
+                    <!--<field name="number"/>-->
+                    <field name="name"/>
+                    <field name="area_id"/>
+                    <!--<field name="description"/>-->
+                    <!--<field name="qty"/>-->
+                    <field name="uom_id"/>
+                    <field name="price_unit"/>
+                    <field name="price_service"/>
+                    <field name="sale_unit"/>
+                    <field name="sale_service"/>
+                    <!--<field name="sub_total"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <!--<record id="view_cost_code_form" model="ir.ui.view">
+            <field name="name">cost.code.form</field>
+            <field name="model">cost.code</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Cost Code">
+                    <sheet>
+                        <group>
+                            <group>
+                                &lt;!&ndash;<field name="number" select="1"/>&ndash;&gt;
+                                <field name="name"/>
+                                <field name="key"/>
+                                <field name="cost_header_id" options="{'no_create': True}"/>
+                                <field name="area_id" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                &lt;!&ndash;<field name="qty"/>&ndash;&gt;
+                                <field name="uom_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="price_unit"/>
+                                &lt;!&ndash;<field name="sub_total"/>&ndash;&gt;
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>-->
+
+        <record id="view_cost_code_pivot" model="ir.ui.view">
+            <field name="name">cost.code.pivot</field>
+            <field name="model">cost.code</field>
+            <field name="arch" type="xml">
+                <pivot string="Cost Code">
+                    <field name="key" type="row"/>
+                    <field name="cost_header_id" type="row"/>
+                    <field name="name" type="row"/>
+                    <field name="area_id" type="col"/>
+                    <field name="price_unit" type="measure"/>
+                    <field name="price_service" type="measure"/>
+                    <field name="sale_unit" type="measure"/>
+                    <field name="sale_service" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_cost_code_search" model="ir.ui.view">
+            <field name="name">cost.code.search</field>
+            <field name="model">cost.code</field>
+            <field name="type">search</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="Cost Code">
+                    <!--<field name="number" select="True"/>-->
+                    <field name="name"/>
+                    <field name="key"/>
+                    <field name="cost_header_id"/>
+                    <field name="area_id"/>
+
+                    <filter string="Operational" name="key_operational" domain="[('key', '=', 'operational')]"/>
+                    <filter string="Permit" name="key_permit" domain="[('key', '=', 'permit')]"/>
+                    <filter string="Equipment" name="key_equipment" domain="[('key', '=', 'equipment')]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_key" string="Cost Key" context="{'group_by':'key'}"/>
+                        <filter name="group_by_category" string="Cost Category" context="{'group_by':'cost_header_id'}"/>
+                        <filter name="group_by_area" string="Area" context="{'group_by':'area_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_cost_code_view">
+            <field name="name">Cost Code</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cost.code</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,pivot</field>
+            <field name="search_view_id" ref="view_cost_code_search"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!--<record model="ir.actions.act_window.view" id="act_open_cost_code_view_form">
+            <field name="act_window_id" ref="act_open_cost_code_view"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_cost_code_form"/>
+        </record>-->
+
+        <record model="ir.actions.act_window.view" id="act_open_cost_code_view_tree">
+            <field name="act_window_id" ref="act_open_cost_code_view"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_cost_code_tree"/>
+        </record>
+
+        <menuitem action="act_open_cost_code_view"
+                  id="menu_cost_code"
+                  sequence="2"
+                  parent="menu_boq_cost"/>
+    </data>
+</odoo>

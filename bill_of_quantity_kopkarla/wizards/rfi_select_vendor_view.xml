@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+    <!--<record id="view_bill_quantity_select_vendor_tree" model="ir.ui.view">
+        <field name="name">view.bill.quantity.select.vendor.tree</field>
+        <field name="model">bill.quantity.line</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <tree string="Select Vendor">
+                <field name="bill_quantity_id"/>
+                <field name="crm_id"/>
+                <field name="product_id"/>
+                <field name="name"/>
+                <field name="qty"/>
+                <field name="price_unit"/>
+                <field name="user_rfq_id" groups="bill_of_quantity_kopkarla.group_rfi_manager"/>
+                <field name="rfi_id"/>
+                <field name="rfi_expired_date"/>
+                <field name="rfi_expired"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>-->
+
+    <record model="ir.ui.view" id="view_bill_quantity_select_vendor_form">
+        <field name="name">view.bill.quantity.select.vendor.form</field>
+        <field name="model">bill.quantity.select.vendor</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <form string="Select Vendor">
+                <sheet>
+                    <group>
+                        <field name="bill_quantity_line_id" invisible="1"/>
+                    </group>
+                    <field name="product_rfi_ids">
+                        <tree string="Select Vendor" create="false" editable="false" delete="false">
+                            <!--<button name="action_select_vendor" string="Sel" type="object"/>-->
+                            <field name="product_id" options="{'no_create': True, 'no_open': True}" invisible="1"/>
+                            <!--<field name="type"/>-->
+                            <!--<field name="uom_id" options="{'no_create': True, 'no_open': True}"/>-->
+                            <field name="partner_id" options="{'no_create': True, 'no_open': True}" domain="[('supplier','=',True)]"/>
+                            <field name="price_unit"/>
+                            <!--<field name="create_date"/>-->
+                            <field name="expired_date"/>
+                            <field name="delivery"/>
+                            <field name="franco"/>
+                            <field name="garansi"/>
+                            <field name="payment_term_id"/>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <field name="partner_id" options="{'no_create': True}"/>
+                        <!--<field name="price_unit" readonly="1" force_save="1"/>
+                        <field name="rfi_expired_date" readonly="1"/>-->
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Update" name="execute" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--<record id="view_bill_quantity_select_vendor_search" model="ir.ui.view">
+        <field name="name">bill.quantity.select.vendor.search</field>
+        <field name="model">bill.quantity.select.vendor</field>
+        <field name="type">search</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <search string="Select Vendor">
+                <field name="bill_quantity_line_id" select="True"/>
+            </search>
+        </field>
+    </record>-->
+
+    <record model="ir.actions.act_window" id="action_bill_quantity_select_vendor">
+        <field name="name">Select Vendor</field>
+        <field name="res_model">bill.quantity.select.vendor</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_bill_quantity_select_vendor_form"/>
+        <!--<field name="search_view_id" ref="view_bill_quantity_select_vendor_search"/>-->
+        <field name="target">new</field>
+    </record>
+
+    <!--<record model="ir.ui.menu" id="account_update_lock_date_menu">
+        <field name="name">Update accounting lock dates</field>
+        <field name="parent_id" ref="account.menu_finance_entries_actions"/>
+        <field name="action" ref="account_update_lock_date_act_window"/>
+        <field name="groups_id" eval="[(6, 0, [ref('account.group_account_manager')])]"/>
+        <field name="sequence" eval="70"/>
+    </record>-->
+</odoo>

@@ -1,0 +1,290 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+        <report
+            id="action_report_boq_customer"
+            string="BoQ to Customer"
+            model="bill.quantity"
+            report_type="qweb-pdf"
+            name="bill_of_quantity_kopkarla.template_boq_customer"
+            file="bill_of_quantity_kopkarla.template_boq_customer"
+            print_report_name="'BoQ to Customer %s' % (object.name)"
+            paperformat="paperformat_boq"/>
+        />
+
+		<template id="template_boq_customer_dokumen">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h3 style="text-align:center;">
+                        <span>BoQ To </span><span t-field="doc.partner_id.name"/>
+                    </h3>
+                    <div class="row mt32 mb32">
+                        <div class="col-xs-6">
+                            <table style="border:none;" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="font-weight:bold; width:120px; padding:2px;">Pelanggan</td>
+                                    <td style="padding: 2px 5px;">:</td>
+                                    <td style="padding: 2px;"><span t-field="doc.partner_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold; width:120px; padding:2px;">Alamat</td>
+                                    <td style="padding: 2px 5px;">:</td>
+                                    <td style="padding: 2px;"><span t-field="doc.partner_id.street"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="co-md-12">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" style="text-align: center; vertical-align: middle; border:1px solid black;" width="4%">No</th>
+                                        <th rowspan="2" style="text-align: center; vertical-align: middle; border:1px solid black;" width="32%">Description</th>
+                                        <th rowspan="2" style="text-align: center; vertical-align: middle; border:1px solid black;" width="8%">Unit</th>
+                                        <th rowspan="2" style="text-align: center; vertical-align: middle; border:1px solid black;" width="8%">Vol</th>
+                                        <th colspan="2" style="text-align: center; vertical-align: middle; border:1px solid black;" width="24%">Harga Satuan</th>
+                                        <th colspan="2" style="text-align: center; vertical-align: middle; border:1px solid black;" width="24%">Jumlah Harga</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="12%">Material</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="12%">Jasa</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="12%">Material</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="12%">Jasa</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="sale_tbody">
+                                    <t t-set="no" t-value="0"/>
+                                    <t t-set="price_subtotal" t-value="0"/>
+                                    <t t-set="service_subtotal" t-value="0"/>
+                                    <t t-if="len(doc.line_mitra_ids)">
+                                        <t t-foreach="doc.line_mitra_ids" t-as="baris">
+                                            <tr style="font-size:12px;">
+                                                <t t-set="no" t-value="no + 1"/>
+                                                <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
+                                                <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
+                                                <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
+                                                <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.qty)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service_subtotal)"/></td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <t t-elif="len(doc.line_material_ids)">
+                                        <t t-foreach="doc.line_material_ids" t-as="baris">
+                                            <tr style="font-size:12px;">
+                                                <t t-set="no" t-value="no + 1"/>
+                                                <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
+                                                <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
+                                                <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
+                                                <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.qty)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service_subtotal)"/></td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr style="font-size:12px; font-weight:bold;">
+                                        <td style="text-align: right; vertical-align: middle; border:1px solid black;" colspan="6">Sub Total</td>
+                                        <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(price_subtotal)"/></td>
+                                        <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(service_subtotal)"/></td>
+                                    </tr>
+                                    <tr style="font-size:12px; font-weight:bold;">
+                                        <td style="text-align: right; vertical-align: middle; border:1px solid black;" colspan="6">TOTAL</td>
+                                        <td style="text-align: center; vertical-align: middle; border:1px solid black;" colspan="2"><span t-esc="'{0:,.2f}'.format(price_subtotal + service_subtotal)"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--<div class="clearfix">
+                        <div class="row" name="total">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="doc.amount_total"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>-->
+                    <!--<div style="page-break-inside: avoid;">
+                        <p>
+                            <div style="font-weight:bold; padding-top:20px;">Description</div>
+                            <div style="border:thin solid #DADADA; padding:5px; min-height:40px;">
+                                <span t-field="doc.description"/>
+                            </div>
+                        </p>
+                        <div style="padding-top:50px;">
+                            <div class="row" name="kolomttd">
+
+                            </div>
+                        </div>
+                    </div>-->
+                    <div style="padding-top: 40px; page-break-inside: avoid;">
+                        <table style="widht:100%;border: 0px">
+                            <tr style="height:125px;">
+                                <td width="75%" style="text-align: center;"></td>
+                                <td width="25%" style="text-align: center;">Jakarta, <span t-esc="time.strftime('%d %B %Y')"/><br/>Menyetujui,</td>
+                            </tr>
+                            <tr style="height:10px;">
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center;"><span t-field="doc.user_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center; border-top: 1px solid black;">Manager Sales &amp; Solution</td>
+                            </tr>
+                            <!--<tr>
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center;">&lt;!&ndash;<span t-field="o.sign_pembayar.name"/>&ndash;&gt;Ismardianto</td>
+                            </tr>-->
+                        </table>
+                    </div>
+                </div>
+            </t>
+		</template>
+
+		<template id="template_boq_customer_rental">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h3 style="text-align:center;">
+                        <span>BoQ To </span><span t-field="doc.partner_id.name"/>
+                    </h3>
+                    <div class="row mt32 mb32">
+                        <div class="col-xs-6">
+                            <table style="border:none;" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="font-weight:bold; width:120px; padding:2px;">Pelanggan</td>
+                                    <td style="padding: 2px 5px;">:</td>
+                                    <td style="padding: 2px;"><span t-field="doc.partner_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold; width:120px; padding:2px;">Alamat</td>
+                                    <td style="padding: 2px 5px;">:</td>
+                                    <td style="padding: 2px;"><span t-field="doc.partner_id.street"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="co-md-12">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="4%">No</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="16%">Product</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="30%">Description</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="7%">Jumlah</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="7%">Unit</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="12%">Harga Sewa (1 Unit/Bulan)</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="12%">Tenure</th>
+                                        <th style="text-align: center; vertical-align: middle; border:1px solid black;" width="12%">Total Harga Sewa</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="sale_tbody">
+                                    <t t-set="no" t-value="0"/>
+                                    <t t-set="price_subtotal" t-value="0"/>
+                                    <t t-foreach="doc.line_material_ids" t-as="baris">
+                                        <tr style="font-size:12px;">
+                                            <t t-set="no" t-value="no + 1"/>
+                                            <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
+                                            <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
+                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
+                                            <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.product_id.name"/></td>
+                                            <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
+                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.0f}'.format(baris.qty)"/></td>
+                                            <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
+                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
+                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
+                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr style="font-size:12px; font-weight:bold;">
+                                        <td style="text-align: right; vertical-align: middle; border:1px solid black;" colspan="6">Sub Total</td>
+                                        <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(price_subtotal)"/></td>
+                                        <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(service_subtotal)"/></td>
+                                    </tr>
+                                    <tr style="font-size:12px; font-weight:bold;">
+                                        <td style="text-align: right; vertical-align: middle; border:1px solid black;" colspan="6">TOTAL</td>
+                                        <td style="text-align: center; vertical-align: middle; border:1px solid black;" colspan="2"><span t-esc="'{0:,.2f}'.format(price_subtotal + service_subtotal)"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--<div class="clearfix">
+                        <div class="row" name="total">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="doc.amount_total"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>-->
+                    <!--<div style="page-break-inside: avoid;">
+                        <p>
+                            <div style="font-weight:bold; padding-top:20px;">Description</div>
+                            <div style="border:thin solid #DADADA; padding:5px; min-height:40px;">
+                                <span t-field="doc.description"/>
+                            </div>
+                        </p>
+                        <div style="padding-top:50px;">
+                            <div class="row" name="kolomttd">
+
+                            </div>
+                        </div>
+                    </div>-->
+                    <div style="padding-top: 40px; page-break-inside: avoid;">
+                        <table style="widht:100%;border: 0px">
+                            <tr style="height:125px;">
+                                <td width="75%" style="text-align: center;"></td>
+                                <td width="25%" style="text-align: center;">Jakarta, <span t-esc="time.strftime('%d %B %Y')"/><br/>Menyetujui,</td>
+                            </tr>
+                            <tr style="height:10px;">
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center;"><span t-field="doc.user_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center; border-top: 1px solid black;">Manager Sales &amp; Solution</td>
+                            </tr>
+                            <!--<tr>
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center;">&lt;!&ndash;<span t-field="o.sign_pembayar.name"/>&ndash;&gt;Ismardianto</td>
+                            </tr>-->
+                        </table>
+                    </div>
+                </div>
+            </t>
+		</template>
+
+        <template id="template_boq_customer">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-if="doc.is_rental">
+                        <t t-call="bill_of_quantity_kopkarla.template_boq_customer_rental"/>
+                    </t>
+                    <t t-else="">
+                        <t t-call="bill_of_quantity_kopkarla.template_boq_customer_dokumen"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="crm_case_form_view_oppor_tbd" model="ir.ui.view">
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
+                <button string="New BoQ" name="%(action_boq_new)d" type="action" class="oe_highlight"
+                    context="{'search_default_partner_id': partner_id,
+                              'default_partner_id': partner_id,
+                              'default_team_id': team_id,
+                              'default_campaign_id': campaign_id,
+                              'default_medium_id': medium_id,
+                              'default_source_id': source_id}"/>
+            </xpath>
+            <button name="action_schedule_meeting" position="after">
+                <button class="oe_stat_button" type="action"
+                        name="%(act_open_bill_quantity_view)d" icon="fa-pencil-square-o"
+                        context="{'search_default_crm_id': active_id, 'default_partner_id': partner_id, 'search_default_draft': 1, 'search_default_sent': 1}">
+                    <div class="o_stat_info">
+                        <field name="boq_count" class="o_stat_value"/>
+                        <span class="o_stat_text"> BoQ(s) </span>
+                    </div>
+                </button>
+            </button>
+            <xpath expr="//notebook/page[1]" position="before">
+                <page name="boq" string="Revenue Calculation" attrs="{'invisible':[('boq_id', '=', False)]}">
+                    <group>
+                        <group>
+                            <label for="boq_id"/>
+                            <div>
+                                <field name="boq_id" class="oe_inline" options="{'no_create': True}" domain="[('crm_id', '=', active_id), ('state', '=', 'posted')]"/>
+                                (Expired: <field name="rfi_expired_date" class="oe_inline"/>)
+                            </div>
+                            <field name="boq_amount" class="oe_right"/>
+                            <field name="overhead_amount" class="oe_right"/>
+                            <field name="total_cost" class="oe_right"/>
+                            <field name="total_sale" class="oe_right"/>
+                            <field name="margin_amount" style="font-weight: bold;" class="oe_right"/>
+                            <label for="margin_pct"/>
+                            <div style="font-weight: bold;" class="oe_right">
+                                <field name="margin_pct" class="oe_inline"/>%
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_case_form_view_oppor_quotation" model="ir.ui.view">
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(sale_crm.sale_action_quotations_new)d']" position="before">
+                <field name="jenis_so" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='%(sale_crm.sale_action_quotations_new)d']" position="attributes">
+                <attribute name="context">{'search_default_partner_id': partner_id,
+                                           'default_partner_id': partner_id,
+                                           'default_team_id': team_id,
+                                           'default_jenis_so': jenis_so,
+                                           'default_proj_type': proj_type_id,
+                                           'default_so_bagian': department_id,
+                                           'default_sales_area_kode': area_id,
+                                           'default_campaign_id': campaign_id,
+                                           'default_medium_id': medium_id,
+                                           'default_source_id': source_id}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_case_tree_view_oppor_tbd" model="ir.ui.view">
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="arch" type="xml">
+            <field name="probability" position="after">
+                <field name="boq_id"/>
+                <field name="rfi_expired_date"/>
+                <field name="boq_rfi_expired"/>
+            </field>
+        </field>
+    </record>
+</odoo>

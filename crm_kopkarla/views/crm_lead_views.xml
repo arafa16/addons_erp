@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_create_opportunity_simplified_tbd" model="ir.ui.view">
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_create_opportunity_simplified"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="required">1</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+            </field>
+            <field name="partner_id" position="after">
+                <field name="order_type_id" options="{'no_create': True}"/>
+                <field name="area_id" options="{'no_create': True}"/>
+                <field name="analytic_account_id" options="{'no_create': True}" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="crm_case_form_view_tbd" model="ir.ui.view">
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <field name="date_deadline" position="after">
+                <field name="boq_due_date"/>
+                <field name="proj_type_readonly" invisible="1"/>
+                <field name="order_type_id" options="{'no_create': True}"/>
+                <field name="proj_type_id" options="{'no_create': True}" force_save="1"
+                       attrs="{'invisible': [('is_rental', '=', True)], 'readonly': [('proj_type_readonly', '=', True)]}"/>
+                <field name="need_spk" invisible="1"/>
+                <field name="no_jar" attrs="{'invisible': [('need_spk', '=', False)]}"/>
+                <field name="spk" attrs="{'invisible': [('need_spk', '=', False)]}"/>
+                <field name="is_rental" invisible="1"/>
+                <field name="rental_type" attrs="{'invisible': [('is_rental', '=', False)]}"/>
+                <field name="department_id" options="{'no_create': True}" domain="[('adadiSO','=',True)]"/>
+                <field name="area_id" options="{'no_create': True}"/>
+                <field name="cost_center_id" options="{'no_create': True}"/>
+                <field name="analytic_account_id" options="{'no_create': True}"/>
+            </field>
+            <!--<xpath expr="//sheet/group/group[2]" position="inside">
+                <field name="order_type"/>
+            </xpath>-->
+            <field name="phone" position="after">
+                <field name="end_user"/>
+                <field name="end_user_address"/>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </field>
+            <field name="user_id" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </field>
+            <field name="team_id" position="after">
+                <field name="presales_user_id" options="{'no_create': True}"/>
+            </field>
+            <notebook position="inside">
+                <page string="Materials" name="material">
+                    <field name="line_material_ids" context="{'default_key': 'material'}">
+                        <tree string="Material" editable="bottom">
+                            <field name="product"/>
+                            <field name="name"/>
+                            <field name="product_brand"/>
+                            <field name="product_type"/>
+                            <field name="qty"/>
+                            <field name="uom_id" options="{'no_create': True}"/>
+                            <!--<field name="price_unit"/>-->
+                            <!--<field name="price_subtotal" style="background-color: #89fae7;" sum="Total Cost"/>
+                            <field name="sale_price" style="background-color: #f1fc88;"/>
+                            <field name="sale_subtotal" style="background-color: #f1fc88;" sum="Total Sales"/>
+                            <field name="revenue_margin"/>-->
+                            <field name="lokasi_kirim"/>
+                            <!--<field name="delivery"/>-->
+                            <field name="franco"/>
+                            <!--<field name="payment_term_id" options="{'no_create': True}"/>-->
+                            <field name="garansi"/>
+                            <!--<field name="state"/>-->
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

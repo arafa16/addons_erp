@@ -1,0 +1,21 @@
+<odoo noupdate="1">
+    <record id="boq_number_sequence" model="ir.sequence">
+        <field name="name">BOQ Number</field>
+        <field name="code">boq.number.sequence</field>
+        <field name="suffix">/BOQ/%(month)s%(y)s</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="rfi_number_sequence" model="ir.sequence">
+        <field name="name">RFI Number</field>
+        <field name="code">rfi.number.sequence</field>
+        <field name="suffix">/RFI/%(month)s%(y)s</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

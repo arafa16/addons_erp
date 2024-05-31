@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_bill_quantity_approval_form" model="ir.ui.view">
+            <field name="model">bill.quantity</field>
+            <field name="inherit_id" ref="bill_of_quantity_kopkarla.view_bill_quantity_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Approval" name="approval">
+                        <group>
+                            <group>
+                                <field name="need_validation" invisible="1"/>
+                                <field name="approver1_id" string="Koordinator" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('need_validation','=',False)]}"/>
+                                <field name="approver2_id" string="Supervisor" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('need_validation','=',False)]}"/>
+                                <field name="approver3_id" string="Manager" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('need_validation','=',False)]}"/>
+                                <field name="approver4_id" string="Pengurus" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('need_validation','=',False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

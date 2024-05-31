@@ -1,0 +1,445 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+        <record id="paperformat_boq_memo" model="report.paperformat">
+            <field name="name">A4 BoQ Memo</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">15</field>
+            <field name="margin_right">15</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <report
+            id="action_report_boq_memo"
+            string="Memo Internal"
+            model="bill.quantity"
+            report_type="qweb-pdf"
+            name="bill_of_quantity_kopkarla.template_boq_memo"
+            file="bill_of_quantity_kopkarla.template_boq_memo"
+            print_report_name="'Memo Internal %s' % (object.name)"
+            paperformat="paperformat_boq_memo"/>
+        />
+
+        <template id="bill_of_quantity_kopkarla.internal_layout">
+            <div class="header">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <span t-esc="title"/>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <span t-esc="company_name"/>
+                    </div>
+                </div>
+            </div>
+            <div class="article">
+                <link href="/account_financial_report/static/src/css/report.css" rel="stylesheet"/>
+                <t t-raw="0" />
+            </div>
+
+            <div class="footer">
+                <div class="row">
+                    <div class="col-xs-6 custom_footer">
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                    </div>
+                    <div class="col-xs-6 text-right custom_footer">
+                        <ul class="list-inline">
+                            <li><span class="page"/></li>
+                            <li>/</li>
+                            <li><span class="topage"/></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+		<template id="template_boq_memo_dokumen">
+            <div class="page">
+                <div class="oe_structure"/>
+                <style>
+                    span.a {
+                      display: inline-block;
+                      padding: 5px;
+                      width: 30px;
+                      vertical-align: top;
+                    }
+                    span.b {
+                      display: inline-block;
+                      padding: 5px 0px;
+                      width: 100px;
+                      vertical-align: top;
+                      text-align: justify;
+                    }
+                    span.c {
+                      display: inline-block;
+                      padding: 5px 0px;
+                      width: 540px;
+                      vertical-align: top;
+                      text-align: justify;
+                    }
+                </style>
+                <table style="border:none;" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="75%" style="text-align:center; vertical-align:middle; font-size:50px; height: 100px;">MEMO INTERNAL</td>
+                        <td width="25%" style="text-align:center; vertical-align:middle;"><img src="/bill_of_quantity_kopkarla/static/src/img/kopkarla.jpg" height="100px" width="100px"/></td>
+                    </tr>
+                </table>
+                <div class="row mt32 mb32">
+                    <p class="col-xs-12">
+                        Berikut ini perhitungan biaya dan marginnya:
+                    </p>
+                    <p class="col-xs-12">
+                        <span class="a">A.</span><span class="b">PROJECT</span><br/>
+                        <span class="a"/><span class="c"><span t-field="doc.crm_id.name"/></span>
+                    </p>
+                    <p class="col-xs-12">
+                        <span class="a">B.</span><span class="b">PENDAPATAN</span><br/>
+                        <span class="a"/><span class="b">1. SPH</span>
+                        <span class="c">
+                            <table class="table" style="background-color: lightgreen;">
+                                <tr>
+                                    <td width="70%" class="text-center" style="padding: 0px 0px;">Total SPH</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'{0:,.2f}'.format(doc.total_sale)"/></td>
+                                </tr>
+                            </table>
+                        </span>
+                        <span class="a"/><span class="b">2. BIAYA</span>
+                        <span class="c">
+                            <table class="table">
+                                <tr style="background-color: lightgreen;">
+                                    <td width="70%" class="text-center" style="padding: 0px 0px;">Uraian</td>
+                                    <td width="30%" class="text-center" style="padding: 0px 0px; border-left: 1px solid white;">Jumlah</td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">BIAYA MATERIAL</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.material_cost)"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">BIAYA OPERASIONAL</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.operational_cost)"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">BIAYA PERMIT</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.permit_cost)"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">BIAYA MITRA</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.mitra_cost)"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">Overhead</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.overhead_amount)"/></td>
+                                </tr>
+                                <tr style="background-color: lightgreen;">
+                                    <td width="70%" class="text-right" style="padding: 0px 10px;">Total Biaya</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'{0:,.2f}'.format(doc.total_cost)"/></td>
+                                </tr>
+                            </table>
+                        </span>
+                    </p>
+                    <p class="col-xs-12">
+                        <span class="a">C.</span><span class="b">MARGIN</span>
+                        <span class="c">
+                            <table class="table">
+                                <tr style="background-color: lightgreen;">
+                                    <td width="70%" class="text-right" style="padding: 0px 10px;">Margin</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'{0:,.2f}'.format(doc.margin_amount)"/></td>
+                                </tr>
+                                <tr style="background-color: lightgreen;">
+                                    <td width="70%" class="text-right" style="padding: 0px 10px;">Percent</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'{0:,.2f}%'.format(doc.margin_pct)"/></td>
+                                </tr>
+                            </table>
+                        </span>
+                    </p>
+                    <p class="col-xs-12">
+                        <span class="a">D.</span><span class="b">CATATAN</span><br/>
+                        <span class="a"/><span class="c"><span t-field="doc.notes"/></span>
+                    </p>
+                </div>
+                <t t-if="doc.get_approver_status() == True">
+                    <div style="padding-top: 40px; page-break-inside: avoid;">
+                        <table style="width: 100%; border: 0px; font-size: 11px;">
+                            <tr style="height:125px;">
+                                <td width="19%" style="text-align: center;">Verifikasi,</td>
+                                <td width="1%"/>
+                                <t t-if="doc.get_approver_status('approver1_id') == True">
+                                    <td width="19%" style="text-align: center;">Approval,</td>
+                                    <td width="1%"/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver2_id') == True">
+                                    <td width="19%" style="text-align: center;">Approval,</td>
+                                    <td width="1%"/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver3_id') == True">
+                                    <td width="19%" style="text-align: center;">Approval,</td>
+                                    <td width="1%"/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver4_id') == True">
+                                    <td width="19%" style="text-align: center;">Approval,</td>
+                                </t>
+                            </tr>
+                            <tr style="height:10px;">
+                                <td style="text-align: center;"><span t-field="doc.user_id.name"/></td>
+                                <td/>
+                                <t t-if="doc.get_approver_status('approver1_id') == True">
+                                    <td style="text-align: center;"><span t-field="doc.approver1_id.name"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver2_id') == True">
+                                    <td style="text-align: center;"><span t-field="doc.approver2_id.name"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver3_id') == True">
+                                    <td style="text-align: center;"><span t-field="doc.approver3_id.name"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver4_id') == True">
+                                    <td style="text-align: center;"><span t-field="doc.approver4_id.name"/></td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.user_id.partner_id.function"/></td>
+                                <td/>
+                                <t t-if="doc.get_approver_status('approver1_id') == True">
+                                    <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.approver1_id.partner_id.function"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver2_id') == True">
+                                    <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.approver2_id.partner_id.function"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver3_id') == True">
+                                    <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.approver3_id.partner_id.function"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver4_id') == True">
+                                    <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.approver4_id.partner_id.function"/></td>
+                                </t>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </div>
+		</template>
+
+		<template id="template_boq_memo_rental">
+            <div class="page">
+                <div class="oe_structure"/>
+                <style>
+                    span.a {
+                      display: inline-block;
+                      padding: 5px;
+                      width: 30px;
+                      vertical-align: top;
+                    }
+                    span.b {
+                      display: inline-block;
+                      padding: 5px 0px;
+                      width: 100px;
+                      vertical-align: top;
+                      text-align: justify;
+                    }
+                    span.c {
+                      display: inline-block;
+                      padding: 5px 0px;
+                      width: 540px;
+                      vertical-align: top;
+                      text-align: justify;
+                    }
+                </style>
+                <table style="border:none;" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="75%" style="text-align:center; vertical-align:middle; font-size:50px; height: 100px;">MEMO INTERNAL</td>
+                        <td width="25%" style="text-align:center; vertical-align:middle;"><img src="/bill_of_quantity_kopkarla/static/src/img/kopkarla.jpg" height="100px" width="100px"/></td>
+                    </tr>
+                </table>
+                <div class="row mt32 mb32">
+                    <p class="col-xs-12">
+                        <span class="c">
+                            <table style="border:none;" cellpadding="0" cellspacing="0">
+                                <tr height="22px">
+                                    <td width="20%" class="text-left" style="padding: 0px 0px 0px 10px;">Project</td>
+                                    <td width="5%" class="text-left" style="padding: 0px 0px 0px 10px;">:</td>
+                                    <td width="75%" class="text-left" style="padding: 0px 0px 0px 10px;"><span t-field="doc.crm_id.name"/></td>
+                                </tr>
+                                <tr height="22px">
+                                    <td width="20%" class="text-left" style="padding: 0px 0px 0px 10px;">Customer</td>
+                                    <td width="5%" class="text-left" style="padding: 0px 0px 0px 10px;">:</td>
+                                    <td width="75%" class="text-left" style="padding: 0px 0px 0px 10px;"><span t-field="doc.partner_id.name"/></td>
+                                </tr>
+                                <tr height="22px">
+                                    <td width="20%" class="text-left" style="padding: 0px 0px 0px 10px;">BoQ No.</td>
+                                    <td width="5%" class="text-left" style="padding: 0px 0px 0px 10px;">:</td>
+                                    <td width="75%" class="text-left" style="padding: 0px 0px 0px 10px;"><span t-field="doc.name"/></td>
+                                </tr>
+                                <tr height="22px">
+                                    <td width="20%" class="text-left" style="padding: 0px 0px 0px 10px;">Tanggal</td>
+                                    <td width="5%" class="text-left" style="padding: 0px 0px 0px 10px;">:</td>
+                                    <td width="75%" class="text-left" style="padding: 0px 0px 0px 10px;"><span t-field="doc.date"/></td>
+                                </tr>
+                            </table>
+                        </span>
+                    </p>
+                    <p class="col-xs-12 text-center" style="background-color: lightgreen;">RESUME INVESTASI</p>
+                    <p class="col-xs-12">
+                        <span class="c" style="padding: 0px 0px 0px 10px; font-weight: bold;"><u>COST</u></span><br/>
+                        <span class="c">
+                            <table class="table">
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">INVESTASI</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.material_cost)"/></td>
+                                </tr>
+                                <t t-foreach="doc.line_operational_ids" t-as="line">
+                                    <tr>
+                                        <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;"><span t-field="line.name"/></td>
+                                        <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(line.price_subtotal)"/></td>
+                                    </tr>
+                                </t>
+                                <!--<tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">BIAYA MITRA</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.mitra_cost)"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">Overhead</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.overhead_amount)"/></td>
+                                </tr>-->
+                                <tr style="font-weight: bold;">
+                                    <td width="70%" class="text-right" style="padding: 0px 10px;">Total Biaya</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'{0:,.2f}'.format(doc.total_cost)"/></td>
+                                </tr>
+                            </table>
+                        </span>
+                    </p>
+                    <p class="col-xs-12">
+                        <span class="c" style="padding: 0px 0px 0px 10px; font-weight: bold;"><u>REVENUE</u></span><br/>
+                        <span class="c">
+                            <table class="table">
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">Tagihan Sewa</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.material_sale)"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 0px 0px 10px;">RV</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid lightgray;"><span t-esc="'{0:,.2f}'.format(doc.resalas_amount)"/></td>
+                                </tr>
+                                <tr style="font-weight: bold;">
+                                    <td width="70%" class="text-right" style="padding: 0px 10px;">Total Revenue</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'{0:,.2f}'.format(doc.total_sale)"/></td>
+                                </tr>
+                            </table>
+                        </span>
+                    </p>
+                    <p class="col-xs-12">
+                        <span class="c" style="padding: 0px 0px 0px 10px; font-weight: bold;"><u>MARGIN</u></span><br/>
+                        <span class="c">
+                            <table class="table">
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 10px;">Margin</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'{0:,.2f}'.format(doc.margin_amount)"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 10px;">Percent</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'{0:,.2f}%'.format(doc.margin_pct)"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="70%" class="text-left" style="padding: 0px 10px;">Masa Sewa</td>
+                                    <td width="30%" class="text-right" style="padding: 0px 10px; border-left: 1px solid white;"><span t-esc="'%s %s' % (doc.rental_period, doc.rental_uom_id.name)"/></td>
+                                </tr>
+                            </table>
+                        </span>
+                    </p>
+                    <p class="col-xs-12 text-center" style="background-color: lightgreen;">NOTE</p>
+                    <p class="col-xs-12">
+                        <span class="c"><span t-field="doc.notes"/></span>
+                    </p>
+                </div>
+                <t t-if="doc.get_approver_status() == True">
+                    <div style="padding-top: 40px; page-break-inside: avoid;">
+                        <table style="width: 100%; border: 0px; font-size: 11px;">
+                            <tr style="height:125px;">
+                                <td width="19%" style="text-align: center;">Verifikasi,</td>
+                                <td width="1%"/>
+                                <t t-if="doc.get_approver_status('approver1_id') == True">
+                                    <td width="19%" style="text-align: center;">Approval,</td>
+                                    <td width="1%"/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver2_id') == True">
+                                    <td width="19%" style="text-align: center;">Approval,</td>
+                                    <td width="1%"/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver3_id') == True">
+                                    <td width="19%" style="text-align: center;">Approval,</td>
+                                    <td width="1%"/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver4_id') == True">
+                                    <td width="19%" style="text-align: center;">Approval,</td>
+                                </t>
+                            </tr>
+                            <tr style="height:10px;">
+                                <td style="text-align: center;"><span t-field="doc.user_id.name"/></td>
+                                <td/>
+                                <t t-if="doc.get_approver_status('approver1_id') == True">
+                                    <td style="text-align: center;"><span t-field="doc.approver1_id.name"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver2_id') == True">
+                                    <td style="text-align: center;"><span t-field="doc.approver2_id.name"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver3_id') == True">
+                                    <td style="text-align: center;"><span t-field="doc.approver3_id.name"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver4_id') == True">
+                                    <td style="text-align: center;"><span t-field="doc.approver4_id.name"/></td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.user_id.partner_id.function"/></td>
+                                <td/>
+                                <t t-if="doc.get_approver_status('approver1_id') == True">
+                                    <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.approver1_id.partner_id.function"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver2_id') == True">
+                                    <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.approver2_id.partner_id.function"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver3_id') == True">
+                                    <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.approver3_id.partner_id.function"/></td>
+                                    <td/>
+                                </t>
+                                <t t-if="doc.get_approver_status('approver4_id') == True">
+                                    <td style="text-align: center; border-top: 1px solid black;"><span t-field="doc.approver4_id.partner_id.function"/></td>
+                                </t>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </div>
+		</template>
+
+        <template id="template_boq_memo">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="bill_of_quantity_kopkarla.internal_layout">
+                        <t t-if="doc.is_rental">
+                            <t t-call="bill_of_quantity_kopkarla.template_boq_memo_rental"/>
+                        </t>
+                        <t t-else="">
+                            <t t-call="bill_of_quantity_kopkarla.template_boq_memo_dokumen"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
