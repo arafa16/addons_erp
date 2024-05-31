@@ -1,4 +1,5 @@
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
+# access_work_package,access_work_package,model_work_package,,1,1,1,1
 
 from odoo import models, fields, api, _
 
