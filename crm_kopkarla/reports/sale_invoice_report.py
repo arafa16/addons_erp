@@ -43,6 +43,8 @@ class SaleInvoiceReport(models.Model):
         ('done', 'Sales Done'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True)
+    invoice_no = fields.Char('Invoice No.', readonly=True)
+    date_invoice = fields.Datetime('Invoice Date', readonly=True)
     invoice_status = fields.Selection([
             ('draft','Draft'),
             ('open', 'Open'),
@@ -87,10 +89,12 @@ class SaleInvoiceReport(models.Model):
         partner.commercial_partner_id as commercial_partner_id,
 --         sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
 --         sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume,
-        inv.state as invoice_status,
         s.jenis_so as order_type_id,
         s.proj_type as proj_type_id,
         s.sales_area_kode as area_id,
+        inv.name as invoice_no,
+        inv.date_invoice as date_invoice,
+        inv.state as invoice_status,
         sum(il.price_subtotal) as amt_invoiced
         """
         return select_str
@@ -130,10 +134,12 @@ left join account_invoice inv on il.invoice_id = inv.id
         p.product_tmpl_id,
         partner.country_id,
         partner.commercial_partner_id,
-        inv.state,
         s.jenis_so,
         s.proj_type,
-        s.sales_area_kode
+        s.sales_area_kode,
+        inv.name,
+        inv.date_invoice,
+        inv.state
         """
         return group_by_str
 

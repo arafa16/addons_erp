@@ -13,7 +13,7 @@
         'views/crm_lead_views.xml',
         'views/crm_order_type_views.xml',
         # 'reports/crm_opportunity_sale_report_views.xml',
-        # 'reports/sale_invoice_report_views.xml',
+        'reports/sale_invoice_report_views.xml',
     ],
     "auto_install": False,
     "installable": True,
