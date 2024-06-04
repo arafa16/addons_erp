@@ -55,9 +55,10 @@ class SaleInvoiceReport(models.Model):
     # weight = fields.Float('Gross Weight', readonly=True)
     # volume = fields.Float('Volume', readonly=True)
 
-    order_type_id = fields.Many2one('crm.order.type', 'Order Type', required=True, track_visibility='onchange')
-    proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', track_visibility='onchange')
-    area_id = fields.Many2one('enhanced.sales.area', string='Sales Area', required=True)
+    # order_type_id = fields.Many2one('crm.order.type', 'Order Type', readonly=True)
+    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("datacom", "Trading Datacom"), ("rental", "Rental Order")], string='Order Type', readonly=True)
+    proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', readonly=True)
+    area_id = fields.Many2one('enhanced.sales.area', string='Sales Area', raedonly=True)
 
     def _select(self):
         select_str = """
@@ -91,7 +92,7 @@ class SaleInvoiceReport(models.Model):
         partner.commercial_partner_id as commercial_partner_id,
 --         sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
 --         sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume,
-        s.jenis_so as order_type_id,
+        s.jenis_so,
         s.proj_type as proj_type_id,
         s.sales_area_kode as area_id,
         inv.number as invoice_no,

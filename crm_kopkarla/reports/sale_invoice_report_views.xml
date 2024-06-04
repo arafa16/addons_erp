@@ -2,31 +2,37 @@
 <odoo>
 
     <record id="view_order_invoice_tree" model="ir.ui.view">
-         <field name="name">sale.invoice.report.tree</field>
-         <field name="model">sale.invoice.report</field>
-         <field name="arch" type="xml">
-             <tree string="Sales Invoice Analysis">
-                 <field name="sale_id"/>
-                 <field name="date"/>
-                 <field name="state"/>
-                 <field name="invoice_no"/>
-                 <field name="date_invoice"/>
-                 <field name="amt_invoiced"/>
-                 <field name="invoice_status"/>
-             </tree>
-         </field>
+        <field name="name">sale.invoice.report.tree</field>
+        <field name="model">sale.invoice.report</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Invoice Analysis">
+                <field name="sale_id"/>
+                <field name="date"/>
+                <field name="jenis_so"/>
+                <field name="proj_type_id"/>
+                <field name="area_id"/>
+                <field name="state"/>
+                <field name="invoice_no"/>
+                <field name="date_invoice"/>
+                <field name="amt_invoiced"/>
+                <field name="invoice_status"/>
+            </tree>
+        </field>
     </record>
 
     <record id="view_order_invoice_form" model="ir.ui.view">
-         <field name="name">sale.invoice.report.form</field>
-         <field name="model">sale.invoice.report</field>
-         <field name="arch" type="xml">
-             <form string="Sales Invoice Analysis">
+        <field name="name">sale.invoice.report.form</field>
+        <field name="model">sale.invoice.report</field>
+        <field name="arch" type="xml">
+            <form string="Sales Invoice Analysis">
                 <sheet>
                     <group>
                         <group>
                             <field name="sale_id"/>
                             <field name="date"/>
+                            <field name="jenis_so"/>
+                            <field name="proj_type_id"/>
+                            <field name="area_id"/>
                             <field name="state"/>
                         </group>
                         <group>
@@ -37,31 +43,31 @@
                         </group>
                     </group>
                 </sheet>
-             </form>
-         </field>
+            </form>
+        </field>
     </record>
 
     <record id="view_order_invoice_pivot" model="ir.ui.view">
-         <field name="name">sale.invoice.report.pivot</field>
-         <field name="model">sale.invoice.report</field>
-         <field name="arch" type="xml">
-             <pivot string="Sales Invoice Analysis" disable_linking="True">
-                 <field name="team_id" type="col"/>
-                 <field name="confirmation_date" interval="month" type="row"/>
-                 <field name="price_subtotal" type="measure"/>
-             </pivot>
-         </field>
+        <field name="name">sale.invoice.report.pivot</field>
+        <field name="model">sale.invoice.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Invoice Analysis" disable_linking="True">
+                <field name="team_id" type="col"/>
+                <field name="confirmation_date" interval="month" type="row"/>
+                <field name="price_subtotal" type="measure"/>
+            </pivot>
+        </field>
     </record>
 
     <record id="view_order_invoice_graph" model="ir.ui.view">
-         <field name="name">sale.invoice.report.graph</field>
-         <field name="model">sale.invoice.report</field>
-         <field name="arch" type="xml">
-             <graph string="Sales Invoice Analysis">
-                 <field name="confirmation_date" type="row"/>
-                 <field name="price_subtotal" type="measure"/>
-             </graph>
-         </field>
+        <field name="name">sale.invoice.report.graph</field>
+        <field name="model">sale.invoice.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Invoice Analysis">
+                <field name="confirmation_date" type="row"/>
+                <field name="price_subtotal" type="measure"/>
+            </graph>
+        </field>
     </record>
 
     <!-- Custom reports (aka filters) -->
@@ -97,7 +103,8 @@
         <field name="arch" type="xml">
             <search string="Sales Invoice Analysis">
                 <field name="date"/>
-                <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="This Year" name="year" invisible="1"
+                        domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
                 <filter name="Sales" string="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>
@@ -114,11 +121,15 @@
                     <filter string="Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter string="Order Type" name="order_type" context="{'group_by':'jenis_so'}"/>
+                    <filter string="Project Type" name="project_type" context="{'group_by':'proj_type_id'}"/>
+                    <filter string="Area" name="area" context="{'group_by':'area_id'}"/>
                     <filter name="status" string="Status" context="{'group_by':'state'}"/>
                     <filter name="invoice_status" string="Invoice Status" context="{'group_by':'invoice_status'}"/>
                     <!--<filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>-->
                     <separator/>
-                    <filter string="Order Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                    <filter string="Order Month" context="{'group_by':'date:month'}"
+                            help="Ordered date of the sales order"/>
                 </group>
             </search>
         </field>
