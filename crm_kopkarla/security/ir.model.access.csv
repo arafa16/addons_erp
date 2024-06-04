@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_crm_order_type,access_crm_order_type,model_crm_order_type,,1,1,1,1
 access_crm_lead_line,access_crm_lead_line,model_crm_lead_line,,1,1,1,1
 access_crm_opportunity_sale_report,access_crm_opportunity_sale_report,model_crm_opportunity_sale_report,,1,1,1,1
+access_sale_invoice_report,access_sale_invoice_report,model_sale_invoice_report,,1,1,1,1

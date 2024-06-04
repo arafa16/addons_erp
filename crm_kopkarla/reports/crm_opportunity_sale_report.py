@@ -42,6 +42,9 @@ class OpportunitySaleReport(models.Model):
     # source_id = fields.Many2one('utm.source', string='Source', readonly=True)
     # medium_id = fields.Many2one('utm.medium', string='Medium', readonly=True)
 
+    order_type_id = fields.Many2one('crm.order.type', 'Order Type', required=True, track_visibility='onchange')
+    proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', track_visibility='onchange')
+    area_id = fields.Many2one('enhanced.sales.area', string='Sales Area', required=True)
     sale_order = fields.Char('Sales Order', readonly=True)
     order_date = fields.Datetime('Date Order', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
