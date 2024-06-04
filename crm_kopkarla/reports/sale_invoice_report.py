@@ -58,6 +58,7 @@ class SaleInvoiceReport(models.Model):
 
     def _select(self):
         select_str = """
+        min(l.id) as id,
         l.product_id as product_id,
         t.uom_id as product_uom,
         sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
