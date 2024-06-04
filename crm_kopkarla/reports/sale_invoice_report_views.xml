@@ -6,13 +6,38 @@
          <field name="model">sale.invoice.report</field>
          <field name="arch" type="xml">
              <tree string="Sales Invoice Analysis">
+                 <field name="sale_id"/>
+                 <field name="date"/>
+                 <field name="state"/>
                  <field name="invoice_no"/>
                  <field name="date_invoice"/>
-                 <field name="name"/>
-                 <field name="date"/>
                  <field name="amt_invoiced"/>
                  <field name="invoice_status"/>
              </tree>
+         </field>
+    </record>
+
+    <record id="view_order_invoice_form" model="ir.ui.view">
+         <field name="name">sale.invoice.report.form</field>
+         <field name="model">sale.invoice.report</field>
+         <field name="arch" type="xml">
+             <form string="Sales Invoice Analysis">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sale_id"/>
+                            <field name="date"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="invoice_no"/>
+                            <field name="date_invoice"/>
+                            <field name="amt_invoiced"/>
+                            <field name="invoice_status"/>
+                        </group>
+                    </group>
+                </sheet>
+             </form>
          </field>
     </record>
 
@@ -90,6 +115,7 @@
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                    <filter name="invoice_status" string="Invoice Status" context="{'group_by':'invoice_status'}"/>
                     <!--<filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>-->
                     <separator/>
                     <filter string="Order Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
@@ -102,10 +128,10 @@
         <field name="name">Sales Invoice Analysis</field>
         <field name="res_model">sale.invoice.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,pivot,graph</field>
+        <field name="view_mode">tree,form</field>
         <field name="view_id"></field>  <!-- force empty -->
         <field name="search_view_id" ref="view_order_invoice_search"/>
-        <field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>
-        <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        <!--<field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>-->
     </record>
 </odoo>

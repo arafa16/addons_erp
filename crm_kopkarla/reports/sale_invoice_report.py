@@ -9,10 +9,11 @@ class SaleInvoiceReport(models.Model):
     _name = "sale.invoice.report"
     _description = "Sales Orders Invoice Analysis"
     _auto = False
-    _rec_name = 'date'
+    _rec_name = 'sale_id'
     _order = 'date desc'
 
     name = fields.Char('Order Reference', readonly=True)
+    sale_id = fields.Many2one('sale.order', 'Sales Order', readonly=True)
     date = fields.Datetime('Date Order', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
@@ -44,7 +45,7 @@ class SaleInvoiceReport(models.Model):
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True)
     invoice_no = fields.Char('Invoice No.', readonly=True)
-    date_invoice = fields.Datetime('Invoice Date', readonly=True)
+    date_invoice = fields.Date('Invoice Date', readonly=True)
     invoice_status = fields.Selection([
             ('draft','Draft'),
             ('open', 'Open'),
@@ -73,6 +74,7 @@ class SaleInvoiceReport(models.Model):
 --         sum(l.amt_invoiced) as amt_invoiced,
 --         count(*) as nbr,
         s.name as name,
+        s.id as sale_id,
         s.date_order as date,
         s.confirmation_date as confirmation_date,
         s.state as state,
@@ -92,7 +94,7 @@ class SaleInvoiceReport(models.Model):
         s.jenis_so as order_type_id,
         s.proj_type as proj_type_id,
         s.sales_area_kode as area_id,
-        inv.name as invoice_no,
+        inv.number as invoice_no,
         inv.date_invoice as date_invoice,
         inv.state as invoice_status,
         sum(il.price_subtotal) as amt_invoiced
@@ -122,6 +124,7 @@ left join account_invoice inv on il.invoice_id = inv.id
         t.uom_id,
         t.categ_id,
         s.name,
+        s.id,
         s.date_order,
         s.confirmation_date,
         s.partner_id,
@@ -137,7 +140,7 @@ left join account_invoice inv on il.invoice_id = inv.id
         s.jenis_so,
         s.proj_type,
         s.sales_area_kode,
-        inv.name,
+        inv.number,
         inv.date_invoice,
         inv.state
         """
