@@ -66,7 +66,8 @@ class Lead(models.Model):
         if self.user_id:
             employee_id = self.env['hr.employee'].sudo().search([('user_id', '=', self.user_id.id)])
             if employee_id.department_id:
-                values.update({'department_id': employee_id.department_id.id})
-            if employee_id.cost_center_id:
-                values.update({'cost_center_id': employee_id.cost_center_id.id})
+                if employee_id.department_id.adadiSO:
+                    values.update({'department_id': employee_id.department_id.id})
+                if employee_id.cost_center_id:
+                    values.update({'cost_center_id': employee_id.cost_center_id.id})
         return values

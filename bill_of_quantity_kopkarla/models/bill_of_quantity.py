@@ -12,6 +12,7 @@ class Bill_Quantity(models.Model):
     crm_id = fields.Many2one('crm.lead', 'CRM', track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     revision = fields.Integer('Revision', readonly=True)
     name = fields.Char('Bill of Quantity', required=True, copy=False, default='New', readonly=True)
+    boq_type = fields.Selection([('sale', 'Sales'), ('internal', 'Internal')], string="BoQ Type", default='sale')
     date = fields.Date('Date', default=datetime.now(), readonly=True, states={'draft': [('readonly', False)]})
     boq_due_date = fields.Date('BoQ Due Date', related='crm_id.boq_due_date')
     rfi_due_date = fields.Date('RFI Due Date', readonly=True, states={'draft': [('readonly', False)]})

@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_bill_quantity_internal_tree" model="ir.ui.view">
+            <field name="name">bill.quantity.internal.tree</field>
+            <field name="model">bill.quantity</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree string="Internal Bill Of Quantity">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <!--<field name="revision"/>-->
+                    <!--<field name="crm_id"/>-->
+                    <!--<field name="boq_type"/>
+                    <field name="order_type_id"/>-->
+                    <field name="total_cost"/>
+                    <!--<field name="total_sale"/>
+                    <field name="user_id"/>
+                    <field name="rfi_expired_date"/>
+                    <field name="boq_rfi_expired"/>-->
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_bill_quantity_internal_form" model="ir.ui.view">
+            <field name="name">bill.quantity.internal.form</field>
+            <field name="model">bill.quantity</field>
+            <field name="type">form</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <form string="Internal Bill Of Quantity">
+                    <header>
+                        <!--<button string="New Revision" type="object"
+                                name="create_new_revision"/>-->
+                        <field name="allow_post" invisible="1"/>
+                        <field name="allow_cancel" invisible="1"/>
+                        <button name="action_draft" string="Set to Draft" states="cancel" class="btn-primary" type="object"/>
+                        <button name="action_to_rfi" string="To RFI" class="btn-primary" type="object" states="draft"/> <!--attrs="{'invisible': [('allow_to_rfi','=',False)]}"/>-->
+                        <!--<button name="action_calculation" string="Calculation" class="btn-primary" type="object" attrs="{'invisible': [('allow_calculation','=',False)]}"/>
+                        <button name="action_approval" string="Approval" class="btn-primary" type="object" attrs="{'invisible': [('state','!=','calculation')]}"/>-->
+                        <button name="action_post" string="Post" class="btn-primary" type="object" states="to_rfi"/> <!--attrs="{'invisible': [('allow_post','=',False)]}"/>-->
+                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('allow_cancel','=',False)]}"/>
+                        <!--<field name="state" widget="statusbar" statusbar_visible="draft,to_rfi,posted"/>-->
+                        <field name="state" widget="statusbar" statusbar_visible="draft,to_rfi,posted"/>
+                    </header>
+                    <sheet string="Bill Of Quantity">
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" context="{'bill_quantity_id': id, 'key': 'material'}" name="action_show_boq_material" icon="fa-bars">
+                                <div class="o_stat_info">
+                                    <field name="line_material_count" class="o_stat_value"/>
+                                    <span class="o_stat_text" attrs="{'invisible': [('line_material_count', '&lt;', 2)]}"> Materials</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('line_material_count', '&gt;', 1)]}"> Material</span>
+                                </div>
+                            </button>
+                            <!--<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('active', '=', True), ('probability', '&lt;', 100)]}">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>-->
+                        </div>
+                        <group>
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="name" class="oe_inline" readonly="1"/>
+                                           <!--attrs="{'readonly':[('state','!=','draft'),('state','!=','to_rfi')]}"/>-->
+                                    <span attrs="{'invisible': [('revision', '=', 0)]}"> Rev.
+                                        <field name="revision" class="oe_inline"/>
+                                    </span>
+                                </h1>
+                            </div>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="allow_cancel" invisible="1"/>
+                                <field name="allow_to_rfi" invisible="1"/>
+                                <field name="allow_calculation" invisible="1"/>
+                                <field name="date"/>
+                                <!--<field name="boq_due_date" readonly="1"/>
+                                <field name="rfi_due_date"/>
+                                <field name="rfi_expired_date" force_save="1"/>
+                                <field name="create_date" readonly="1"/>
+                                <field name="close_date" readonly="1" attrs="{'invisible': [('state', '!=', 'posted')]}"/>-->
+                            </group>
+                            <group>
+                                <!--<field name="user_id" readonly="1"/>
+                                <field name="boq_type" readonly="1"/>
+                                <field name="order_type_id" readonly="1"/>
+                                <field name="is_rental" invisible="1"/>
+                                <field name="rental_type" readonly="1" attrs="{'invisible': [('is_rental', '=', False)]}"/>
+                                <label for="rental_period" attrs="{'invisible': [('is_rental', '=', False)]}"/>
+                                <div attrs="{'invisible': [('is_rental', '=', False)]}">
+                                    <field name="rental_period" class="oe_inline" style="padding-right: 5px;"/>
+                                    <field name="rental_uom_id" widget="selection" class="oe_inline"/>
+                                </div>
+                                <field name="cost_center_id" readonly="1"/>
+                                <field name="area_id" invisible="1"/>
+                                <field name="analytic_account_id" readonly="1"/>-->
+                            </group>
+                            <group colspan="2">
+                                <field string="Notes" name="notes"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <field name="using_mitra" invisible="1"/>
+                            <field name="is_rental" invisible="1"/>
+                            <page string="Materials" name="material">
+                                <field name="line_material_ids" context="{'default_key': 'material', 'default_rfi_send': True}">
+                                    <tree string="Quantity Line" editable="bottom">
+                                        <field name="key" invisible="1" force_save="1"/>
+                                        <field name="rfi_send" invisible="1" force_save="1"/>
+                                        <!--<field name="state" invisible="1"/>-->
+                                        <!--<field name="employee_id"/>-->
+                                        <!--<field name="assest_id"/>-->
+                                        <!--<field name="partner_id"/>-->
+                                        <!--<field name="work_package_id"/>-->
+                                        <field name="product_id" options="{'no_create': True}"/>
+                                        <!--<field name="type"/>-->
+                                        <field name="name"/>
+                                        <!--<field name="product_brand"/>
+                                        <field name="product_type"/>-->
+                                        <field name="qty"/>
+                                        <field name="uom_id" options="{'no_create': True}"/>
+                                        <field name="price_unit" style="background-color: #89fae7;" readonly="1"/>
+                                        <field name="price_subtotal" style="background-color: #89fae7;" readonly="1" sum="Total Cost"/>
+                                        <field name="state" readonly="1"/>
+                                        <button name="%(action_bill_quantity_select_vendor)d" string="Set" type="action"
+                                                context="{'default_bill_quantity_line_id': id}"/>
+
+                                    </tree>
+                                    <form string="Quantity Line">
+                                        <header>
+                                            <field name="state" invisible="1" widget="statusbar" statusbar_visible="draft,done"/>
+                                        </header>
+                                        <sheet string="BoQ Line">
+                                            <group> <!--attrs="{'invisible': [('state','=','done'),('rfi_send','!=',False)]}">-->
+                                                <group colspan="2" attrs="{'invisible': [('parent.using_mitra', '=', True)]}">
+                                                    <field name="rfi_send" attrs="{'readonly': [('state','=','done')]}"/>
+                                                </group>
+                                                <group>
+                                                    <field name="key" invisible="1" force_save="1"/>
+                                                    <!--<field name="assest_id"-->
+                                                    <!--<field name="employee_id" attrs="{'invisible': [('key','!=', 'labor')]}"/>-->
+                                                    <!--attrs="{'invisible': [('key','!=', 'equipment')]}"/>-->
+                                                    <!--<field name="partner_id" attrs="{'invisible': [('key','!=', 'subcontract')]}"/>-->
+                                                    <!--<field name="work_package_id" attrs="{'invisible': [('key','!=', 'work_package')]}"/>-->
+                                                    <field name="product_id" options="{'no_create': True}" attrs="{'readonly': [('state','=','done')]}"/> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
+                                                    <field name="product_brand" attrs="{'readonly': [('state','=','done')]}"/>
+                                                    <field name="product_type" attrs="{'readonly': [('state','=','done')]}"/>
+                                                    <field name="name" attrs="{'readonly': [('state','=','done')]}"/>
+                                                </group>
+                                                <group>
+                                                    <!--<field name="type"/>-->
+                                                    <field name="qty" attrs="{'readonly': [('state','=','done')]}"/>
+                                                    <field name="uom_id" options="{'no_create': True}" attrs="{'readonly': [('state','=','done')]}"/>
+                                                    <field name="price_unit" attrs="{'readonly': ['|',('rfi_send','=',True),('state','=','done')]}"/>
+                                                    <field name="price_subtotal" sum="Total Cost"/>
+                                                </group>
+                                                <group>
+                                                    <field name="lokasi_kirim"/>
+                                                    <field name="expired_date"/>
+                                                    <field name="delivery"/>
+                                                    <field name="franco"/>
+                                                    <field name="payment_term_id"/>
+                                                    <field name="garansi"/>
+                                                    <label for="count_attachment" string="Attachment"/>
+                                                    <div>
+                                                        <field name="count_attachment" class="oe_inline" style="padding-right: 10px;"/>
+                                                        <button name="action_view_employee_attachment" icon="fa-eye" type="object" class="oe_inline"/>
+                                                    </div>
+                                                </group>
+                                                <group>
+                                                    <field name="sale_price" attrs="{'readonly': [('allow_set_sales','!=',True)]}"/>
+                                                    <field name="sale_subtotal" sum="Total Sales"/>
+                                                    <field name="allow_set_sales" invisible="1"/>
+                                                    <field name="revenue_margin"/>
+                                                </group>
+                                            </group>
+                                            <!--<notebook attrs="{'invisible': ['|',('state','!=','done'),('rfi_send','=',False)]}">
+                                                <page string="Select Vendor" name="price">
+                                                    <field name="product_rfi_ids" string="Select Vendor">
+                                                        <tree string="Select Vendor" create="false" editable="bottom" delete="false">
+                                                            <button name="action_select_vendor" string="Sel" type="object"/>
+                                                            <field name="selected" string="Sel"/>
+                                                            <field name="product_id" options="{'no_create': True, 'no_open': True}" invisible="1"/>
+                                                            &lt;!&ndash;<field name="type"/>&ndash;&gt;
+                                                            &lt;!&ndash;<field name="uom_id" options="{'no_create': True, 'no_open': True}"/>&ndash;&gt;
+                                                            <field name="partner_id" options="{'no_create': True, 'no_open': True}" domain="[('supplier','=',True)]"/>
+                                                            <field name="price_unit"/>
+                                                            <field name="create_date"/>
+                                                            <field name="expired_date"/>
+                                                            <field name="delivery"/>
+                                                            <field name="franco"/>
+                                                            <field name="garansi"/>
+                                                            <field name="payment_term_id"/>
+                                                            <field name="name"/>
+                                                        </tree>
+                                                        &lt;!&ndash;<form string="Select Vendor">
+                                                            <sheet string="Select Vendor">
+                                                                <group>
+                                                                    <group>
+                                                                        <field name="partner_id" options="{'no_create': True, 'no_open': True}" domain="[('supplier','=',True)]"/>
+                                                                    </group>
+                                                                </group>
+                                                            </sheet>
+                                                            <footer>
+                                                                <button name="action_select_vendor" type="object" string="Process" class="btn-primary"/>
+                                                            </footer>
+                                                        </form>&ndash;&gt;
+                                                    </field>
+                                                </page>
+                                                &lt;!&ndash;<page string="Selected Vendor" name="selected_vendor">
+                                                    <group>
+                                                        <field name="rfi_id" options="{'no_create': True}" domain="[('bill_quantity_line_id', '=', active_id)]"/>
+                                                        <field name="price_unit" readonly="1" force_save="1"/>
+                                                        <field name="rfi_expired_date" readonly="1"/>
+                                                    </group>
+                                                </page>&ndash;&gt;
+                                            </notebook>-->
+                                        </sheet>
+                                        <!--<footer>
+                                            <button name="action_close" string="Close" class="btn-default" type="object"/>
+                                            <button special="cancel" string="Cancel" class="btn-default"/>
+                                        </footer>-->
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_bill_quantity_internal_search" model="ir.ui.view">
+            <field name="name">bill.quantity.internal.search</field>
+            <field name="model">bill.quantity</field>
+            <field name="type">search</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <search string="Internal Bill Of Quantity">
+                    <field name="boq_type" select="True"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_order_type" string="Order Type" context="{'group_by':'order_type_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_bill_quantity_internal_view">
+            <field name="name">Internal Bill Of Quantity</field>
+            <field name="res_model">bill.quantity</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_bill_quantity_internal_search"/>
+            <field name="domain">[('boq_type', '=', 'internal')]</field>
+            <field name="context">{'default_boq_type': 'internal'}</field>
+        </record>
+
+        <!--<record id="action_boq_new" model="ir.actions.act_window">
+            <field name="name">BoQ</field>
+            <field name="res_model">bill.quantity</field>
+            <field name="view_mode">form,tree,graph</field>
+            <field name="domain">[('crm_id', '=', active_id)]</field>
+            <field name="context">{'search_default_crm_id': active_id, 'default_crm_id': active_id}</field>
+        </record>-->
+
+        <record model="ir.actions.act_window.view" id="act_open_bill_quantity_internal_view_tree">
+            <field name="act_window_id" ref="act_open_bill_quantity_internal_view"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_bill_quantity_internal_tree"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_bill_quantity_internal_view_form">
+            <field name="act_window_id" ref="act_open_bill_quantity_internal_view"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bill_quantity_internal_form"/>
+        </record>
+
+        <menuitem action="act_open_bill_quantity_internal_view"
+                  id="menu_bill_quantity_internal"
+                  sequence="50"
+                  parent="sprogroup_purchase_request.purchase_request_menu_1"
+                  groups="bill_of_quantity_kopkarla.group_presales_internal"/>
+    </data>
+</odoo>

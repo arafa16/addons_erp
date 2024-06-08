@@ -11,7 +11,9 @@
             <field name="partner_id" position="after">
                 <field name="order_type_id" options="{'no_create': True}"/>
                 <field name="area_id" options="{'no_create': True}"/>
-                <field name="analytic_account_id" options="{'no_create': True}" invisible="1"/>
+                <field name="analytic_account_id" options="{'no_create': True}" invisible="1" force_save="1"/>
+                <field name="user_id" options="{'no_create': True}" invisible="1" force_save="1"/>
+                <field name="department_id" options="{'no_create': True}" invisible="1" force_save="1"/>
             </field>
         </field>
     </record>
