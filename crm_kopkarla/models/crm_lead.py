@@ -71,3 +71,17 @@ class Lead(models.Model):
                 if employee_id.cost_center_id:
                     values.update({'cost_center_id': employee_id.cost_center_id.id})
         return values
+
+    @api.depends('order_ids')
+    def _compute_sale_amount_total(self):
+        for lead in self:
+            total = 0.0
+            nbr = 0
+            company_currency = lead.company_currency or self.env.user.company_id.currency_id
+            for order in lead.order_ids:
+                if order.state in ('draft','spvcheck','assmancheck','requestloa','loaconfirmed','sent'):
+                    nbr += 1
+                if order.state not in ('draft','spvcheck','assmancheck','requestloa','loaconfirmed','sent','cancel'):
+                    total += order.currency_id.compute(order.amount_untaxed, company_currency)
+            lead.sale_amount_total = total
+            lead.sale_number = nbr
