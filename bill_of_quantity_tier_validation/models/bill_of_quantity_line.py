@@ -7,7 +7,7 @@ class bill_quantity_line(models.Model):
 
     def _get_allow_set_vendor(self):
         for line in self:
-            line.allow_set_vendor = line.state == 'done' and line.rfi_send and (line.bill_quantity_id.need_validation or line.bill_quantity_id.total_sale == 0)
+            line.allow_set_vendor = line.state == 'done' and line.rfi_send and (line.bill_quantity_id.need_validation or (line.bill_quantity_id.total_sale - line.bill_quantity_id.resalas_amount) == 0)
 
     def _get_allow_set_sales(self):
         for line in self:
