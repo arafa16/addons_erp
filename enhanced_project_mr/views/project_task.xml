@@ -26,6 +26,10 @@
                                 <tree create="false">
                                     <field name="name" attrs="{'readonly': [('stat', '!=', 'draft')]}"/>
                                     <field name="tanggal" attrs="{'readonly': [('stat', '!=', 'draft')]}"/>
+                                    <field name="picking_id"/>
+                                    <field name="create_uid"/>
+                                    <field name="write_uid"/>
+                                    <field name="write_date"/>
                                     <field name="stat" readonly="1"/>
                                 </tree>
                             </field>

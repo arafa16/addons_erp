@@ -11,7 +11,12 @@ class EmRequest(models.Model):
     material_ids = fields.One2many('em.request.product', 'mr_id', string='Daftar Material')
     task_idx = fields.Many2one('project.task', string='Project Task')
     stat = fields.Selection([("draft","Draft"),("close","Proses")], string='Status',default=lambda self: 'draft')
-    
+    picking_id = fields.Many2one('stock.picking', 'Picking', compute='_get_picking_id')
+
+    def _get_picking_id(self):
+        for mr in self:
+            mr.picking_id = self.env['stock.picking'].sudo().search([('name', '=', mr.material_ids[0].moveopr)]).id
+
     @api.multi
     def set_proses(self):
         # cek gudang cutomer
