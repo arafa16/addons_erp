@@ -82,6 +82,17 @@
         </field>
     </record>
 
+    <record model="ir.actions.act_window" id="crm.crm_lead_opportunities_tree_view">
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'kanban', 'view_id': ref('crm.crm_case_kanban_view_leads')}),
+                      (0, 0, {'view_mode': 'tree', 'view_id': ref('crm.crm_case_tree_view_oppor')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('crm.crm_case_form_view_oppor')}),
+                      (0, 0, {'view_mode': 'graph'}),
+                      (0, 0, {'view_mode': 'pivot'}),
+                      (0, 0, {'view_mode': 'calendar'})]"/>
+    </record>
+
     <menuitem
             id="crm.crm_menu_root"
             name="CRM"
