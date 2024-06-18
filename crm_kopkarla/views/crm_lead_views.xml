@@ -81,4 +81,9 @@
             </notebook>
         </field>
     </record>
+
+    <menuitem
+            id="crm.crm_menu_root"
+            name="CRM"
+            action="crm.crm_lead_opportunities_tree_view"/>
 </odoo>
