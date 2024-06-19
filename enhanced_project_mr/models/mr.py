@@ -15,7 +15,7 @@ class EmRequest(models.Model):
 
     def _get_picking_id(self):
         for mr in self:
-            mr.picking_id = self.env['stock.picking'].sudo().search([('name', '=', mr.material_ids[0].moveopr)]).id
+            mr.picking_id = self.env['stock.picking'].sudo().search([('name', '=', mr.material_ids[0].moveopr)]).id if mr.material_ids else False
 
     @api.multi
     def set_proses(self):
