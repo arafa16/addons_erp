@@ -309,8 +309,11 @@
                                         </header>
                                         <sheet string="BoQ Line">
                                             <group> <!--attrs="{'invisible': [('state','=','done'),('rfi_send','!=',False)]}">-->
-                                                <group colspan="2" attrs="{'invisible': [('parent.using_mitra', '=', True)]}">
+                                                <group attrs="{'invisible': [('parent.using_mitra', '=', True)]}">
                                                     <field name="rfi_send" attrs="{'readonly': [('state','=','done')]}"/>
+                                                </group>
+                                                <group attrs="{'invisible': [('parent.using_mitra', '=', True)]}">
+                                                    <field name="user_rfq_id" readonly="1"/>
                                                 </group>
                                                 <group>
                                                     <field name="key" invisible="1" force_save="1"/>

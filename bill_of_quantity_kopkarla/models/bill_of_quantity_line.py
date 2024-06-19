@@ -71,12 +71,12 @@ class bill_quantity_line(models.Model):
         ('done', 'Done'),
         ('reject', 'Rejected'),
         ('cancel', 'Canceled'),
-    ], string='Status', default='draft')
+    ], string='Status', default='draft', track_visibility='onchange')
     rfi_send = fields.Boolean('Send to RFI')
-    rfi_id = fields.Many2one('bill.quantity.rfi', string='Selected RFI', ondelete='set null', index=True)
+    rfi_id = fields.Many2one('bill.quantity.rfi', string='Selected RFI', ondelete='set null', index=True, track_visibility='onchange')
     rfi_expired_date = fields.Date('Expired Date', related='rfi_id.expired_date', store=True)
     rfi_expired = fields.Boolean('RFI Expired', compute='_get_rfi_expired_date')
-    product_rfi_ids = fields.One2many('bill.quantity.rfi', 'bill_quantity_line_id', string='Product Price')
+    product_rfi_ids = fields.One2many('bill.quantity.rfi', 'bill_quantity_line_id', string='Product Price', track_visibility='onchange')
     user_id = fields.Many2one('res.users', string='Presales Person', related='bill_quantity_id.user_id')
     user_rfq_id = fields.Many2one('res.users', string='RFI Person', index=True, track_visibility='onchange', domain=_get_domain_rfq)
     # penawaran_harga = fields.Selection([('single', '1 Price'), ('double', '2 Price')], 'Penawaran Harga', default='single')
@@ -86,7 +86,7 @@ class bill_quantity_line(models.Model):
     alamat_pengiriman = fields.Char('Alamat Pengiriman', related='crm_id.end_user_address')
     # divisi = fields.Selection([('pusat', 'Pusat'), ('regional', 'Regional')], 'Divisi')
     product_price_count = fields.Integer('Product Price History', compute='_get_product_price_count')
-    close_date = fields.Datetime('Closed Date')
+    close_date = fields.Datetime('Closed Date', track_visibility='onchange')
     allow_set_vendor = fields.Boolean(compute='_get_allow_set_vendor')
     allow_set_sales = fields.Boolean(compute='_get_allow_set_sales', default=True)
 
@@ -253,3 +253,65 @@ class bill_quantity_line(models.Model):
     def action_cancel(self):
         for boq in self:
             boq.state = 'cancel'
+
+    @api.multi
+    def write(self, vals):
+        def get_create_data(data):
+            body = ''
+            for key, value in data.items():
+                if key not in ('product_id', 'partner_id'):
+                    if key == 'payment_term_id':
+                        value = self.env['account.payment.term'].sudo().browse(value).name if value else False
+                    body += "<li style='margin-left: 20px;'>%s: %s</li>" % (key, value)
+            return body
+
+        def get_update_data(data, boq_vendor_id):
+            body = ''
+            for key, value in data.items():
+                if key not in ('product_id', 'partner_id'):
+                    if key == 'payment_term_id':
+                        value = self.env['account.payment.term'].sudo().browse(value).name if value else False
+                        value_prev = getattr(boq_vendor_id, key).name
+                    else:
+                        value_prev = getattr(boq_vendor_id, key)
+                    body += "<li style='margin-left: 20px;'>%s: %s -> %s</li>" % (key, value_prev, value)
+            return body
+
+        if vals.get('product_rfi_ids'):
+            for val in vals.get('product_rfi_ids'):
+                subject = False
+                if val[0] == 0:
+                    partner_id = self.env['res.partner'].sudo().browse(val[2].get('partner_id'))
+                    subject = 'BoQ Vendor Price Create %s - %s: %s' % (self.bill_quantity_id.name, self.product_id.name, partner_id.name)
+                    body = """
+                        <b>Vendor Price Create %s</b>
+                        <br/>%s
+                    """ % (partner_id.name, get_create_data(val[2]))
+                elif val[0] == 1:
+                    boq_vendor_id = self.env['bill.quantity.rfi'].sudo().browse(val[1])
+                    partner_id = boq_vendor_id.partner_id
+                    subject = 'BoQ Vendor Price Update %s - %s: %s' % (self.bill_quantity_id.name, self.product_id.name, partner_id.name)
+                    body = """
+                        <b>Vendor Price Update %s</b>
+                        <br/>%s
+                    """ % (partner_id.name, get_update_data(val[2], boq_vendor_id))
+                elif val[0] == 2:
+                    boq_vendor_id = self.env['bill.quantity.rfi'].sudo().browse(val[1])
+                    partner_id = boq_vendor_id.partner_id
+                    subject = 'BoQ Vendor Price Delete %s - %s: %s' % (self.bill_quantity_id.name, self.product_id.name, partner_id.name)
+                    body = """
+                        <b>Vendor Price Delete %s</b>
+                        <br/>
+                        
+                    """ % partner_id.name
+                if subject:
+                    self.env['mail.message'].create({
+                        'subject': subject,
+                        'body': body,
+                        'model': 'bill.quantity.line',
+                        'res_id': self.id,
+                        'message_type': 'notification',
+                        'subtype_id': 1,
+                    })
+        return super(bill_quantity_line, self).write(vals)
+
