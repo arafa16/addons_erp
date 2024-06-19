@@ -22,7 +22,7 @@
     'depends': ['project',
                 'enhanced_sales_convert_project',
                 'enhanced_sales_attribute',
-                'sale','sales_team',
+                'sale','sales_team', 'sale_crm',
                 'sprogroup_purchase_request',
                 'cost_centers_kopkarla',
                 'account',
