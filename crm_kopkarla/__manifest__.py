@@ -1,7 +1,7 @@
 {
     "name": "CRM Kopkarla",
     "version": "14.0.0.2",
-    "depends": ['crm', 'cost_centers_kopkarla','account_analytic_kopkarla','enhanced_sales_project'],
+    "depends": ['crm', 'sale_crm', 'cost_centers_kopkarla','account_analytic_kopkarla','enhanced_sales_project'],
     "author": "TBD Team",
     "summary": "CRM",
     "description": """

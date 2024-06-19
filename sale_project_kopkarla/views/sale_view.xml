@@ -132,6 +132,9 @@
                 <field name="tgl_spk" position="after">
                     <field name="tgl_due_po" attrs="{'readonly':[('stat_spk','=',False)]}"/>
                 </field>
+                <group name="technical" position="attributes">
+                    <attribute name="groups"/>
+                </group>
             </field>
         </record>
 
@@ -174,6 +177,19 @@
                     <filter string="With Purchase Request Only" domain="[('pr_line_ids','!=',False)]"/>
                     <separator/>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="sale_order_view_search_inherit_quotation_tbd" model="ir.ui.view">
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="arch" type="xml">
+                <filter name="draft" position="after">
+                    <filter string="SPV Check" name="spvcheck" domain="[('state','=','spvcheck')]"/>
+                    <filter string="Assman Check" name="assmancheck" domain="[('state','=','assmancheck')]"/>
+                    <filter string="Request LoA" name="requestloa" domain="[('state','=','requestloa')]"/>
+                    <filter string="LoA Confirmed" name="loaconfirmed" domain="[('state','=','loaconfirmed')]"/>
+                </filter>
             </field>
         </record>
 

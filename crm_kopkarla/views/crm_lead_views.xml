@@ -97,4 +97,22 @@
             id="crm.crm_menu_root"
             name="CRM"
             action="crm.crm_lead_opportunities_tree_view"/>
+
+    <record id="crm_case_form_view_oppor_tbd" model="ir.ui.view">
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <button name="%(sale_crm.sale_action_quotations)d" position="attributes">
+                <attribute name="context">{
+                    'default_partner_id': partner_id,
+                    'search_default_draft': 1,
+                    'search_default_spvcheck': 1,
+                    'search_default_assmancheck': 1,
+                    'search_default_requestloa': 1,
+                    'search_default_loaconfirmed': 1,
+                    'search_default_sent': 1
+                    }</attribute>
+            </button>
+        </field>
+    </record>
 </odoo>
