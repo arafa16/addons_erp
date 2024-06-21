@@ -516,7 +516,8 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Bill Of Quantity">
-                    <field name="crm_id" select="True"/>
+                    <field name="name" select="True"/>
+                    <field name="crm_id"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_order_type" string="Order Type" context="{'group_by':'order_type_id'}"/>
                     </group>
