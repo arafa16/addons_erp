@@ -299,9 +299,11 @@
                                         <field name="count_attachment"/>
                                         <field name="bill_quantity_id" invisible="1"/>
                                         <field name="allow_set_vendor" invisible="1"/>
-                                        <button name="%(action_bill_quantity_select_vendor)d" string="Set" type="action"
-                                                context="{'default_bill_quantity_line_id': id}"/>
-                                                <!--attrs="{'invisible': [('allow_set_vendor','=',False)]}"/>-->
+                                        <!--<button name="%(action_bill_quantity_select_vendor)d" string="Set" type="action"
+                                                context="{'default_bill_quantity_line_id': id}"
+                                                attrs="{'invisible': [('parent.state','=','posted')]}"/>-->
+                                        <button name="show_bill_quantity_select_vendor" string="Set" type="object"
+                                                attrs="{'invisible': [('parent.state','=','posted')]}"/>
                                     </tree>
                                     <form string="Quantity Line">
                                         <header>
@@ -509,6 +511,19 @@
             </field>
         </record>
 
+        <record id="view_bill_quantity_pivot" model="ir.ui.view">
+            <field name="name">bill.quantity.pivot</field>
+            <field name="model">bill.quantity</field>
+            <field name="arch" type="xml">
+                <pivot string="Bill Of Quantity">
+                    <field name="date" interval="month" type="row"/>
+                    <field name="order_type_id" type="col"/>
+                    <field name="total_cost" type="measure"/>
+                    <field name="total_sale" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_bill_quantity_search" model="ir.ui.view">
             <field name="name">bill.quantity.search</field>
             <field name="model">bill.quantity</field>
@@ -529,7 +544,7 @@
             <field name="name">Bill Of Quantity</field>
             <field name="res_model">bill.quantity</field>
             <!-- <field name="view_type">form</field> -->
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot</field>
             <field name="search_view_id" ref="view_bill_quantity_search"/>
             <field name="domain">[('boq_type', '=', 'sale')]</field>
             <field name="context">{}</field>

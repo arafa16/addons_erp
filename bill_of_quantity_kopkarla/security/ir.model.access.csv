@@ -2,6 +2,8 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_bill_quantity,access_bill_quantity,model_bill_quantity,,1,1,1,1
 access_bill_quantity_line,access_bill_quantity_line,model_bill_quantity_line,,1,1,1,1
 access_bill_quantity_line_activity,access_bill_quantity_line_activity,model_bill_quantity_line_activity,,1,1,1,1
+access_bill_quantity_select_vendor,access_bill_quantity_select_vendor,model_bill_quantity_select_vendor,,1,1,1,1
+access_bill_quantity_select_vendor_line,access_bill_quantity_select_vendor_line,model_bill_quantity_select_vendor_line,,1,1,1,1
 access_bill_quantity_rfi,access_bill_quantity_rfi,model_bill_quantity_rfi,,1,1,1,1
 access_cost_code,access_cost_code,model_cost_code,,1,1,1,1
 access_cost_header,access_cost_header,model_cost_header,,1,1,1,1

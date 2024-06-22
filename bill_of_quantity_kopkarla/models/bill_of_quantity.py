@@ -50,12 +50,12 @@ class Bill_Quantity(models.Model):
     disc_mitra_sale_pct = fields.Float('Discount Sales Mitra', default=0, readonly=True, states={'draft': [('readonly', False)]})
     disc_mitra_sale_amt = fields.Float('Discount Sales Mitra Amount', default=0, readonly=True, states={'draft': [('readonly', False)]})
 
-    total_cost = fields.Float('Total Cost', compute="_compute_amount")
+    total_cost = fields.Float('Total Cost', compute="_compute_amount", store=True)
     total_sale = fields.Float('Total Sales', compute="_compute_amount", store=True)
 
     overhead_amount = fields.Float('Biaya Overhead', compute='_compute_amount')
-    margin_amount = fields.Float('Margin Amount', compute='_compute_amount')
-    margin_pct = fields.Float('Margin', compute='_compute_amount')
+    margin_amount = fields.Float('Margin Amount', compute='_compute_amount', store=True)
+    margin_pct = fields.Float('Margin', compute='_compute_amount', store=True)
 
     asset_cost = fields.Float('Asset Cost', compute="_compute_amount")
     line_asset_ids = fields.One2many('bill.quantity.line', 'bill_quantity_id', string='Asset Lines', readonly=False, copy=True, domain=[('key', '=', 'asset')])

@@ -135,6 +135,16 @@ class bill_quantity_line(models.Model):
                 line.rfi_expired = False
 
     @api.multi
+    def show_bill_quantity_select_vendor(self):
+        self.env['bill.quantity.select.vendor'].sudo().search([]).unlink()
+        self.env['bill.quantity.select.vendor.line'].sudo().search([]).unlink()
+        action = self.env.ref('bill_of_quantity_kopkarla.action_bill_quantity_select_vendor').read()[0]
+        action['context'] = {
+            'default_bill_quantity_line_id': self.id,
+        }
+        return action
+
+    @api.multi
     def show_rfi_product_price(self):
         return {
             'name': _('Product Price History'),

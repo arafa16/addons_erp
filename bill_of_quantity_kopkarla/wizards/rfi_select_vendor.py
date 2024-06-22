@@ -55,7 +55,7 @@ class RFISelectVendor(models.TransientModel):
     _description = 'RFI Select Vendor Line'
     _rec_name = 'partner_id'
 
-    bill_quantity_line_id = fields.Many2one('bill.quantity.select.vendor', string='BoQ Line', ondelete='set null', readonly=True)
+    bill_quantity_line_id = fields.Many2one('bill.quantity.select.vendor', string='BoQ Line', ondelete='cascade', readonly=True)
     bill_quantity_id = fields.Many2one('bill.quantity', string='BoQ No.', related='bill_quantity_line_id.bill_quantity_line_id.bill_quantity_id', readonly=True)
     crm_id = fields.Many2one('crm.lead', 'CRM', related='bill_quantity_id.crm_id')
     product_id = fields.Many2one('product.product', string='Product', ondelete='restrict', related='bill_quantity_line_id.bill_quantity_line_id.product_id', index=True, store=True)

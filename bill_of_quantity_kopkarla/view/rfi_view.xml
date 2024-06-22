@@ -207,6 +207,19 @@
             </field>
         </record>
 
+        <record id="view_rfi_pivot" model="ir.ui.view">
+            <field name="name">bill.quantity.line.pivot</field>
+            <field name="model">bill.quantity.line</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <pivot string="RFI">
+                    <field name="product_id" type="row"/>
+                    <field name="rfi_due_date" interval="month" type="col"/>
+                    <!--<field name="total_sale" type="measure"/>-->
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_bill_quantity_rfi_search" model="ir.ui.view">
             <field name="name">bill.quantity.search</field>
             <field name="model">bill.quantity.line</field>
@@ -232,7 +245,7 @@
             <field name="name">RFI</field>
             <field name="res_model">bill.quantity.line</field>
             <!-- <field name="view_type">form</field> -->
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot</field>
             <field name="search_view_id" ref="view_bill_quantity_rfi_search"/>
             <field name="domain">[('key', '=', 'material'),('rfi_send','=',True)]</field>
             <field name="context">{'search_default_boq_to_rfi': True}</field>
