@@ -11,6 +11,8 @@ class StockPickingEnhanced(models.Model):
     idreturn = fields.Many2one('em.return', string='Material Return Id')
     mr_responsible = fields.Many2one('res.users', string='Responsible')
     sopr = fields.Char(string='SO on PR', compute='setnamaso',)
+    pr_no = fields.Char(string='PR', compute='setnamaso',)
+    pr_date = fields.Date(string='PR Date', compute='setnamaso',)
     sopraddress = fields.Char(string='SO on PR Address',compute="setalamatso")
     isDirect = fields.Char(string='Inventory Process', compute='setdirecttocust',)
     prCreator = fields.Char(string='PR Requested By', compute='setPrOwner',)
@@ -27,6 +29,14 @@ class StockPickingEnhanced(models.Model):
     def setnamaso(self):
         for doc in self:
             if doc.purchase_id.id != False:
+                pr_id = doc.purchase_id.requisition_id.nomor_pr
+                if pr_id != False:
+                    doc.pr_no = pr_id.name
+                    doc.pr_date = pr_id.date_start
+                else:
+                    doc.pr_id = 'Tidak ada PR'
+                    doc.pr_date = False
+
                 xx = doc.purchase_id.requisition_id.nomor_pr.salesorder_id.name
                 if xx != False:
                     doc.sopr = xx 
