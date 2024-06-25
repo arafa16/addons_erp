@@ -48,6 +48,18 @@ class OpportunitySaleReport(models.Model):
     sale_order = fields.Char('Sales Order', readonly=True)
     order_date = fields.Datetime('Date Order', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
+    order_state = fields.Selection([
+        ('draft', 'Draft Quotation'),
+        ('spvcheck', 'SPV Check'),
+        ('assmancheck', 'Assman Check'),
+        ('requestloa', 'Request LoA'),
+        ('loaconfirmed', 'LoA Confirmed'),
+        ('sent', 'Quotation Sent'),
+        ('sale', 'Sales Order'),
+        ('done', 'Sales Done'),
+        ('cancel', 'Cancelled'),
+        ], string='Status', readonly=True)
+
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
@@ -96,6 +108,7 @@ SELECT  c.id,
         s.name as sale_order,
         s.date_order as order_date,
         s.confirmation_date as confirmation_date,
+        s.state as order_state,
         sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
         sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
         sum(l.qty_invoiced / u.factor * u2.factor) as qty_invoiced,
