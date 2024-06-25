@@ -167,7 +167,7 @@
                         <notebook colspan="4">
                             <field name="using_mitra" invisible="1"/>
                             <field name="is_rental" invisible="1"/>
-                            <page string="Mitra" name="mitra" attrs="{'invisible': [('using_mitra', '!=', True)]}">
+                            <page string="Mitra" name="mitra"> <!--attrs="{'invisible': [('using_mitra', '!=', True)]}">-->
                                 <field name="line_mitra_ids" context="{'default_key': 'mitra'}">
                                     <tree string="Quantity Line" editable="bottom">
                                         <field name="key" invisible="1" force_save="1"/>
