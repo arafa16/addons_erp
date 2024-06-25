@@ -146,7 +146,7 @@ LEFT JOIN product_pricelist pp ON s.pricelist_id = pp.id
 
     def _group_by(self):
         group_by_str = """
-            GROUP BY c.id, stage.name, s.name, s.date_order, s.confirmation_date
+            GROUP BY c.id, stage.name, s.name, s.date_order, s.confirmation_date, s.state
         """
         return group_by_str
 
