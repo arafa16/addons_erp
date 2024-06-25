@@ -48,6 +48,7 @@ class OpportunitySaleReport(models.Model):
     sale_order = fields.Char('Sales Order', readonly=True)
     order_date = fields.Datetime('Date Order', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
+    with_po = fields.Boolean('Cusomer PO', readonly=True)
     order_state = fields.Selection([
         ('draft', 'Draft Quotation'),
         ('spvcheck', 'SPV Check'),
@@ -108,6 +109,7 @@ SELECT  c.id,
         s.name as sale_order,
         s.date_order as order_date,
         s.confirmation_date as confirmation_date,
+        s.stat_spk as with_po,
         s.state as order_state,
         sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
         sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
@@ -146,7 +148,7 @@ LEFT JOIN product_pricelist pp ON s.pricelist_id = pp.id
 
     def _group_by(self):
         group_by_str = """
-            GROUP BY c.id, stage.name, s.name, s.date_order, s.confirmation_date, s.state
+            GROUP BY c.id, stage.name, s.name, s.date_order, s.confirmation_date, s.stat_spk, s.state
         """
         return group_by_str
 
