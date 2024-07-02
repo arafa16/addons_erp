@@ -169,8 +169,8 @@
                                                     </div>
                                                 </group>
                                                 <group>
-                                                    <field name="sale_price" attrs="{'readonly': [('allow_set_sales','!=',True)]}"/>
-                                                    <field name="sale_subtotal" sum="Total Sales"/>
+                                                    <field name="sale_price" force_save="1" attrs="{'readonly': [('allow_set_sales','!=',True)]}"/>
+                                                    <field name="sale_subtotal" force_save="1" sum="Total Sales"/>
                                                     <field name="allow_set_sales" invisible="1"/>
                                                     <field name="revenue_margin"/>
                                                 </group>
