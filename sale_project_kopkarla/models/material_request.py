@@ -25,8 +25,8 @@ class MaterialRequest(models.Model):
             curtime = now.strftime("%Y-%m-%d %H:%M:%S")
             employee_id = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.user.id)])
             cost_center_id = self.task_idx.cost_center_id.id
-            if employee_id:
-                cost_center_id = employee_id.cost_center_id.id
+            # if employee_id:
+            #     cost_center_id = employee_id.cost_center_id.id
             for gud in gudang:
                 stloc = self.env['stock.location'].browse(gud)
                 wh = stloc.get_warehouse().id
