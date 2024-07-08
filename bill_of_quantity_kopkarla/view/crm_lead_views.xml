@@ -58,6 +58,8 @@
             <xpath expr="//button[@name='%(sale_crm.sale_action_quotations_new)d']" position="attributes">
                 <attribute name="context">{'search_default_partner_id': partner_id,
                                            'default_partner_id': partner_id,
+                                           'default_partner_invoice_id': partner_invoice_id,
+                                           'default_partner_shipping_id': partner_shipping_id,
                                            'default_team_id': team_id,
                                            'default_jenis_so': jenis_so,
                                            'default_proj_type': proj_type_id,
