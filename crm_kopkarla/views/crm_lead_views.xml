@@ -22,6 +22,19 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <!--<field name="partner_invoice_id" options="{'no_create': True}"/>
+                <field name="partner_shipping_id" options="{'no_create': True}"/>-->
+
+                <field name="partner_invoice_id"
+                       options='{"always_reload": True, "no_quick_create": True, "no_create_edit":True, "no_create": True, "no_open": True}'
+                       domain="['|', ('id', '=', partner_id), ('parent_id', '=', partner_id)]"/>
+                       <!--domain="[('customer', '=', True), ('active', '=', True), '|', ('is_company', '=', True), ('type', '=', 'invoice')]"/>-->
+                <field name="partner_shipping_id"
+                       options='{"always_reload": True, "no_quick_create": True, "no_create_edit":True, "no_create": True, "no_open": True}'
+                       domain="['|', ('id', '=', partner_id), ('parent_id', '=', partner_id)]"/>
+
+            </field>
             <field name="date_deadline" position="after">
                 <field name="boq_due_date"/>
                 <field name="proj_type_readonly" invisible="1"/>
@@ -43,7 +56,7 @@
             </xpath>-->
             <field name="phone" position="after">
                 <field name="end_user"/>
-                <field name="end_user_address"/>
+                <field name="end_user_address" invisible="1"/>
             </field>
             <field name="partner_id" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>

@@ -43,6 +43,36 @@ class Lead(models.Model):
     presales_user_id = fields.Many2one('res.users', string='Presales Person', index=True, track_visibility='onchange', domain=_get_domain_presales)
     line_material_ids = fields.One2many('crm.lead.line', 'crm_id', string='Material', copy=True)
 
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address')
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address')
+
+    @api.multi
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        if not self.partner_id:
+            self.update({
+                'partner_invoice_id': False,
+                'partner_shipping_id': False,
+                # 'payment_term_id': False,
+                # 'fiscal_position_id': False,
+            })
+            return
+
+        addr = self.partner_id.address_get(['delivery', 'invoice'])
+        values = {
+            # 'pricelist_id': self.partner_id.property_product_pricelist and self.partner_id.property_product_pricelist.id or False,
+            # 'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+            # 'user_id': self.partner_id.user_id.id or self.env.uid
+        }
+        # if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
+        #     values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
+
+        # if self.partner_id.team_id:
+        #     values['team_id'] = self.partner_id.team_id.id
+        self.update(values)
+
     @api.onchange('order_type_id')
     def _onchange_order_type(self):
         for lead in self:
