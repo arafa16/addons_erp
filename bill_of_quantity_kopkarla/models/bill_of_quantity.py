@@ -68,7 +68,7 @@ class Bill_Quantity(models.Model):
 
     user_id = fields.Many2one('res.users', string='Presales Person', index=True, track_visibility='onchange', related='crm_id.presales_user_id')
     order_type_id = fields.Many2one('crm.order.type', 'Order Type', related='crm_id.order_type_id', store=True)
-    overhead_pct = fields.Float('Overhead (%)', related='order_type_id.overhead_pct', store=True)
+    overhead_pct = fields.Float('Overhead (%)') #, related='order_type_id.overhead_pct', store=True)
     using_mitra = fields.Boolean('BoQ Mitra', related='order_type_id.using_mitra', store=True)
     is_rental = fields.Boolean(related='order_type_id.is_rental')
     rental_type = fields.Selection([('Sewa Beli', 'Sewa Beli'), ('Sewa Pakai', 'Sewa Pakai'), ('Back to Back', 'Back to Back'),], 'Rental Type', track_visibility='onchange')
