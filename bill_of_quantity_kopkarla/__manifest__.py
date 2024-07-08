@@ -15,6 +15,7 @@
         "data/boq_sequence.xml",
         # "view/main_menu.xml",
         'wizards/rfi_select_vendor_view.xml',
+        'wizards/rfi_reject_reason_view.xml',
         'view/bill_of_quantity_view.xml',
         'view/bill_of_quantity_internal_view.xml',
         'view/bill_of_quantity_line_view.xml',

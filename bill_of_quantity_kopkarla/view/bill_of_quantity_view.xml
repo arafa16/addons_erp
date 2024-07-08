@@ -120,7 +120,7 @@
                                 <field name="user_id" readonly="1"/>
                                 <field name="order_type_id" readonly="1"/>
                                 <field name="is_rental" invisible="1"/>
-                                <field name="rental_type" readonly="1" attrs="{'invisible': [('is_rental', '=', False)]}"/>
+                                <field name="rental_type" readonly="0" attrs="{'invisible': [('is_rental', '=', False)]}"/>
                                 <label for="rental_period" attrs="{'invisible': [('is_rental', '=', False)]}"/>
                                 <div attrs="{'invisible': [('is_rental', '=', False)]}">
                                     <field name="rental_period" class="oe_inline" style="padding-right: 5px;"/>
@@ -140,7 +140,14 @@
                                     <field name="disc_mitra_cost_pct" class="oe_inline"/>%
                                     <field name="disc_mitra_cost_amt" class="oe_inline oe_right" readonly="1" force_save="1"/>
                                 </div>
-                                <field string="Overhead" name="overhead_amount" class="oe_right" readonly="1"/>
+
+                                <label for="overhead_pct" string="Overhead"/>
+                                <div>
+                                    <field name="overhead_pct" class="oe_inline" attrs="{'readonly': [('state', '=', 'posted')]}"/>%
+                                    <field name="overhead_amount" class="oe_inline oe_right" readonly="1"/>
+                                </div>
+
+
                                 <field string="Total" name="total_cost" style="font-weight: bold;" class="oe_right" readonly="1"/>
                             </group>
                             <group string="Sales Calculation">
@@ -167,104 +174,6 @@
                         <notebook colspan="4">
                             <field name="using_mitra" invisible="1"/>
                             <field name="is_rental" invisible="1"/>
-                            <page string="Mitra" name="mitra"> <!--attrs="{'invisible': [('using_mitra', '!=', True)]}">-->
-                                <field name="line_mitra_ids" context="{'default_key': 'mitra'}">
-                                    <tree string="Quantity Line" editable="bottom">
-                                        <field name="key" invisible="1" force_save="1"/>
-                                        <!--<field name="employee_id"/>-->
-                                        <!--<field name="assest_id"/>-->
-                                        <!--<field name="partner_id"/>-->
-                                        <!--<field name="work_package_id" domain="[('key', '=', 'mitra')]" context="{'default_key': 'mitra'}"/>-->
-                                        <field name="cost_code_id" domain="[('key', '=', 'mitra'),('area_id', '=', parent.area_id)]" context="{'default_key': 'mitra'}" options="{'no_create': True}"/>
-                                        <!--<field name="product_id" options="{'no_create': True, 'no_open': True}"/>-->
-                                        <!--<field name="type"/>-->
-                                        <!--<field name="product_brand"/>
-                                        <field name="product_type"/>-->
-                                        <field name="name"/>
-                                        <field name="qty"/>
-                                        <field name="uom_id" options="{'no_create': True}"/>
-                                        <field name="price_unit" style="background-color: #89fae7;"/>
-                                        <field name="price_service" style="background-color: #89fae7;"/>
-                                        <field name="price_subtotal" sum="Total Cost Mitra" style="background-color: #89fae7;"/>
-                                        <field name="service_subtotal" sum="Total Service Mitra" style="background-color: #89fae7;"/>
-                                        <field name="sale_price" readonly="1" force_save="1" style="background-color: #f1fc88;"/>
-                                        <field name="sale_service" readonly="1" force_save="1" style="background-color: #f1fc88;"/>
-                                        <field name="sale_subtotal" sum="Total Sales" style="background-color: #f1fc88;"/>
-                                        <field name="sale_service_subtotal" sum="Total Service Sales" style="background-color: #f1fc88;"/>
-                                        <field name="revenue_margin"/>
-                                    </tree>
-                                    <form string="Quantity Line">
-                                        <group>
-                                            <group>
-                                                <field name="key" invisible="1" force_save="1"/>
-                                                <!--<field name="work_package_id" options="{'no_create': True}"/>--> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
-                                                <field name="cost_code_id" options="{'no_create': True}"/> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
-                                                <field name="name"/>
-                                            </group>
-                                            <group>
-                                                <field name="qty"/>
-                                                <field name="uom_id" options="{'no_create': True}"/>
-                                                <field name="price_unit"/>
-                                                <field name="price_subtotal" sum="Total Cost"/>
-                                            </group>
-                                            <!--<group>
-                                                <field name="lokasi_kirim"/>
-                                                <field name="garansi"/>
-                                            </group>
-                                            <group>
-                                                <field name="sale_price"/>
-                                                <field name="sale_subtotal" sum="Total Sales"/>
-                                                <field name="revenue_margin"/>
-                                            </group>-->
-                                        </group>
-                                    </form>
-                                </field>
-                            </page>
-                            <page string="Asset" name="asset" attrs="{'invisible': ['|', ('is_rental', '=', False), ('rental_type', '=', 'Back to Back')]}">
-                                <field name="line_asset_ids" context="{'default_key': 'asset'}">
-                                    <tree string="Quantity Line" editable="bottom">
-                                        <field name="key" invisible="1" force_save="1"/>
-                                        <field name="asset_id" options="{'no_create': True}"/>
-                                        <field name="name"/>
-                                        <!--<field name="qty"/>-->
-                                        <!--<field name="uom_id" options="{'no_create': True}"/>-->
-                                        <!--<field name="price_unit"/>
-                                        <field name="price_service"/>
-                                        <field name="price_subtotal" sum="Total Cost Mitra"/>
-                                        <field name="service_subtotal" sum="Total Service Mitra"/>
-                                        <field name="sale_price" readonly="1" force_save="1"/>
-                                        <field name="sale_service" readonly="1" force_save="1"/>
-                                        <field name="sale_subtotal" sum="Total Sales"/>
-                                        <field name="sale_service_subtotal" sum="Total Service Sales"/>
-                                        <field name="revenue_margin"/>-->
-                                    </tree>
-                                    <form string="Quantity Line">
-                                        <group>
-                                            <group>
-                                                <field name="key" invisible="1" force_save="1"/>
-                                                <!--<field name="work_package_id" options="{'no_create': True}"/>--> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
-                                                <field name="asset_id" options="{'no_create': True}"/> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
-                                                <field name="name"/>
-                                            </group>
-                                            <group>
-                                                <field name="qty"/>
-                                                <field name="uom_id" options="{'no_create': True}"/>
-                                                <field name="price_unit"/>
-                                                <field name="price_subtotal" sum="Total Cost"/>
-                                            </group>
-                                            <!--<group>
-                                                <field name="lokasi_kirim"/>
-                                                <field name="garansi"/>
-                                            </group>
-                                            <group>
-                                                <field name="sale_price"/>
-                                                <field name="sale_subtotal" sum="Total Sales"/>
-                                                <field name="revenue_margin"/>
-                                            </group>-->
-                                        </group>
-                                    </form>
-                                </field>
-                            </page>
                             <page string="Materials" name="material">
                                 <field name="line_material_ids" context="{'default_key': 'material'}">
                                     <!--<tree string="Quantity Line" decoration-info="state=='done'" decoration-muted="state=='cancel'">-->
@@ -316,6 +225,9 @@
                                                 </group>
                                                 <group attrs="{'invisible': [('parent.using_mitra', '=', True)]}">
                                                     <field name="user_rfq_id" readonly="1"/>
+                                                </group>
+                                                <group colspan="2" attrs="{'invisible': [('state', '!=', 'reject')]}" style="background-color: #fcacac;">
+                                                    <field name="reject_reason" readonly="1"/>
                                                 </group>
                                                 <group>
                                                     <field name="key" invisible="1" force_save="1"/>
@@ -405,26 +317,61 @@
                                     </form>
                                 </field>
                             </page>
+                            <page string="Asset" name="asset" attrs="{'invisible': ['|', ('is_rental', '=', False), ('rental_type', '=', 'Back to Back')]}">
+                                <field name="line_asset_ids" context="{'default_key': 'asset'}">
+                                    <tree string="Quantity Line" editable="bottom">
+                                        <field name="key" invisible="1" force_save="1"/>
+                                        <field name="asset_id" options="{'no_create': True}"/>
+                                        <field name="name"/>
+                                        <!--<field name="qty"/>-->
+                                        <!--<field name="uom_id" options="{'no_create': True}"/>-->
+                                        <!--<field name="price_unit"/>
+                                        <field name="price_service"/>
+                                        <field name="price_subtotal" sum="Total Cost Mitra"/>
+                                        <field name="service_subtotal" sum="Total Service Mitra"/>
+                                        <field name="sale_price" readonly="1" force_save="1"/>
+                                        <field name="sale_service" readonly="1" force_save="1"/>
+                                        <field name="sale_subtotal" sum="Total Sales"/>
+                                        <field name="sale_service_subtotal" sum="Total Service Sales"/>
+                                        <field name="revenue_margin"/>-->
+                                    </tree>
+                                    <form string="Quantity Line">
+                                        <group>
+                                            <group>
+                                                <field name="key" invisible="1" force_save="1"/>
+                                                <!--<field name="work_package_id" options="{'no_create': True}"/>--> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
+                                                <field name="asset_id" options="{'no_create': True}"/> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
+                                                <field name="name"/>
+                                            </group>
+                                            <group>
+                                                <field name="qty"/>
+                                                <field name="uom_id" options="{'no_create': True}"/>
+                                                <field name="price_unit"/>
+                                                <field name="price_subtotal" sum="Total Cost"/>
+                                            </group>
+                                            <!--<group>
+                                                <field name="lokasi_kirim"/>
+                                                <field name="garansi"/>
+                                            </group>
+                                            <group>
+                                                <field name="sale_price"/>
+                                                <field name="sale_subtotal" sum="Total Sales"/>
+                                                <field name="revenue_margin"/>
+                                            </group>-->
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
                             <page string="Operationals" name="operational">
                                 <field name="line_operational_ids" context="{'default_key': 'operational'}">
                                     <tree string="Quantity Line" editable="bottom">
                                         <field name="key" invisible="1" force_save="1"/>
-                                        <!--<field name="employee_id"/>-->
-                                        <!--<field name="assest_id"/>-->
-                                        <!--<field name="partner_id"/>-->
-                                        <!--<field name="work_package_id" domain="[('key', '=', 'operational')]" context="{'default_key': 'operational'}"/>-->
                                         <field name="cost_code_id" domain="[('key', '=', 'operational'),'|',('area_id', '=', parent.area_id),('price_unit', '=', 0)]" context="{'default_key': 'operational'}" options="{'no_create': True}"/>
-                                        <!--<field name="product_id" options="{'no_create': True, 'no_open': True}"/>-->
-                                        <!--<field name="type"/>-->
-                                        <!--<field name="product_brand"/>
-                                        <field name="product_type"/>-->
                                         <field name="name"/>
                                         <field name="qty"/>
                                         <field name="uom_id" options="{'no_create': True}"/>
                                         <field name="price_unit"/>
                                         <field name="price_subtotal" sum="Total Operational"/>
-                                        <!--<field name="lokasi_kirim"/>
-                                        <field name="garansi"/>-->
                                     </tree>
                                     <form string="Quantity Line">
                                         <group>
@@ -473,6 +420,59 @@
                                         <field name="price_subtotal" sum="Total Permit"/>
                                         <!--<field name="lokasi_kirim"/>
                                         <field name="garansi"/>-->
+                                    </tree>
+                                    <form string="Quantity Line">
+                                        <group>
+                                            <group>
+                                                <field name="key" invisible="1" force_save="1"/>
+                                                <!--<field name="work_package_id" options="{'no_create': True}"/>--> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
+                                                <field name="cost_code_id" options="{'no_create': True}"/> <!--attrs="{'invisible': [('key','!=', 'material')]}"/>-->
+                                                <field name="name"/>
+                                            </group>
+                                            <group>
+                                                <field name="qty"/>
+                                                <field name="uom_id" options="{'no_create': True}"/>
+                                                <field name="price_unit"/>
+                                                <field name="price_subtotal" sum="Total Cost"/>
+                                            </group>
+                                            <!--<group>
+                                                <field name="lokasi_kirim"/>
+                                                <field name="garansi"/>
+                                            </group>
+                                            <group>
+                                                <field name="sale_price"/>
+                                                <field name="sale_subtotal" sum="Total Sales"/>
+                                                <field name="revenue_margin"/>
+                                            </group>-->
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Mitra" name="mitra"> <!--attrs="{'invisible': [('using_mitra', '!=', True)]}">-->
+                                <field name="line_mitra_ids" context="{'default_key': 'mitra'}">
+                                    <tree string="Quantity Line" editable="bottom">
+                                        <field name="key" invisible="1" force_save="1"/>
+                                        <!--<field name="employee_id"/>-->
+                                        <!--<field name="assest_id"/>-->
+                                        <!--<field name="partner_id"/>-->
+                                        <!--<field name="work_package_id" domain="[('key', '=', 'mitra')]" context="{'default_key': 'mitra'}"/>-->
+                                        <field name="cost_code_id" domain="[('key', '=', 'mitra'),('area_id', '=', parent.area_id)]" context="{'default_key': 'mitra'}" options="{'no_create': True}"/>
+                                        <!--<field name="product_id" options="{'no_create': True, 'no_open': True}"/>-->
+                                        <!--<field name="type"/>-->
+                                        <!--<field name="product_brand"/>
+                                        <field name="product_type"/>-->
+                                        <field name="name"/>
+                                        <field name="qty"/>
+                                        <field name="uom_id" options="{'no_create': True}"/>
+                                        <field name="price_unit" style="background-color: #89fae7;"/>
+                                        <field name="price_service" style="background-color: #89fae7;"/>
+                                        <field name="price_subtotal" sum="Total Cost Mitra" style="background-color: #89fae7;"/>
+                                        <field name="service_subtotal" sum="Total Service Mitra" style="background-color: #89fae7;"/>
+                                        <field name="sale_price" readonly="1" force_save="1" style="background-color: #f1fc88;"/>
+                                        <field name="sale_service" readonly="1" force_save="1" style="background-color: #f1fc88;"/>
+                                        <field name="sale_subtotal" sum="Total Sales" style="background-color: #f1fc88;"/>
+                                        <field name="sale_service_subtotal" sum="Total Service Sales" style="background-color: #f1fc88;"/>
+                                        <field name="revenue_margin"/>
                                     </tree>
                                     <form string="Quantity Line">
                                         <group>

@@ -68,9 +68,10 @@ class Bill_Quantity(models.Model):
 
     user_id = fields.Many2one('res.users', string='Presales Person', index=True, track_visibility='onchange', related='crm_id.presales_user_id')
     order_type_id = fields.Many2one('crm.order.type', 'Order Type', related='crm_id.order_type_id', store=True)
+    overhead_pct = fields.Float('Overhead (%)', related='order_type_id.overhead_pct', store=True)
     using_mitra = fields.Boolean('BoQ Mitra', related='order_type_id.using_mitra', store=True)
     is_rental = fields.Boolean(related='order_type_id.is_rental')
-    rental_type = fields.Selection('Rental Type', related='crm_id.rental_type')
+    rental_type = fields.Selection([('Sewa Beli', 'Sewa Beli'), ('Sewa Pakai', 'Sewa Pakai'), ('Back to Back', 'Back to Back'),], 'Rental Type', track_visibility='onchange')
     rental_period = fields.Integer('Masa Sewa')
     rental_uom_id = fields.Many2one('product.uom', string='UoM', domain=[('category_id', '=', 6)])
     resalas_amount = fields.Float('RV')
@@ -96,6 +97,18 @@ class Bill_Quantity(models.Model):
     allow_cancel = fields.Boolean(compute='_get_allow_cancel')
     allow_to_rfi = fields.Boolean(compute='_get_allow_to_rfi_calculation')
     allow_calculation = fields.Boolean(compute='_get_allow_to_rfi_calculation')
+
+    @api.onchange('order_type_id')
+    def _onchange_order_type_id(self):
+        if self.order_type_id:
+            self.overhead_pct = self.order_type_id.overhead_pct
+        else:
+            self.overhead_pct = 0
+
+    @api.onchange('crm_id')
+    def _onchange_crm_id(self):
+        if self.is_rental:
+            self.rental_type = self.crm_id.rental_type
 
     def _get_material_count(self):
         for boq in self:
@@ -211,7 +224,8 @@ class Bill_Quantity(models.Model):
                  'line_permit_ids.qty', 'line_permit_ids.price_unit',
                  'line_mitra_ids.qty', 'line_mitra_ids.price_unit',
                  'disc_mitra_cost_pct', 'disc_mitra_cost_amt',
-                 'disc_mitra_sale_pct', 'disc_mitra_sale_amt', 'resalas_amount')
+                 'disc_mitra_sale_pct', 'disc_mitra_sale_amt', 'resalas_amount',
+                 'overhead_pct')
     def _compute_amount(self):
         for i in self:
             material_price_subtotal = 0.0
@@ -243,7 +257,8 @@ class Bill_Quantity(models.Model):
             disc_mitra_sale = -mitra_sale_subtotal * i.disc_mitra_sale_pct / 100
             # total_sale = material_sale_subtotal + operational_price_subtotal + permit_price_subtotal + mitra_sale_subtotal + disc_mitra_sale
             total_sale = material_sale_subtotal + mitra_sale_subtotal + disc_mitra_sale + i.resalas_amount
-            overhead_amount = total_sale * i.order_type_id.overhead_pct / 100
+            # overhead_amount = total_sale * i.order_type_id.overhead_pct / 100
+            overhead_amount = total_sale * i.overhead_pct / 100
             total_cost = material_price_subtotal + operational_price_subtotal + permit_price_subtotal + mitra_price_subtotal + disc_mitra_cost + overhead_amount
             margin_amount = total_sale - total_cost
             margin_pct = (margin_amount / total_sale * 100) if total_sale != 0 else 0

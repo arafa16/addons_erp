@@ -95,6 +95,8 @@ class bill_quantity_line(models.Model):
     notes = fields.Text('Notes')
     boq_line_activity_ids = fields.One2many('bill.quantity.line.activity', 'boq_line_id', string='Activity')
 
+    reject_reason = fields.Char('Rejected Reason')
+
     def _get_allow_set_vendor(self):
         for line in self:
             line.allow_set_vendor = line.state == 'done' and line.rfi_send
@@ -256,9 +258,9 @@ class bill_quantity_line(models.Model):
         for boq in self:
             boq.state = 'draft'
 
-    def action_reject(self):
-        for boq in self:
-            boq.state = 'reject'
+    # def action_reject(self):
+    #     for boq in self:
+    #         boq.state = 'reject'
 
     def action_cancel(self):
         for boq in self:

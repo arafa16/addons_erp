@@ -76,7 +76,8 @@
                         <button name="action_draft" string="Set to Draft" states="reject,cancel" class="btn-primary" type="object"/>
                         <button name="action_process" string="Process" states="draft" class="btn-primary" type="object"/>
                         <button name="action_post" string="Post" states="process" class="btn-primary" type="object"/>
-                        <button name="action_reject" string="Reject" states="draft,process" type="object"/>
+                        <!--<button name="action_reject" string="Reject" states="draft,process" type="object"/>-->
+                        <button name="%(action_bill_quantity_reject)d" string="Reject" states="draft,process" type="action" context="{'default_bill_quantity_line_id': id}"/>
                         <button name="action_cancel" string="Cancel" states="process,done" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,process,done"/>
                     </header>
@@ -229,6 +230,7 @@
                 <search string="RFI">
                     <field name="product_id" select="True"/>
                     <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Process" name="process" domain="[('state','=','process')]"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]"/>
                     <filter string="Rejected" name="reject" domain="[('state','=','reject')]"/>
                     <filter string="Canceled" name="cancel" domain="[('state','=','cancel')]"/>
@@ -248,7 +250,7 @@
             <field name="view_mode">tree,form,pivot</field>
             <field name="search_view_id" ref="view_bill_quantity_rfi_search"/>
             <field name="domain">[('key', '=', 'material'),('rfi_send','=',True)]</field>
-            <field name="context">{'search_default_boq_to_rfi': True}</field>
+            <field name="context">{'search_default_boq_to_rfi': True, 'search_default_draft': True, 'search_default_process': True}</field>
         </record>
 
         <!--<record id="action_boq_new" model="ir.actions.act_window">

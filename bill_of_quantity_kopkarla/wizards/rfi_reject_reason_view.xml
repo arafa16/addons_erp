@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+    <record model="ir.ui.view" id="view_bill_quantity_reject_form">
+        <field name="name">view.bill.quantity.reject.form</field>
+        <field name="model">bill.quantity.reject</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <form string="Reject Reason">
+                <sheet>
+                    <group>
+                        <field name="bill_quantity_line_id" invisible="1"/>
+                        <field name="reject_reason"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Reject" name="execute" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_bill_quantity_reject">
+        <field name="name">Reject Reason</field>
+        <field name="res_model">bill.quantity.reject</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_bill_quantity_reject_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
