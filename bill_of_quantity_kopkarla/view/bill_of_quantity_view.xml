@@ -535,6 +535,7 @@
                     <field name="crm_id"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_order_type" string="Order Type" context="{'group_by':'order_type_id'}"/>
+                        <filter name="group_by_state" string="State" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>

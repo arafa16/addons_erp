@@ -55,7 +55,7 @@
             <xpath expr="//button[@name='%(sale_crm.sale_action_quotations_new)d']" position="before">
                 <field name="jenis_so" invisible="1"/>
             </xpath>
-            <xpath expr="//button[@name='%(sale_crm.sale_action_quotations_new)d']" position="attributes">
+            <!--<xpath expr="//button[@name='%(sale_crm.sale_action_quotations_new)d']" position="attributes">
                 <attribute name="context">{'search_default_partner_id': partner_id,
                                            'default_partner_id': partner_id,
                                            'default_partner_invoice_id': partner_invoice_id,
@@ -68,6 +68,9 @@
                                            'default_campaign_id': campaign_id,
                                            'default_medium_id': medium_id,
                                            'default_source_id': source_id}</attribute>
+            </xpath>-->
+            <xpath expr="//button[@name='%(sale_crm.sale_action_quotations_new)d']" position="replace">
+                <button string="New Quotation" name="action_quotations_new" type="object" class="oe_highlight"/>
             </xpath>
         </field>
     </record>

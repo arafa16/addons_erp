@@ -22,6 +22,9 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="domain">[('customer', '=', True), ('is_company', '=', True)]</attribute>
+            </field>
             <field name="partner_id" position="after">
                 <!--<field name="partner_invoice_id" options="{'no_create': True}"/>
                 <field name="partner_shipping_id" options="{'no_create': True}"/>-->
@@ -126,6 +129,16 @@
                     'search_default_sent': 1
                     }</attribute>
             </button>
+        </field>
+    </record>
+
+    <record id="view_crm_case_opportunities_filter_tbd" model="ir.ui.view">
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Order Type" context="{'group_by':'order_type_id'}"/>
+            </xpath>
         </field>
     </record>
 </odoo>
