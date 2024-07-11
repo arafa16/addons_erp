@@ -56,6 +56,7 @@
                                    options="{'no_create': True}"/>
                             <field name="sequence"/>
                             <field name="notify_on_create"/>
+                            <field name="approve_sequence" />
                         </group>
                     </group>
                     <group name="bottom">

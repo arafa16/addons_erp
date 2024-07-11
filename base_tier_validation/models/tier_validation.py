@@ -39,10 +39,30 @@ class TierValidation(models.AbstractModel):
     )
     can_review = fields.Boolean(compute="_compute_can_review")
 
-    @api.multi
+    def _get_sequences_to_approve(self, user):
+        all_reviews = self.review_ids.filtered(lambda r: r.status == "pending")
+        my_reviews = all_reviews.filtered(lambda r: user in r.reviewer_ids)
+        # Include all my_reviews with approve_sequence = False
+        sequences = my_reviews.filtered(lambda r: not r.approve_sequence).mapped(
+            "sequence"
+        )
+        # Include only my_reviews with approve_sequence = True
+        approve_sequences = my_reviews.filtered("approve_sequence").mapped("sequence")
+        if approve_sequences:
+            my_sequence = min(approve_sequences)
+            min_sequence = min(all_reviews.mapped("sequence"))
+            if my_sequence <= min_sequence:
+                sequences.append(my_sequence)
+        return sequences
+
     def _compute_can_review(self):
         for rec in self:
-            rec.can_review = self.env.user in rec.reviewer_ids
+            rec.can_review = rec._get_sequences_to_approve(self.env.user)
+
+    # @api.multi
+    # def _compute_can_review(self):
+    #     for rec in self:
+    #         rec.can_review = self.env.user in rec.reviewer_ids
 
     @api.multi
     @api.depends('review_ids')

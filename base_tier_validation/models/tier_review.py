@@ -34,13 +34,29 @@ class TierReview(models.Model):
     )
     sequence = fields.Integer(string="Tier")
     todo_by = fields.Char(compute="_compute_todo_by", store=True)
-    done_by = fields.Many2one(
-        comodel_name="res.users",
+    done_by = fields.Many2one(comodel_name="res.users")
+    requested_by = fields.Many2one(comodel_name="res.users")
+    reviewed_date = fields.Datetime(string="Validation Date")
+    approve_sequence = fields.Boolean(
+        related="definition_id.approve_sequence", readonly=True
     )
-    requested_by = fields.Many2one(
-        comodel_name="res.users",
-    )
-    reviewed_date = fields.Datetime(string='Validation Date')
+
+    @api.depends("definition_id.approve_sequence")
+    def _compute_can_review(self):
+        for record in self:
+            record.can_review = record._can_review_value()
+
+    def _can_review_value(self):
+        if self.status != "pending":
+            return False
+        if not self.approve_sequence:
+            return True
+        resource = self.env[self.model].browse(self.res_id)
+        reviews = resource.review_ids.filtered(lambda r: r.status == "pending")
+        if not reviews:
+            return True
+        sequence = min(reviews.mapped("sequence"))
+        return self.sequence == sequence
 
     @api.model
     def _get_reviewer_fields(self):
