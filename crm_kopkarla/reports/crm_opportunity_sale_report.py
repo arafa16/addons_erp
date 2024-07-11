@@ -5,8 +5,9 @@ class OpportunitySaleReport(models.Model):
     _name = "crm.opportunity.sale.report"
     _auto = False
     _description = "CRM Opportunity Sales Analysis"
-    _rec_name = 'date_deadline'
+    _rec_name = 'sale_order_id'
 
+    crm_id = fields.Many2one('crm.lead', 'Opportunity', readonly=True)
     date_deadline = fields.Date('Expected Closing', readonly=True)
     create_date = fields.Datetime('Creation Date', readonly=True)
     opening_date = fields.Datetime('Assignation Date', readonly=True)
@@ -21,14 +22,14 @@ class OpportunitySaleReport(models.Model):
 
     user_id = fields.Many2one('res.users', string='User', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', readonly=True)
-    nbr_activities = fields.Integer('# of Activities', readonly=True)
-    city = fields.Char('City')
-    country_id = fields.Many2one('res.country', string='Country', readonly=True)
-    probability = fields.Float(string='Probability', digits=(16, 2), readonly=True, group_operator="avg")
+    # nbr_activities = fields.Integer('# of Activities', readonly=True)
+    # city = fields.Char('City')
+    # country_id = fields.Many2one('res.country', string='Country', readonly=True)
+    # probability = fields.Float(string='Probability', digits=(16, 2), readonly=True, group_operator="avg")
     total_revenue = fields.Float(string='Total Revenue', digits=(16, 2), readonly=True)
-    expected_revenue = fields.Float(string='Probable Turnover', digits=(16, 2), readonly=True)
+    # expected_revenue = fields.Float(string='Probable Turnover', digits=(16, 2), readonly=True)
     stage_id = fields.Many2one('crm.stage', string='Stage', readonly=True, domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]")
-    stage_name = fields.Char(string='Stage Name', readonly=True)
+    # stage_name = fields.Char(string='Stage Name', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     # company_id = fields.Many2one('res.company', string='Company', readonly=True)
     # priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', group_operator="avg")
@@ -45,11 +46,11 @@ class OpportunitySaleReport(models.Model):
     order_type_id = fields.Many2one('crm.order.type', 'Order Type', required=True, track_visibility='onchange')
     proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', track_visibility='onchange')
     area_id = fields.Many2one('enhanced.sales.area', string='Sales Area', required=True)
-    sale_order = fields.Char('Sales Order', readonly=True)
+    sale_order_id = fields.Many2one('sale.order', string='Sales Order', readonly=True)
     order_date = fields.Datetime('Date Order', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     with_po = fields.Boolean('Cusomer PO', readonly=True)
-    reva_id = fields.Many2one('enhanced.reva.table', string='Reva Status', readonly=True)
+    reva_id = fields.Many2one('enhanced.reva.tabel', string='Reva Status', readonly=True)
     order_state = fields.Selection([
         ('draft', 'Draft Quotation'),
         ('spvcheck', 'SPV Check'),
@@ -74,14 +75,15 @@ class OpportunitySaleReport(models.Model):
     def _select(self):
         select_str = """
 SELECT  c.id,
+        c.id as crm_id,
         c.date_deadline,
         c.date_open as opening_date,
         c.date_closed as date_closed,
 --         c.date_last_stage_update as date_last_stage_update,
         c.user_id,
-        c.probability,
+--        c.probability,
         c.stage_id,
-        stage.name as stage_name,
+--        stage.name as stage_name,
 --         c.type,
 --         c.company_id,
 --         c.priority,
@@ -97,7 +99,7 @@ SELECT  c.id,
 --         c.city,
 --         c.country_id,
         c.planned_revenue as total_revenue,
-        c.planned_revenue * (c.probability/100) as expected_revenue,
+--        c.planned_revenue * (c.probability/100) as expected_revenue,
         c.create_date as create_date,
 --         extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
 --         abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
@@ -107,7 +109,7 @@ SELECT  c.id,
         c.order_type_id,
         c.proj_type_id,
         c.area_id,
-        s.name as sale_order,
+        s.id as sale_order_id,
         s.date_order as order_date,
         s.confirmation_date as confirmation_date,
         s.stat_spk as with_po,
@@ -150,7 +152,7 @@ LEFT JOIN product_pricelist pp ON s.pricelist_id = pp.id
 
     def _group_by(self):
         group_by_str = """
-            GROUP BY c.id, stage.name, s.name, s.date_order, s.confirmation_date, s.stat_spk, s.stat_reva, s.state
+            GROUP BY c.id, stage.name, s.id, s.date_order, s.confirmation_date, s.stat_spk, s.stat_reva, s.state
         """
         return group_by_str
 
