@@ -52,7 +52,7 @@ class OpportunitySaleReport(models.Model):
     with_po = fields.Boolean('Cusomer PO', readonly=True)
     reva_id = fields.Many2one('enhanced.reva.tabel', string='Reva Status', readonly=True)
     order_state = fields.Selection([
-        ('draft', 'Draft Quotation'),
+        ('draft', 'Quotation'),
         ('spvcheck', 'SPV Check'),
         ('assmancheck', 'Assman Check'),
         ('requestloa', 'Request LoA'),
