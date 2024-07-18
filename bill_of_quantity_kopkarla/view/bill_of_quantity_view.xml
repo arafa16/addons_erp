@@ -468,11 +468,11 @@
                                         <field name="price_service" style="background-color: #89fae7;"/>
                                         <field name="price_subtotal" sum="Total Cost Mitra" style="background-color: #89fae7;"/>
                                         <field name="service_subtotal" sum="Total Service Mitra" style="background-color: #89fae7;"/>
-                                        <field name="sale_price" readonly="1" force_save="1" style="background-color: #f1fc88;"/>
-                                        <field name="sale_service" readonly="1" force_save="1" style="background-color: #f1fc88;"/>
+                                        <field name="sale_price" readonly="0" force_save="1" style="background-color: #f1fc88;"/>
+                                        <field name="sale_service" readonly="0" force_save="1" style="background-color: #f1fc88;"/>
                                         <field name="sale_subtotal" sum="Total Sales" style="background-color: #f1fc88;"/>
                                         <field name="sale_service_subtotal" sum="Total Service Sales" style="background-color: #f1fc88;"/>
-                                        <field name="revenue_margin"/>
+                                        <field name="revenue_margin" readonly="1" force_save="1"/>
                                     </tree>
                                     <form string="Quantity Line">
                                         <group>
