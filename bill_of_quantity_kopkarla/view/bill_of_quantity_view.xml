@@ -135,8 +135,8 @@
                                 <field string="Operational" name="operational_cost" class="oe_right" readonly="1"/>
                                 <field string="Permit" name="permit_cost" class="oe_right" readonly="1"/>
                                 <field string="Mitra" name="mitra_cost" class="oe_right" readonly="1"/>
-                                <label for="disc_mitra_cost_pct" attrs="{'invisible': [('using_mitra','=',False)]}"/>
-                                <div attrs="{'invisible': [('using_mitra','=',False)]}">
+                                <label for="disc_mitra_cost_pct"/> <!--attrs="{'invisible': [('using_mitra','=',False)]}"/>-->
+                                <div> <!--attrs="{'invisible': [('using_mitra','=',False)]}">-->
                                     <field name="disc_mitra_cost_pct" class="oe_inline"/>%
                                     <field name="disc_mitra_cost_amt" class="oe_inline oe_right" readonly="1" force_save="1"/>
                                 </div>
@@ -155,9 +155,9 @@
                                 <field string="RV" name="resalas_amount" class="oe_right" attrs="{'invisible': [('is_rental', '=', False)]}"/>
                                 <!--<field string="Operational" name="operational_cost" class="oe_right" readonly="1"/>-->
                                 <!--<field string="Permit" name="permit_cost" class="oe_right" readonly="1"/>-->
-                                <field string="Mitra" name="mitra_sale" class="oe_right" readonly="1" attrs="{'invisible': [('using_mitra','=',False)]}"/>
-                                <label for="disc_mitra_sale_pct" attrs="{'invisible': [('using_mitra','=',False)]}"/>
-                                <div attrs="{'invisible': [('using_mitra','=',False)]}">
+                                <field string="Mitra" name="mitra_sale" class="oe_right" readonly="1"/> <!--attrs="{'invisible': [('using_mitra','=',False)]}"/>-->
+                                <label for="disc_mitra_sale_pct"/> <!--attrs="{'invisible': [('using_mitra','=',False)]}"/>-->
+                                <div> <!--attrs="{'invisible': [('using_mitra','=',False)]}">-->
                                     <field name="disc_mitra_sale_pct" class="oe_inline"/>%
                                     <field name="disc_mitra_sale_amt" class="oe_inline oe_right" readonly="1" force_save="1"/>
                                 </div>
