@@ -12,6 +12,9 @@
                     <field name="with_po"/>
                     <field name="reva_id"/>
                     <field name="price_subtotal" sum="sub_total"/>
+                    <field name="invoice_draft" sum="sub_total"/>
+                    <field name="invoice_open" sum="sub_total"/>
+                    <field name="invoice_paid" sum="sub_total"/>
                     <field name="crm_id"/>
                     <field name="order_type_id"/>
                     <field name="proj_type_id"/>
