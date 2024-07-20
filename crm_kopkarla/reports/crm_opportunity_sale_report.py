@@ -71,6 +71,9 @@ class OpportunitySaleReport(models.Model):
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
     amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
     amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
+    invoice_draft = fields.Float('Invoice Draft', readonly=True)
+    invoice_open = fields.Float('Invoice Open', readonly=True)
+    invoice_paid = fields.Float('Invoice Paid', readonly=True)
 
     def _select(self):
         select_str = """
@@ -122,7 +125,31 @@ SELECT  c.id,
         sum(l.price_total) as price_total,
         sum(l.price_subtotal) as price_subtotal,
         sum(l.amt_to_invoice) as amt_to_invoice,
-        sum(l.amt_invoiced) as amt_invoiced
+        sum(l.amt_invoiced) as amt_invoiced,
+        (
+            select sum(ail.price_subtotal)
+            from sale_order_line sol
+            LEFT JOIN sale_order_line_invoice_rel sri on sol.id = sri.order_line_id
+            LEFT JOIN account_invoice_line ail on sri.invoice_line_id = ail.id
+            LEFT JOIN account_invoice ai on ail.invoice_id = ai.id
+            where sol.order_id = s.id and ai.state = 'draft'
+           ) as invoice_draft,
+        (
+            select sum(ail.price_subtotal)
+            from sale_order_line sol
+            LEFT JOIN sale_order_line_invoice_rel sri on sol.id = sri.order_line_id
+            LEFT JOIN account_invoice_line ail on sri.invoice_line_id = ail.id
+            LEFT JOIN account_invoice ai on ail.invoice_id = ai.id
+            where sol.order_id = s.id and ai.state = 'open'
+           ) as invoice_open,
+        (
+            select sum(ail.price_subtotal)
+            from sale_order_line sol
+            LEFT JOIN sale_order_line_invoice_rel sri on sol.id = sri.order_line_id
+            LEFT JOIN account_invoice_line ail on sri.invoice_line_id = ail.id
+            LEFT JOIN account_invoice ai on ail.invoice_id = ai.id
+            where sol.order_id = s.id and ai.state = 'paid'
+           ) as invoice_paid
         """
         return select_str
 
