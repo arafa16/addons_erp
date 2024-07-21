@@ -283,37 +283,33 @@ class Bill_Quantity(models.Model):
         vals['name'] = self.env['ir.sequence'].next_by_code('boq.number.sequence') or 'New'
         return super(Bill_Quantity, self).create(vals)
 
-    def _validate_boq(self):
+    def validate_boq(self):
         if self.total_cost <= 0:
             raise UserError(_("Total cost 0."))
 
     def _update_project_boq(self, _set_status, boq):
         if _set_status:
-            boq.project_id.boq_id = boq.id
-            boq.project_id.boq_total = boq.total_cost
-        else:
-            boq.project_id.boq_id = False
-            boq.project_id.boq_total = 0
+            boq.crm_id.planned_revenue = boq.total_sale
+        # else:
+        #     boq.crm_id.planned_revenue = 0
 
     def action_to_rfi(self):
         for boq in self:
-            # boq._validate_boq()
             boq.state = 'to_rfi'
 
     def action_calculation(self):
         for boq in self:
-            # boq._validate_boq()
             boq.state = 'calculation'
 
     def action_approval(self):
         for boq in self:
-            # boq._validate_boq()
             boq.state = 'approval'
 
     def action_post(self):
         for boq in self:
-            boq._validate_boq()
-            # boq._update_project_boq(True, boq)
+            boq.validate_boq()
+            if boq.crm_id:
+                boq._update_project_boq(True, boq)
             boq.close_date = datetime.now()
             boq.state = 'posted'
 
