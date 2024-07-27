@@ -56,6 +56,7 @@
                     <field name="name"/>
                     <field name="qty"/>
                     <field name="price_unit"/>
+                    <field name="rfi_send"/>
                     <field name="user_rfq_id" groups="bill_of_quantity_kopkarla.group_rfi_manager"/>
                     <field name="rfi_id"/>
                     <field name="rfi_expired_date"/>

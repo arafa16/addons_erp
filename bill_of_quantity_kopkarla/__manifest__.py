@@ -1,7 +1,7 @@
 {
     "name": "Bill of Quantity",
     "version": "14.0.0.2",
-    "depends": ['crm', 'crm_kopkarla', 'sale_crm', 'account', 'sprogroup_purchase_request'],
+    "depends": ['crm', 'crm_kopkarla', 'sale_crm', 'account', 'sprogroup_purchase_request', 'product'],
     "author": "TBD Team",
     "summary": "Bill of Quantity BOQ",
     "description": """
@@ -24,6 +24,7 @@
         'view/rfi_history_view.xml',
         'view/cost_header_view.xml',
         'view/cost_code_view.xml',
+        'view/product_template_view.xml',
         'reports/boq_mitra.xml',
         'reports/boq_customer.xml',
         'reports/boq_memo.xml',

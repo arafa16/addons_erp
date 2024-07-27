@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_product_template_search_tbd" model="ir.ui.view">
+        <field name="name">product.template.search.tbd</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand"/>
+                <field name="product_type"/>
+            </field>
+        </field>
+    </record>
+
+    <!--<record id="product_template_form_tbd" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <field name="barcode" position="after">
+                <field name="product_brand"/>
+                <field name="product_type"/>
+            </field>
+        </field>
+    </record>-->
+
+    <record id="product_template_form_tbd" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <field name="barcode" position="after">
+                <field name="product_brand"/>
+                <field name="product_type"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_product_template_tree_tbd" model="ir.ui.view">
+        <field name="name">product tree view: add tbd</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand"/>
+                <field name="product_type"/>
+            </field>
+        </field>
+    </record>
+</odoo>

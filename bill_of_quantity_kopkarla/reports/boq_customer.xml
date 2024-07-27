@@ -59,36 +59,40 @@
                                     <t t-set="service_subtotal" t-value="0"/>
                                     <t t-if="len(doc.line_mitra_ids)">
                                         <t t-foreach="doc.line_mitra_ids" t-as="baris">
-                                            <tr style="font-size:12px;">
-                                                <t t-set="no" t-value="no + 1"/>
-                                                <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
-                                                <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
-                                                <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
-                                                <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.qty)"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service_subtotal)"/></td>
-                                            </tr>
+                                            <t t-if="baris.sale_subtotal + baris.sale_service_subtotal">
+                                                <tr style="font-size:12px;">
+                                                    <t t-set="no" t-value="no + 1"/>
+                                                    <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
+                                                    <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
+                                                    <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
+                                                    <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.qty)"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service_subtotal)"/></td>
+                                                </tr>
+                                            </t>
                                         </t>
                                     </t>
                                     <t t-elif="len(doc.line_material_ids)">
                                         <t t-foreach="doc.line_material_ids" t-as="baris">
-                                            <tr style="font-size:12px;">
-                                                <t t-set="no" t-value="no + 1"/>
-                                                <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
-                                                <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
-                                                <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
-                                                <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.qty)"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
-                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service_subtotal)"/></td>
-                                            </tr>
+                                            <t t-if="baris.sale_subtotal + baris.sale_service_subtotal">
+                                                <tr style="font-size:12px;">
+                                                    <t t-set="no" t-value="no + 1"/>
+                                                    <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
+                                                    <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
+                                                    <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
+                                                    <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.qty)"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
+                                                    <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service_subtotal)"/></td>
+                                                </tr>
+                                            </t>
                                         </t>
                                     </t>
                                     <tr style="font-size:12px; font-weight:bold;">
@@ -139,7 +143,8 @@
                             </tr>
                             <tr style="height:10px;">
                                 <td style="text-align: center;"></td>
-                                <td style="text-align: center;"><span t-field="doc.user_id.name"/></td>
+                                <!--<td style="text-align: center;"><span t-field="doc.user_id.name"/></td>-->
+                                <td style="text-align: center;"><span t-field="doc.approver3_id.name"/></td>
                             </tr>
                             <tr>
                                 <td style="text-align: center;"></td>
@@ -196,19 +201,21 @@
                                     <t t-set="no" t-value="0"/>
                                     <t t-set="price_subtotal" t-value="0"/>
                                     <t t-foreach="doc.line_material_ids" t-as="baris">
-                                        <tr style="font-size:12px;">
-                                            <t t-set="no" t-value="no + 1"/>
-                                            <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
-                                            <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
-                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
-                                            <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.product_id.name"/></td>
-                                            <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
-                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.0f}'.format(baris.qty)"/></td>
-                                            <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
-                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
-                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
-                                            <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
-                                        </tr>
+                                        <t t-if="baris.sale_subtotal">
+                                            <tr style="font-size:12px;">
+                                                <t t-set="no" t-value="no + 1"/>
+                                                <t t-set="price_subtotal" t-value="price_subtotal + baris.sale_subtotal"/>
+                                                <t t-set="service_subtotal" t-value="service_subtotal + baris.sale_service_subtotal"/>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="no"/></td>
+                                                <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.product_id.name"/></td>
+                                                <td style="text-align: left; vertical-align: middle; border:1px solid black;"><span t-field="baris.name"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.0f}'.format(baris.qty)"/></td>
+                                                <td style="text-align: center; vertical-align: middle; border:1px solid black;"><span t-field="baris.uom_id.name"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_price)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_service)"/></td>
+                                                <td style="text-align: right; vertical-align: middle; border:1px solid black;"><span t-esc="'{0:,.2f}'.format(baris.sale_subtotal)"/></td>
+                                            </tr>
+                                        </t>
                                     </t>
                                     <tr style="font-size:12px; font-weight:bold;">
                                         <td style="text-align: right; vertical-align: middle; border:1px solid black;" colspan="6">Sub Total</td>
@@ -258,7 +265,8 @@
                             </tr>
                             <tr style="height:10px;">
                                 <td style="text-align: center;"></td>
-                                <td style="text-align: center;"><span t-field="doc.user_id.name"/></td>
+                                <!--<td style="text-align: center;"><span t-field="doc.user_id.name"/></td>-->
+                                <td style="text-align: center;"><span t-field="doc.approver3_id.name"/></td>
                             </tr>
                             <tr>
                                 <td style="text-align: center;"></td>

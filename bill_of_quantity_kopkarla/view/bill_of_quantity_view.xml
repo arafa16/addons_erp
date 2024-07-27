@@ -67,7 +67,7 @@
                                 </div>
                             </button>
                             <button class="oe_stat_button" type="object" context="{'bill_quantity_id': id, 'key': 'mitra'}"
-                                    name="action_show_boq_mitra" icon="fa-bars" attrs="{'invisible': [('using_mitra', '!=', True)]}">
+                                    name="action_show_boq_mitra" icon="fa-bars"> <!--attrs="{'invisible': [('using_mitra', '!=', True)]}">-->
                                 <div class="o_stat_info">
                                     <field name="line_mitra_count" class="o_stat_value"/>
                                     <span class="o_stat_text" attrs="{'invisible': [('line_mitra_count', '&lt;', 2)]}"> Mitras</span>

@@ -205,6 +205,8 @@ class bill_quantity_line(models.Model):
                 if rec.product_id.description_purchase:
                     name += "\n" + rec.product_id.description_purchase
                 rec.description = name
+                rec.product_brand = rec.product_id.product_brand
+                rec.product_type = rec.product_id.product_type
                 rec.uom_id = rec.product_id.uom_id.id
                 rec.qty = 1
                 # if rec.bill_quantity_id.using_mitra:

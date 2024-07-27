@@ -6,3 +6,4 @@ from . import bill_of_quantity_line
 from . import bill_of_quantity_rfi
 from . import bill_of_quantity_activity
 from . import crm_lead
+from . import product_template
