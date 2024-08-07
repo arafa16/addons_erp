@@ -334,8 +334,7 @@ class Bill_Quantity(models.Model):
             boq.validate_boq()
             if boq.crm_id:
                 boq._update_project_boq(True, boq)
-            boq.close_date = datetime.now()
-            boq.state = 'posted'
+            boq.write({'close_date': datetime.now(), 'state': 'posted'})
 
     def action_draft(self):
         for boq in self:
