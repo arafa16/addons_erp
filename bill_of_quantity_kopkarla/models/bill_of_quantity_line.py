@@ -173,18 +173,28 @@ class bill_quantity_line(models.Model):
             self.payment_term_id = self.rfi_id.payment_term_id.id
             self.garansi = self.rfi_id.garansi
 
-    # @api.onchange('revenue_margin')
-    # def _compute_sale_price(self):
-    #     for i in self:
-    #         sale_subtotal = i.sale_subtotal + i.sale_service_subtotal
-    #         margin = sale_subtotal * i.revenue_margin / 100
-    #         margin_cost = sale_subtotal - (i.price_subtotal + i.service_subtotal)
-    #         while not float_is_zero(margin - margin_cost, precision_digits=5):
-    #             sale_subtotal = i.price_subtotal + margin
-    #             margin_cost = sale_subtotal - i.price_subtotal
-    #             margin = sale_subtotal * i.revenue_margin / 100
-    #         i.sale_price = sale_subtotal / i.qty
-    #         i._compute_price()
+    @api.onchange('revenue_margin')
+    def _compute_sale_price(self):
+        for i in self:
+            if i.key == 'material':
+                sale_subtotal = i.sale_subtotal + i.sale_service_subtotal
+                margin = sale_subtotal * i.revenue_margin / 100
+                margin_cost = sale_subtotal - (i.price_subtotal + i.service_subtotal)
+                while not float_is_zero(margin - margin_cost, precision_digits=5):
+                    sale_subtotal = i.price_subtotal + margin
+                    margin_cost = sale_subtotal - i.price_subtotal
+                    margin = sale_subtotal * i.revenue_margin / 100
+                i.sale_price = sale_subtotal / i.qty
+                i._compute_price()
+
+    @api.onchange('price_unit', 'price_service', 'sale_price', 'sale_service', 'qty', 'product_id')
+    def _onchange_quantity_price(self):
+        for i in self:
+            i.price_subtotal = i.qty * i.price_unit
+            i.service_subtotal = i.qty * i.price_service
+            i.sale_subtotal = i.qty * i.sale_price
+            i.sale_service_subtotal = i.qty * i.sale_service
+            i.revenue_margin = (((i.sale_subtotal + i.sale_service_subtotal) - (i.price_subtotal + i.service_subtotal)) / (i.sale_subtotal + i.sale_service_subtotal) * 100) if (i.sale_subtotal + i.sale_service_subtotal) != 0 else 0
 
     @api.depends('price_unit', 'price_service', 'sale_price', 'sale_service', 'qty', 'product_id')
     def _compute_price(self):
@@ -193,7 +203,7 @@ class bill_quantity_line(models.Model):
             i.service_subtotal = i.qty * i.price_service
             i.sale_subtotal = i.qty * i.sale_price
             i.sale_service_subtotal = i.qty * i.sale_service
-            i.revenue_margin = (((i.sale_subtotal + i.sale_service_subtotal) - (i.price_subtotal + i.service_subtotal)) / (i.sale_subtotal + i.sale_service_subtotal) * 100) if (i.sale_subtotal + i.sale_service_subtotal) != 0 else 0
+            # i.revenue_margin = (((i.sale_subtotal + i.sale_service_subtotal) - (i.price_subtotal + i.service_subtotal)) / (i.sale_subtotal + i.sale_service_subtotal) * 100) if (i.sale_subtotal + i.sale_service_subtotal) != 0 else 0
 
     @api.onchange("product_id")
     def _onchange_product_id(self):

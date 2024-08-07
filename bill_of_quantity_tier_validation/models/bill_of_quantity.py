@@ -31,7 +31,8 @@ class bill_quantity(models.Model):
         super(bill_quantity, self).validate_tier()
         for rec in self:
             if rec.validated:
-                rec.state = 'posted'
+                # rec.state = 'posted'
+                rec.action_post()
 
     @api.multi
     def reject_tier(self):

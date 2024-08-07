@@ -20,12 +20,18 @@ class Bill_Quantity(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', related='crm_id.partner_id')
     parent_id = fields.Many2one('bill.quantity')
 
+    material_cost_before_discount = fields.Float('Material Cost Before Discount', compute="_compute_amount")
     material_cost = fields.Float('Material Cost', compute="_compute_amount")
+    material_sale_before_discount = fields.Float('Material Sales Before Discount', compute="_compute_amount")
     material_sale = fields.Float('Material Sales', compute="_compute_amount")
     line_material_ids = fields.One2many('bill.quantity.line', 'bill_quantity_id', string='Bill Of Quantity Lines',
                                         # readonly=True, states={'draft': [('readonly', False)]},
                                         readonly=False,
                                         copy=True, domain=[('key', '=', 'material')])
+    disc_material_cost_pct = fields.Float('Disc. Cost Material', default=0, readonly=True, states={'draft': [('readonly', False)]})
+    disc_material_cost_amt = fields.Float('Disc. Cost Material Amount', default=0, readonly=True, states={'draft': [('readonly', False)]})
+    disc_material_sale_pct = fields.Float('Disc. Sales Material', default=0, readonly=True, states={'draft': [('readonly', False)]})
+    disc_material_sale_amt = fields.Float('Disc. Sales Material Amount', default=0, readonly=True, states={'draft': [('readonly', False)]})
 
     operational_cost = fields.Float('Operational Cost', compute="_compute_amount")
     line_operational_ids = fields.One2many('bill.quantity.line', 'bill_quantity_id', string='Operational Lines',
@@ -45,10 +51,10 @@ class Bill_Quantity(models.Model):
                                      # readonly=True, states={'draft': [('readonly', False)]},
                                      readonly=False,
                                      copy=True, domain=[('key', '=', 'mitra')])
-    disc_mitra_cost_pct = fields.Float('Discount Cost Mitra', default=0, readonly=True, states={'draft': [('readonly', False)]})
-    disc_mitra_cost_amt = fields.Float('Discount Cost Mitra Amount', default=0, readonly=True, states={'draft': [('readonly', False)]})
-    disc_mitra_sale_pct = fields.Float('Discount Sales Mitra', default=0, readonly=True, states={'draft': [('readonly', False)]})
-    disc_mitra_sale_amt = fields.Float('Discount Sales Mitra Amount', default=0, readonly=True, states={'draft': [('readonly', False)]})
+    disc_mitra_cost_pct = fields.Float('Disc. Cost Mitra', default=0, readonly=True, states={'draft': [('readonly', False)]})
+    disc_mitra_cost_amt = fields.Float('Disc. Cost Mitra Amount', default=0, readonly=True, states={'draft': [('readonly', False)]})
+    disc_mitra_sale_pct = fields.Float('Disc. Sales Mitra', default=0, readonly=True, states={'draft': [('readonly', False)]})
+    disc_mitra_sale_amt = fields.Float('Disc. Sales Mitra Amount', default=0, readonly=True, states={'draft': [('readonly', False)]})
 
     total_cost = fields.Float('Total Cost', compute="_compute_amount", store=True)
     total_sale = fields.Float('Total Sales', compute="_compute_amount", store=True)
@@ -220,6 +226,8 @@ class Bill_Quantity(models.Model):
                 boq.boq_rfi_expired = boq.rfi_expired_date < fields.Datetime.now()
 
     @api.depends('line_material_ids.qty', 'line_material_ids.price_unit',
+                 'disc_material_cost_pct', 'disc_material_cost_amt',
+                 'disc_material_sale_pct', 'disc_material_sale_amt',
                  'line_operational_ids.qty', 'line_operational_ids.price_unit',
                  'line_permit_ids.qty', 'line_permit_ids.price_unit',
                  'line_mitra_ids.qty', 'line_mitra_ids.price_unit',
@@ -228,33 +236,45 @@ class Bill_Quantity(models.Model):
                  'overhead_pct')
     def _compute_amount(self):
         for i in self:
+            material_price_subtotal_before_discount = 0.0
             material_price_subtotal = 0.0
+            material_sale_subtotal_before_discount = 0.0
             material_sale_subtotal = 0.0
             operational_price_subtotal = 0.0
             permit_price_subtotal = 0.0
             mitra_price_subtotal = 0.0
             mitra_sale_subtotal = 0.0
+
             if i.line_material_ids:
                 for record in i.line_material_ids:
                     if record.key == 'material':
+                        material_price_subtotal_before_discount += record.price_subtotal
                         material_price_subtotal += record.price_subtotal
+                        material_sale_subtotal_before_discount += record.sale_subtotal
                         material_sale_subtotal += record.sale_subtotal
+            disc_material_cost = -material_price_subtotal * i.disc_material_cost_pct / 100
+            disc_material_sale = -material_sale_subtotal * i.disc_material_sale_pct / 100
+            material_price_subtotal += disc_material_cost
+            material_sale_subtotal += disc_material_sale
+
             if i.line_operational_ids:
                 for record in i.line_operational_ids:
                     if record.key == 'operational':
                         operational_price_subtotal += record.price_subtotal
+
             if i.line_permit_ids:
                 for record in i.line_permit_ids:
                     if record.key == 'permit':
                         permit_price_subtotal += record.price_subtotal
+
             if i.line_mitra_ids:
                 for record in i.line_mitra_ids:
                     if record.key == 'mitra':
                         mitra_price_subtotal += record.price_subtotal + record.service_subtotal
                         mitra_sale_subtotal += record.sale_subtotal + record.sale_service_subtotal
-
             disc_mitra_cost = -mitra_price_subtotal * i.disc_mitra_cost_pct / 100
             disc_mitra_sale = -mitra_sale_subtotal * i.disc_mitra_sale_pct / 100
+
             # total_sale = material_sale_subtotal + operational_price_subtotal + permit_price_subtotal + mitra_sale_subtotal + disc_mitra_sale
             total_sale = material_sale_subtotal + mitra_sale_subtotal + disc_mitra_sale + i.resalas_amount
             # overhead_amount = total_sale * i.order_type_id.overhead_pct / 100
@@ -262,7 +282,11 @@ class Bill_Quantity(models.Model):
             total_cost = material_price_subtotal + operational_price_subtotal + permit_price_subtotal + mitra_price_subtotal + disc_mitra_cost + overhead_amount
             margin_amount = total_sale - total_cost
             margin_pct = (margin_amount / total_sale * 100) if total_sale != 0 else 0
-            i.update({'material_cost': material_price_subtotal,
+            i.update({'material_cost_before_discount': material_price_subtotal_before_discount,
+                      'disc_material_cost_amt': disc_material_cost,
+                      'material_cost': material_price_subtotal,
+                      'material_sale_before_discount': material_sale_subtotal_before_discount,
+                      'disc_material_sale_amt': disc_material_sale,
                       'material_sale': material_sale_subtotal,
                       'operational_cost': operational_price_subtotal,
                       'permit_cost': permit_price_subtotal,

@@ -131,13 +131,20 @@
                                 <field name="analytic_account_id" readonly="1"/>
                             </group>
                             <group string="Cost Calculation">
+                                <field string="Material Before Disc." name="material_cost_before_discount" class="oe_right" readonly="1"/>
+                                <label for="disc_material_cost_pct"/> <!--attrs="{'invisible': [('using_mitra','=',False)]}"/>-->
+                                <div> <!--attrs="{'invisible': [('using_mitra','=',False)]}">-->
+                                    <field name="disc_material_cost_pct" class="oe_inline" attrs="{'readonly': [('state', '=', 'posted')]}"/>%
+                                    <field name="disc_material_cost_amt" class="oe_inline oe_right" readonly="1" force_save="1"/>
+                                </div>
+                                <separator/>
                                 <field string="Material" name="material_cost" class="oe_right" readonly="1"/>
                                 <field string="Operational" name="operational_cost" class="oe_right" readonly="1"/>
                                 <field string="Permit" name="permit_cost" class="oe_right" readonly="1"/>
                                 <field string="Mitra" name="mitra_cost" class="oe_right" readonly="1"/>
                                 <label for="disc_mitra_cost_pct"/> <!--attrs="{'invisible': [('using_mitra','=',False)]}"/>-->
                                 <div> <!--attrs="{'invisible': [('using_mitra','=',False)]}">-->
-                                    <field name="disc_mitra_cost_pct" class="oe_inline"/>%
+                                    <field name="disc_mitra_cost_pct" class="oe_inline" attrs="{'readonly': [('state', '=', 'posted')]}"/>%
                                     <field name="disc_mitra_cost_amt" class="oe_inline oe_right" readonly="1" force_save="1"/>
                                 </div>
 
@@ -151,6 +158,13 @@
                                 <field string="Total" name="total_cost" style="font-weight: bold;" class="oe_right" readonly="1"/>
                             </group>
                             <group string="Sales Calculation">
+                                <field string="Material Before Disc." name="material_sale_before_discount" class="oe_right" readonly="1"/>
+                                <label for="disc_material_sale_pct"/> <!--attrs="{'invisible': [('using_mitra','=',False)]}"/>-->
+                                <div> <!--attrs="{'invisible': [('using_mitra','=',False)]}">-->
+                                    <field name="disc_material_sale_pct" class="oe_inline" attrs="{'readonly': [('state', '=', 'posted')]}"/>%
+                                    <field name="disc_material_sale_amt" class="oe_inline oe_right" readonly="1" force_save="1"/>
+                                </div>
+                                <separator/>
                                 <field string="Material" name="material_sale" class="oe_right" readonly="1"/>
                                 <field string="RV" name="resalas_amount" class="oe_right" attrs="{'invisible': [('is_rental', '=', False)]}"/>
                                 <!--<field string="Operational" name="operational_cost" class="oe_right" readonly="1"/>-->
@@ -158,7 +172,7 @@
                                 <field string="Mitra" name="mitra_sale" class="oe_right" readonly="1"/> <!--attrs="{'invisible': [('using_mitra','=',False)]}"/>-->
                                 <label for="disc_mitra_sale_pct"/> <!--attrs="{'invisible': [('using_mitra','=',False)]}"/>-->
                                 <div> <!--attrs="{'invisible': [('using_mitra','=',False)]}">-->
-                                    <field name="disc_mitra_sale_pct" class="oe_inline"/>%
+                                    <field name="disc_mitra_sale_pct" class="oe_inline" attrs="{'readonly': [('state', '=', 'posted')]}"/>%
                                     <field name="disc_mitra_sale_amt" class="oe_inline oe_right" readonly="1" force_save="1"/>
                                 </div>
                                 <field string="Total" name="total_sale" style="font-weight: bold;" class="oe_right" readonly="1"/>
