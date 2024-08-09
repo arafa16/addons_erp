@@ -1014,6 +1014,7 @@ SELECT
                         when sp.origin is not null then 
                             case 
                                 when so3.name is not null then so3.name
+                                when sm.origin_returned_move_id is not null then so_ret.name
                                 else sp.origin
                             end
                         /* else m.ref */
@@ -1122,7 +1123,14 @@ LEFT JOIN
     left join account_invoice ai2 on ml.move_id = ai2.move_id
     left join project_task pt on sp.idtask = pt.id
     left join sale_order so3 on pt.sale_order_id = so3.id
-    /* left join stock_picking sp2 on m.ref = sp2.name */
+    
+    left join stock_move sm_ret on sm.origin_returned_move_id = sm_ret.id
+    left join stock_picking sp_ret on sm_ret.picking_id = sp_ret.id
+    left join purchase_order po_ret on sp_ret.origin = po_ret.name
+    left join purchase_requisition pr_ret on po_ret.requisition_id = pr_ret.id
+    left join sprogroup_purchase_request spr_ret on pr_ret.nomor_pr = spr_ret.id
+    left join sale_order so_ret on spr_ret.salesorder_id = so_ret.id
+
                 """
         query_inject_move_line += """
 WHERE
