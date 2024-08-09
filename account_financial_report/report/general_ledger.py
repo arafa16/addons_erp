@@ -1008,7 +1008,7 @@ SELECT
                                                      else ai2.origin end) 
                 when ml.user_type_id = 5 then
                     case 
-                        when sm.origin_returned_move_id is not null then so_ret.name
+                        when sm.to_refund then case when sm.picking_type_id = 2 then so_ret.name else sm.origin end
                         when sp.sale_id is not null then sp.origin
                         when ai2.origin is not null then ai2.origin
                         when so2.name is not null then so2.name
