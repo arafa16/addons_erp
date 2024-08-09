@@ -1008,13 +1008,13 @@ SELECT
                                                      else ai2.origin end) 
                 when ml.user_type_id = 5 then
                     case 
+                        when sm.origin_returned_move_id is not null then so_ret.name
                         when sp.sale_id is not null then sp.origin
                         when ai2.origin is not null then ai2.origin
                         when so2.name is not null then so2.name
                         when sp.origin is not null then 
                             case 
                                 when so3.name is not null then so3.name
-                                when sm.origin_returned_move_id is not null then so_ret.name
                                 else sp.origin
                             end
                         /* else m.ref */
