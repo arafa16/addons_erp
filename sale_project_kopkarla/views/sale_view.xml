@@ -144,6 +144,7 @@
             <field name="arch" type="xml">
                 <field name="opportunity_id" position="attributes">
                     <attribute name="groups"/>
+                    <attribute name="options">{'no_create': True}</attribute>
                 </field>
             </field>
         </record>
