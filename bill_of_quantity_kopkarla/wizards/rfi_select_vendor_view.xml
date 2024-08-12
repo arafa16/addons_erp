@@ -49,6 +49,7 @@
                             <field name="garansi"/>
                             <field name="payment_term_id"/>
                             <field name="name"/>
+                            <field name="description"/>
                         </tree>
                     </field>
                     <group>
