@@ -20,6 +20,8 @@ from odoo.addons import decimal_precision as dp
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    opportunity_id = fields.Many2one('crm.lead', string='Opportunity', domain="[('type', '=', 'opportunity')]", required=True)
+
     @api.multi
     @api.onchange('partner_id')
     def onchange_partner_id(self):
