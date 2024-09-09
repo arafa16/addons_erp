@@ -18,6 +18,9 @@
                             <group string="Trading Type" attrs="{'invisible': [('jenis_so', 'not in', ['datacom'])]}">
                                 <field name="proj_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" string="Jenis Trading" options="{'no_create': True}"/>
                             </group>
+                            <group string="Project Type" attrs="{'invisible': [('jenis_so', 'not in', ['rental'])]}">
+                                <field name="proj_type" attrs="{'required': ['&amp;',('state', 'not in', ['draft','sent']),('jenis_so', '=', 'Project')]}" options="{'no_create': True}"/>
+                            </group>
                             <group string="Informasi S.P.K" name="info_spk">
                                 <field name="spk_sementara" string="SPK User"/>
                                 <field name="stat_spk" string="Ada PO"/>
