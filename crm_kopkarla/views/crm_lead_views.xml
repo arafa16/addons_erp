@@ -42,8 +42,8 @@
                 <field name="boq_due_date"/>
                 <field name="proj_type_readonly" invisible="1"/>
                 <field name="order_type_id" options="{'no_create': True}"/>
-                <field name="proj_type_id" options="{'no_create': True}" force_save="1"
-                       attrs="{'invisible': [('is_rental', '=', True)], 'readonly': [('proj_type_readonly', '=', True)]}"/>
+                <!--<field name="proj_type_id" options="{'no_create': True}" force_save="1" attrs="{'invisible': [('is_rental', '=', True)], 'readonly': [('proj_type_readonly', '=', True)]}"/>-->
+                <field name="proj_type_id" options="{'no_create': True}" force_save="1" attrs="{'readonly': [('proj_type_readonly', '=', True)]}"/>
                 <field name="need_spk" invisible="1"/>
                 <field name="no_jar" attrs="{'invisible': [('need_spk', '=', False)]}"/>
                 <field name="spk" attrs="{'invisible': [('need_spk', '=', False)]}"/>
