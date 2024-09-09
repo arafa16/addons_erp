@@ -43,7 +43,8 @@ class OpportunitySaleReport(models.Model):
     # source_id = fields.Many2one('utm.source', string='Source', readonly=True)
     # medium_id = fields.Many2one('utm.medium', string='Medium', readonly=True)
 
-    order_type_id = fields.Many2one('crm.order.type', 'Order Type', required=True, track_visibility='onchange')
+    order_type_id = fields.Many2one('crm.order.type', 'Order Type CRM', required=True, track_visibility='onchange')
+    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("datacom", "Trading Datacom"), ("rental", "Rental Order")], string='Order Type', track_visibility='onchange')
     proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', track_visibility='onchange')
     area_id = fields.Many2one('enhanced.sales.area', string='Sales Area', required=True)
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', readonly=True)
@@ -51,6 +52,7 @@ class OpportunitySaleReport(models.Model):
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     with_po = fields.Boolean('Cusomer PO', readonly=True)
     reva_id = fields.Many2one('enhanced.reva.tabel', string='Reva Status', readonly=True)
+    est_invoice_date = fields.Date('Estimasi Invoice Date', readonly=True)
     order_state = fields.Selection([
         ('draft', 'Quotation'),
         ('spvcheck', 'SPV Check'),
@@ -115,8 +117,10 @@ SELECT  c.id,
         s.id as sale_order_id,
         s.date_order as order_date,
         s.confirmation_date as confirmation_date,
+        s.jenis_so as jenis_so,
         s.stat_spk as with_po,
         s.stat_reva as reva_id,
+        s.est_invoice_date as est_invoice_date,
         s.state as order_state,
         sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
         sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
@@ -183,7 +187,7 @@ LEFT JOIN product_pricelist pp ON s.pricelist_id = pp.id
                     c.order_type_id,
                     c.proj_type_id,
                     c.area_id,
-                    s.id, s.date_order, s.confirmation_date, s.stat_spk, s.stat_reva, s.state
+                    s.id, s.date_order, s.confirmation_date, s.jenis_so, s.stat_spk, s.stat_reva, s.est_invoice_date, s.state
         """
         return group_by_str
 

@@ -9,6 +9,7 @@
                     <field name="partner_id"/>
                     <field name="order_date"/>
                     <field name="confirmation_date"/>
+                    <field name="est_invoice_date"/>
                     <field name="with_po"/>
                     <field name="reva_id"/>
                     <field name="price_subtotal" sum="sub_total"/>
@@ -17,6 +18,7 @@
                     <field name="invoice_paid" sum="sub_total"/>
                     <field name="crm_id"/>
                     <field name="order_type_id"/>
+                    <field name="jenis_so"/>
                     <field name="proj_type_id"/>
                     <field name="user_id"/>
                     <field name="area_id"/>
@@ -41,6 +43,7 @@
                             <group colspan="2">
                                 <field name="partner_id"/>
                                 <field name="order_type_id"/>
+                                <field name="jenis_so"/>
                                 <field name="proj_type_id"/>
                                 <field name="area_id"/>
                             </group>
@@ -48,6 +51,7 @@
                                 <field name="sale_order_id"/>
                                 <field name="order_date"/>
                                 <field name="confirmation_date"/>
+                                <field name="est_invoice_date"/>
                                 <field name="with_po"/>
                                 <field name="reva_id"/>
                                 <field name="order_state"/>
@@ -70,7 +74,7 @@
             <field name="model">crm.opportunity.sale.report</field>
             <field name="arch" type="xml">
                 <pivot string="Opportunity to Sale Report" disable_linking="True">
-                    <field name="order_type_id" type="col"/>
+                    <field name="jenis_so" type="col"/>
                     <field name="order_date" interval="month" type="row"/>
                     <field name="price_subtotal" type="measure"/>
                 </pivot>
@@ -112,7 +116,8 @@
                         <filter string="Customer" name="customer" context="{'group_by':'partner_id'}" />
                         <filter string="Salesperson" context="{'group_by':'user_id'}" />
                         <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
-                        <filter string="Order Type" context="{'group_by':'order_type_id'}" />
+                        <filter string="Order Type CRM" context="{'group_by':'order_type_id'}" />
+                        <filter string="Order Type" context="{'group_by':'jenis_so'}" />
                         <filter string="Area" context="{'group_by':'area_id'}" />
                         <filter string="Status" name="order_state" context="{'group_by':'order_state'}" />
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
