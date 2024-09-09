@@ -23,6 +23,7 @@ class bill_quantity_line_rfi(models.Model):
     garansi = fields.Char('Garansi', track_visibility='onchange')
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Term', track_visibility='onchange')
     selected = fields.Boolean(compute='_get_selected_status')
+    user_rfq_id = fields.Many2one('res.users', string='RFI Person', related='bill_quantity_line_id.user_rfq_id')
 
     @api.multi
     def action_select_vendor(self):

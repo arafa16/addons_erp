@@ -12,6 +12,7 @@
                     <field name="product_id"/>
                     <field name="bill_quantity_id"/>
                     <field name="crm_id"/>
+                    <field name="user_rfq_id"/>
                     <field name="description"/>
                     <field name="price_unit"/>
                     <field name="expired_date"/>
