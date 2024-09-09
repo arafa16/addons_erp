@@ -39,6 +39,12 @@ class EnhancedSalesArea(models.Model):
 
     tgl_due_po  = fields.Date(string='Due Date PO')
 
+    @api.model
+    def create(self, vals):
+        if not vals.get('opportunity_id', True):
+            raise UserError('Opportunity / pipeline CRM tidak boleh kosong!')
+        return super(EnhancedSalesArea, self).create(vals)
+
     @api.multi
     def convert_to_project(self):
         # super(EnhancedSalesArea, self)
