@@ -154,51 +154,51 @@ class SalesOrder(models.Model):
                 self.state = 'assmancheck'
 
                 # ----- bypassloa
-                prosesLoa = True
                 if self.jenis_so == 'Project':
+                    prosesLoa = True
                     if self.proj_type.id != False and self.ord_type.id != False:
                         if self.proj_type.bypassLoA == True and self.ord_type.bypassLoA == True:
                             prosesLoa = False
                     if prosesLoa and self.pek_type != False:
                         if self.pek_type.bypassLoA == True:
                             prosesLoa = False
-                if prosesLoa == True:
-                    tujuan = []
-                    if self.required5 == True:
-                        teksmail = self.penandatangan5.user_id.email
-                        tail = 'Ketua Pengurus'
-                        self.loa_request = 5
-                    if self.required4 == True:
-                        teksmail = self.penandatangan4.user_id.email
-                        tail = 'Pengurus/Direktur'
-                        self.loa_request = 4
-                    if self.required3 == True:
-                        teksmail = self.penandatangan3.user_id.email
-                        tail = 'General Manager'
-                        self.loa_request = 3
-                    if self.required2 == True:
-                        teksmail = self.penandatangan2.user_id.email
-                        tail = 'Manager'
-                        self.loa_request = 2
-                    if self.required1 == True:
-                        teksmail = self.penandatangan1.user_id.email
-                        tail = 'Asisten Manager'
-                        self.loa_request = 1
-                    tujuan.append(teksmail)
-                    template = 'salesorder_quotation_loa'
-                    self.requestLoA = True
-                    self.apvteks = tail
-                    self.state = 'requestloa'
-                    self._sent_mail(tujuan, template, tail)
-                else:
-                    self.requestLoA = True
-                    self.state = 'loaconfirmed'
-                    idusr = self._uid
-                    getusrs = self.env['res.users'].browse(idusr)
-                    self.message_post(
-                        body="Document Bypass LoA  By <b>" + getusrs.display_name + " <i>(" + getusrs.email + ")</i></b> because Jenis Project <b>" + str(
-                            self.proj_type.name) + "</b> and Jenis Order <b>" + str(
-                            self.ord_type.name) + "</b> , Document Ready to Confirm")
+                    if not prosesLoa:
+                    #     tujuan = []
+                    #     if self.required5 == True:
+                    #         teksmail = self.penandatangan5.user_id.email
+                    #         tail = 'Ketua Pengurus'
+                    #         self.loa_request = 5
+                    #     if self.required4 == True:
+                    #         teksmail = self.penandatangan4.user_id.email
+                    #         tail = 'Pengurus/Direktur'
+                    #         self.loa_request = 4
+                    #     if self.required3 == True:
+                    #         teksmail = self.penandatangan3.user_id.email
+                    #         tail = 'General Manager'
+                    #         self.loa_request = 3
+                    #     if self.required2 == True:
+                    #         teksmail = self.penandatangan2.user_id.email
+                    #         tail = 'Manager'
+                    #         self.loa_request = 2
+                    #     if self.required1 == True:
+                    #         teksmail = self.penandatangan1.user_id.email
+                    #         tail = 'Asisten Manager'
+                    #         self.loa_request = 1
+                    #     tujuan.append(teksmail)
+                    #     template = 'salesorder_quotation_loa'
+                    #     self.requestLoA = True
+                    #     self.apvteks = tail
+                    #     # self.state = 'requestloa'
+                    #     self._sent_mail(tujuan, template, tail)
+                    # else:
+                        self.requestLoA = True
+                        self.state = 'loaconfirmed'
+                        idusr = self._uid
+                        getusrs = self.env['res.users'].browse(idusr)
+                        self.message_post(
+                            body="Document Bypass LoA  By <b>" + getusrs.display_name + " <i>(" + getusrs.email + ")</i></b> because Jenis Project <b>" + str(
+                                self.proj_type.name) + "</b> and Jenis Order <b>" + str(
+                                self.ord_type.name) + "</b> , Document Ready to Confirm")
                 # ---------------
         else:
             raise UserError('You dont have access to supervisor')
