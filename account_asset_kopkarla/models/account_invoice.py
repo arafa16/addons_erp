@@ -41,23 +41,24 @@ class AccountInvoice(models.Model):
         for line in self.invoice_line_ids:
             if line.asset_category_id:
                 if line.purchase_line_id:
-                    stock_move = self.env['stock.move'].sudo().search([('purchase_line_id', '=', line.purchase_line_id.id)])
-                    if stock_move.move_id:
-                        for move_line in stock_move.move_id.line_ids:
-                            move_line_dict = {
-                                'name': line.name,
-                                'product_id': line.product_id.id,
-                                'quantity': line.quantity,
-                                'product_uom_id': line.product_id.uom_id.id,
-                                'ref': stock_move.picking_id.name,
-                                'partner_id': self.partner_id.id,
-                                'debit': line.price_subtotal if move_line.debit == 0 else 0,
-                                'credit': line.price_subtotal if move_line.credit == 0 else 0,
-                                'account_id': move_line.account_id.id,
-                                'cost_center_id': line.cost_center_id.id,
-                                'analytic_account_id': line.account_analytic_id.id,
-                            }
-                            res.append((0, 0, move_line_dict))
+                    stock_move_ids = self.env['stock.move'].sudo().search([('purchase_line_id', '=', line.purchase_line_id.id)])
+                    for stock_move in stock_move_ids:
+                        if stock_move.move_id:
+                            for move_line in stock_move.move_id.line_ids:
+                                move_line_dict = {
+                                    'name': line.name,
+                                    'product_id': line.product_id.id,
+                                    'quantity': line.quantity,
+                                    'product_uom_id': line.product_id.uom_id.id,
+                                    'ref': stock_move.picking_id.name,
+                                    'partner_id': self.partner_id.id,
+                                    'debit': line.price_subtotal if move_line.debit == 0 else 0,
+                                    'credit': line.price_subtotal if move_line.credit == 0 else 0,
+                                    'account_id': move_line.account_id.id,
+                                    'cost_center_id': line.cost_center_id.id,
+                                    'analytic_account_id': line.account_analytic_id.id,
+                                }
+                                res.append((0, 0, move_line_dict))
         return res
 
     @api.multi
