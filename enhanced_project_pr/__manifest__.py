@@ -4,7 +4,9 @@
   'version': '0.1',
   'depends': [
     'project',
-    'sprogroup_purchase_request'
+    'sprogroup_purchase_request',
+    'cost_centers_kopkarla',
+    'enhanced_sales_convert_project'
   ],
   'data': [
     'views/project_task.xml'

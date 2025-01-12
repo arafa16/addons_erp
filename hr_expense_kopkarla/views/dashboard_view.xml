@@ -149,7 +149,7 @@
 
         <menuitem id="menu_dashboard_expense" name="Dashboard" sequence="1"
                   parent="hr_expense.menu_hr_expense_root" action="dashboard_expense_action"
-                  groups="account.group_account_manager,account.group_account_invoice"/>
+                  groups="account.group_account_manager"/>
 
         <menuitem id="hr_expense.menu_hr_expense_my_expenses" name="My Expenses" sequence="2"
                   parent="hr_expense.menu_hr_expense_root" groups="base.group_user"/>

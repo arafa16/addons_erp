@@ -47,7 +47,10 @@ class HrExpense(models.Model):
             self.unit_amount = self.product_id.price_compute('standard_price')[self.product_id.id]
             self.product_uom_id = self.product_id.uom_id
             self.tax_ids = self.product_id.supplier_taxes_id
-            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+            if self.sheet_id.order_id.jenis_so == 'Project':
+                account = self.sheet_id.order_id.proj_type.project_account_id.id
+            else:
+                account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
                 self.account_id = account
             self.employee_id = self.sheet_id.employee_id.id
@@ -223,15 +226,17 @@ class HrExpense(models.Model):
 class HrExpenseSheet(models.Model):
     _inherit = "hr.expense.sheet"
 
-    is_unbudget = fields.Boolean('Unbudget', compute='_get_unbudget')
+    is_unbudget = fields.Boolean('Unbudget', compute='_get_unbudget', store=True)
 
+    @api.depends('expense_line_ids.product_id')
     def _get_unbudget(self):
-        self.is_unbudget = True
-        product_unbudget_id = self.env['ir.config_parameter'].sudo().get_param('default_product_unbudget')
-        if product_unbudget_id:
-            line = self.expense_line_ids.filtered(lambda x: x.product_id.id != int(product_unbudget_id))
-            if line:
-                self.is_unbudget = False
+        for sheet in self:
+            sheet.is_unbudget = True
+            product_unbudget_id = self.env['ir.config_parameter'].sudo().get_param('default_product_unbudget')
+            if product_unbudget_id:
+                line = sheet.expense_line_ids.filtered(lambda x: x.product_id.id != int(product_unbudget_id))
+                if line:
+                    sheet.is_unbudget = False
 
     @api.model
     def _default_partner(self):
@@ -254,12 +259,12 @@ class HrExpenseSheet(models.Model):
     advance_date = fields.Date(string='Paid Date', related='advance_id.account_validate_date', readonly=True)
     advance_amount = fields.Float(string='Advance Amount', related='advance_id.paid_amount', readonly=True, digits=dp.get_precision('Account'))
     total_amount = fields.Float(string='Settle Amount', store=True, compute='_compute_amount', digits=dp.get_precision('Account'))
-    expense_amount = fields.Float(string='Expense Amount', digits=dp.get_precision('Account'), compute='_compute_amount')
+    expense_amount = fields.Float(string='Expense Amount', digits=dp.get_precision('Account'), compute='_compute_amount', store=True)
     payment_id = fields.Many2one('account.payment', string='Payment', readonly=True)
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete='set null', copy=False)
     accounting_date = fields.Date(string="Payment Date")
     payment_mode = fields.Selection([("own_account", "Employee"), ("company_account", "Company")], related='', default='own_account', string="Payment By")
-    partner_id = fields.Many2one('res.partner', string='Employee Partner', readonly=True, store=True, default=_default_partner, required=True)
+    partner_id = fields.Many2one('res.partner', string='Employee Partner', default=_default_partner, required=True)
     communication = fields.Char(string='Memo', required=True)
     journal_id = fields.Many2one('account.journal', string='Expense Journal', readonly=True,
                                  states={'done': [('readonly', True)], 'post': [('readonly', True)]},
@@ -267,7 +272,7 @@ class HrExpenseSheet(models.Model):
                                  help="The journal used when the expense is done.")
     advance_journal_id = fields.Many2one('account.journal', string='Advance Journal', readonly=True, store=True)
     ret_journal_id = fields.Many2one('account.journal', string='Transfer From Journal', readonly=True, store=True)
-    order_id = fields.Many2one('sale.order', string="Sale Order", readonly=True, states={'submit': [('readonly', False)]}, ondelete="set null")
+    order_id = fields.Many2one('sale.order', string="Sale Order", readonly=True, states={'submit': [('readonly', False)]}, ondelete="set null", tracking=True)
     request_id = fields.Many2one('sprogroup.purchase.request', string="Purchase Request", readonly=True, states={'submit': [('readonly', False)]}, ondelete="set null")
     department_id_charge_to = fields.Many2one('hr.department', string="Charge Department", readonly=True, states={'submit': [('readonly', False)]}, ondelete="restrict")
     created_sign_by = fields.Many2one('hr.employee', string='Dibuat', default=lambda self: self.env['res.config.settings'].get_values().get('default_exp_created_sign_by'))
@@ -293,25 +298,25 @@ class HrExpenseSheet(models.Model):
             self.cost_center_id = self.employee_id.cost_center_id.id
             self.analytic_account_id = self.employee_id.analytic_account_id.id
 
-    @api.onchange('request_id')
-    def _onchange_request_id(self):
-        if self.request_id.id:
-            self.cost_center_id = self.request_id.cost_center_id.id
-            self.analytic_account_id = self.request_id.analytic_account_id.id
-            self.order_id = self.request_id.salesorder_id.id
-        else:
-            self.cost_center_id = self.employee_id.cost_center_id.id
-            self.analytic_account_id = self.employee_id.analytic_account_id.id
-            self.order_id = False
+    # @api.onchange('request_id')
+    # def _onchange_request_id(self):
+    #     if self.request_id.id:
+    #         self.cost_center_id = self.request_id.cost_center_id.id
+    #         self.analytic_account_id = self.request_id.analytic_account_id.id
+    #         self.order_id = self.request_id.salesorder_id.id
+    #     else:
+    #         self.cost_center_id = self.employee_id.cost_center_id.id
+    #         self.analytic_account_id = self.employee_id.analytic_account_id.id
+    #         self.order_id = False
 
-    @api.onchange('department_id_charge_to')
-    def _onchange_department_id_charge_to(self):
-        if self.department_id_charge_to.id:
-            self.cost_center_id = self.department_id_charge_to.cost_center_id.id
-            self.analytic_account_id = self.department_id_charge_to.analytic_account_id.id
-        else:
-            self.cost_center_id = self.employee_id.cost_center_id.id
-            self.analytic_account_id = self.employee_id.analytic_account_id.id
+    # @api.onchange('department_id_charge_to')
+    # def _onchange_department_id_charge_to(self):
+    #     if self.department_id_charge_to.id:
+    #         self.cost_center_id = self.department_id_charge_to.cost_center_id.id
+    #         self.analytic_account_id = self.department_id_charge_to.analytic_account_id.id
+    #     else:
+    #         self.cost_center_id = self.employee_id.cost_center_id.id
+    #         self.analytic_account_id = self.employee_id.analytic_account_id.id
 
     @api.multi
     def approve_expense_sheets(self):
@@ -508,32 +513,41 @@ class HrExpenseSheet(models.Model):
         return lines
 
     @api.onchange('advance_id')
-    def _onchange_product_id(self):
+    def _onchange_advance_id(self):
         self.advance_journal_id = False
         self.ret_journal_id = False
         self.expense_line_ids = False
-        self.order_id = False
+        if self._context.get('default_task_id', False):
+            self.task_id = self._context['default_task_id']
+        if self._context.get('default_order_id', False):
+            self.order_id = self._context['default_order_id']
         self.request_id = False
         self.department_id_charge_to = False
         self.cost_center_id = self.employee_id.cost_center_id.id
         self.analytic_account_id = self.employee_id.analytic_account_id.id
+        self.partner_id = self._default_partner().id
         if self.advance_id:
             self.expense_line_ids = [[0, False, line] for line in self._populate_advance_lines()]
             self.payment_mode = 'own_account'
             self.advance_journal_id = self.advance_id.journal_id.id
             ret_journal_id = self.env['ir.config_parameter'].sudo().get_param('ret_journal_id')
             self.ret_journal_id = int(ret_journal_id)
-            self.order_id = self.advance_id.order_id.id
+            if not self.task_id:
+                self.task_id = self.advance_id.task_id.id
+            if not self.order_id:
+                self.order_id = self.advance_id.order_id.id
             self.request_id = self.advance_id.request_id.id
             self.department_id_charge_to = self.advance_id.department_id_charge_to.id
             self.cost_center_id = self.advance_id.cost_center_id.id
             self.analytic_account_id = self.advance_id.analytic_account_id.id
+            self.partner_id = self.advance_id.partner_id.id
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         super(HrExpenseSheet, self)._onchange_employee_id()
-        self.cost_center_id = self.employee_id.cost_center_id.id
-        self.analytic_account_id = self.employee_id.analytic_account_id.id
+        if not self.order_id:
+            self.cost_center_id = self.employee_id.cost_center_id.id
+            self.analytic_account_id = self.employee_id.analytic_account_id.id
         self.job_id = self.employee_id.job_id.id
         # self.partner_id = self.employee_id.address_home_id and self.employee_id.address_home_id.id or False
         for sheet in self:

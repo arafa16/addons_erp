@@ -10,12 +10,16 @@
                             type="object" attrs="{'invisible': ['|', ('is_unbudget','=',True), ('state','!=','submit')]}"
                             groups="hr_expense.group_hr_expense_user"/>
                 </button>
+                <field name="state" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="submit,budget,approve,post,done"/>
+                </field>
                 <xpath expr="//sheet/div" position="inside">
-                    <!--<field name="budget_request_id" invisible="1"/>
+                    <field name="budget_request_id" invisible="1"/>
                     <button name="show_selected_budget" type="object" class="oe_stat_button" icon="fa-codepen"
-                        attrs="{'invisible': [('budget_request_id', '=', False)]}">
-                        <span>Budget</span>
-                    </button>-->
+                            groups="sprogroup_purchase_request.group_purchase_request_budget"
+                            attrs="{'invisible': [('budget_request_id', '=', False)]}">
+                        <span>Budget Request</span>
+                    </button>
                     <button name="show_available_budget" type="object" class="oe_stat_button" icon="fa-book">
                         <field name="active_budget_count" widget="statinfo" string="Budget List"/>
                     </button>

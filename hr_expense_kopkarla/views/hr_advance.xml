@@ -24,12 +24,12 @@
                                           'default_advance_id': id, 'default_employee_id': employee_id,
                                           'default_payment_date': accounting_date,
                                           'default_amount': total_amount_expense, 'default_partner_id': partner_id}"
-                                groups="account.group_account_manager,account.group_account_invoice"/>
+                                groups="account.group_account_manager"/>
                         <button string="Reject" name="get_reject" states="confirm,approved_hr_manager" type="object"
                                 groups="hr_expense.group_hr_expense_user"/>
                         <button string="Cancel" name="exit_cancel" states="draft,paid" type="object"
                                 groups="hr_expense.group_hr_expense_user"/>
-                        <button string="Set to Draft" name="request_set" states="reject,cancel" type="object"/>
+                        <button string="Set to Draft" name="request_set" states="approved_hr_manager,reject,cancel" type="object"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,confirm,approved_hr_manager,paid,done" colspan="2"/>
                     </header>
@@ -49,16 +49,15 @@
                         </div>
                         <group>
                             <group>
-                                <field name="employee_id" options="{'no_open': True, 'no_create': True}"/>
-                                <field name="plan_date"/>
-                                <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="employee_id" options="{'no_create': True}"/>
+                                <field name="currency_id" options="{'no_create': True}"/>
                                 <field name="total_amount_expense" widget="monetary"
                                        options="{'currency_field': 'currency_id'}"/>
                             </group>
-                            <group string="Charge To" attrs="{'invisible': [('employee_id', '=', False)]}">
-                                <field name="order_id" options="{'no_open': True, 'no_create': True}"/> <!--attrs="{'invisible': ['|',('request_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
-                                <field name="request_id" options="{'no_create': True, 'no_open': True}"/> <!--attrs="{'invisible': ['|',('order_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
-                                <field name="department_id_charge_to" string="Department" options="{'no_open': True, 'no_create': True}"/> <!--attrs="{'invisible': ['|',('order_id', '!=', False),('request_id', '!=', False)]}"/>-->
+                            <group>
+                                <!--<field name="department_id_charge_to" string="Department" options="{'no_create': True}"/>--> <!--attrs="{'invisible': ['|',('order_id', '!=', False),('request_id', '!=', False)]}"/>-->
+                                <field name="plan_date"/>
+                                <field name="partner_id" string="Advance Type" domain="[('ref', '=', 'EMP-ADV')]" options="{'no_create': True}"/>
                                 <field name="reason_for_advance" string="Description"
                                        attrs="{'readonly': [('state', 'in', ['done','paid','confirm','approved_hr_manager'])]}"
                                        placeholder="Reason for Advance............."/>
@@ -88,19 +87,22 @@
                             </page>
                             <page name="accounting" string="Accounting Information" groups="account.group_account_user">
                                 <group>
+                                    <group string="Charge To" attrs="{'invisible': [('employee_id', '=', False)]}">
+                                        <field name="order_id" options="{'no_create': True}"/> <!--attrs="{'invisible': ['|',('request_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
+                                        <!--<field name="request_id" options="{'no_create': True, 'no_open': True}"/>--> <!--attrs="{'invisible': ['|',('order_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
+                                        <field name="cost_center_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
+                                        <field name="analytic_account_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
+                                    </group>
                                     <group>
                                         <field name="journal_id" groups="account.group_account_user"
                                                domain="[('type', 'in', ['cash', 'bank'])]"
-                                               options="{'no_open': True, 'no_create': True}"
+                                               options="{'no_create': True}"
                                                attrs="{'invisible': ['|', '|', '|', '|', ('state', '=', 'cancel'), ('state', '=', 'reject'), ('state', '=', 'draft'), ('state', '=', 'confirm'), ('state', '=', 'approved_hr_manager')],
                                                         'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')],}"/>
                                         <field name="accounting_date" groups="account.group_account_user"
                                                attrs="{'invisible': ['|', '|', '|', '|', ('state', '=', 'cancel'), ('state', '=', 'reject'), ('state', '=', 'draft'), ('state', '=', 'confirm'), ('state', '=', 'approved_hr_manager')],
                                                         'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')],}"/>
-                                        <field name="partner_id" groups="account.group_account_user" readonly="1" options="{'no_open': True, 'no_create': True}"/>
                                         <!--<field name="account_id" groups="account.group_account_user" readonly="1"/>-->
-                                        <field name="cost_center_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
-                                        <field name="analytic_account_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
                                         <field name="is_paid" invisible="1"/>
                                     </group>
                                     <group>
@@ -171,11 +173,12 @@
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="request_date"/>
+                    <field name="accounting_date"/>
                     <field name="currency_id"/>
                     <field name="total_amount_expense"/>
                     <field name="paid_amount"/>
                     <field name="journal_id"/>
-                    <field name="accounting_date"/>
+                    <field name="partner_id" string="Advance Type"/>
                     <field name="aging_days"/>
                     <field name="expense_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -201,6 +204,10 @@
                     <field name="confirm_by_id"/>
                     <field name="hr_manager_by_id"/>
                     <field name="account_by_id"/>
+                    <filter string="My Cash Advance" domain="[('employee_id.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Reguler Advance" domain="[('partner_id.name', '=', 'Employee Account')]"/>
+                    <filter string="Deposit Advance" domain="[('partner_id.name', '=', 'Employee Deposit')]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" context="{'group_by':'employee_id'}"/>
                         <filter string="State" context="{'group_by':'state'}"/>

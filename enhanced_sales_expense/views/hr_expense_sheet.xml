@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_expense_sheet_form_inherit_advance_expense_task" model="ir.ui.view">
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense_kopkarla.view_hr_expense_sheet_form_inherit_advance_expense"/>
+            <field name="arch" type="xml">
+                <field name="order_id" position="before">
+                    <field name="task_id" attrs="{'no_create': True}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_hr_expense_sheet_tree_task" model="ir.ui.view">
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense_kopkarla.view_hr_expense_sheet_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <field name="employee_id" position="after">
+                        <field name="task_id"/>
+                        <field name="order_id"/>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

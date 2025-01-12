@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 Eficent Business and IT Consulting Services S.L.
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_advance_tree_validation" model="ir.ui.view">
+        <field name="model">hr.advance</field>
+        <field name="inherit_id" ref="hr_expense_kopkarla.employee_advance_expense_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="need_validation" invisible="1"/>
+                <field name="reviewer_ids" widget="many2many_tags"/>
+                <field name="validated"/>
+                <field name="rejected"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="employee_advance_expense_form_view_validation" model="ir.ui.view">
+        <field name="model">hr.advance</field>
+        <field name="inherit_id" ref="hr_expense_kopkarla.employee_advance_expense_form_view"/>
+        <field name="arch" type="xml">
+            <button name="get_confirm" position="before">
+                <field name="need_validation" invisible="1"/>
+                <button name="request_validation" string="Request Validation" type="object" class="btn-primary"
+                    attrs="{'invisible': ['|','|',('need_validation', '!=', True),('state','!=','draft')]}"/>
+                <!--<button name="request_validation" string="Request Validation" type="object" class="btn-primary"
+                    attrs="{'invisible': ['|','|',('need_validation', '!=', True),('using_mitra','=',True),('state','!=','to_rfi')]}"/>-->
+                <button name="restart_validation" string="Restart Validation" type="object"
+                    attrs="{'invisible': ['|','|',('review_ids', '=', []),('state','!=','draft')]}"/>
+                <!--<button name="restart_validation" string="Restart Validation" type="object"
+                    attrs="{'invisible': ['|','|',('review_ids', '=', []),('using_mitra','=',True),('state','!=','to_rfi')]}"/>-->
+            </button>
+            <!--<button name="action_cancel" position="attributes">
+                <attribute name="attrs">{'invisible': [('need_validation','=',False)]}</attribute>
+            </button>-->
+            <!--<button name="action_post" string="Post" class="btn-primary" type="object" attrs="{'invisible': [('allow_post','=',False)]}"/>-->
+            <header position="after">
+                <field name="need_validation" invisible="1"/>
+                <field name="validated" invisible="1"/>
+                <field name="rejected" invisible="1"/>
+                <div class="alert alert-warning"
+                     attrs="{'invisible': ['|', '|', '|',
+                     ('validated', '=', True), ('state', 'not in', ['draft']),
+                     ('rejected', '=', True), ('review_ids', '=', [])]}"
+                     style="margin-bottom:0px;">
+                    <p><i class="fa fa-info-circle"/>This cash advance needs to be
+                        validated.
+                        <field name="can_review" invisible="1"/>
+                        <button name="validate_tier"
+                                string="Validate"
+                                attrs="{'invisible': [('can_review', '=', False)]}"
+                                type="object"
+                                class="oe_inline oe_button btn-success"
+                                icon="fa-thumbs-up"/>
+                        <button name="reject_tier"
+                                string="Reject"
+                                attrs="{'invisible': [('can_review', '=', False)]}"
+                                type="object"
+                                class="btn-icon btn-danger"
+                                icon="fa-thumbs-down"/>
+                    </p>
+                </div>
+                <div class="alert alert-success"
+                     attrs="{'invisible': ['|', '|', ('validated', '!=', True), ('state', 'not in', ['draft']), ('review_ids', '=', [])]}"
+                     style="margin-bottom:0px;">
+                    <p><i class="fa fa-thumbs-up"/> Operation has been <b>validated</b>!</p>
+                </div>
+                <div class="alert alert-danger"
+                     attrs="{'invisible': ['|', '|', ('rejected', '!=', True), ('state', 'not in', ['draft']), ('review_ids', '=', [])]}"
+                     style="margin-bottom:0px;">
+                    <p><i class="fa fa-thumbs-down"/> Operation has been <b>rejected</b>.</p>
+                </div>
+            </header>
+            <xpath expr="//form/div[hasclass('oe_chatter')]" position="before">
+                <field name="review_ids" widget="tier_validation" attrs="{'invisible':[('review_ids', '=', [])]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="employee_advance_expense_search_view_validation" model="ir.ui.view">
+        <field name="model">hr.advance</field>
+        <field name="inherit_id" ref="hr_expense_kopkarla.employee_advance_expense_search_view"/>
+        <field name="arch" type="xml">
+            <group position="after">
+                <filter name="needs_review" string="Needs my Review"
+                        domain="[('reviewer_ids','in',uid), ('state', 'in', ['draft'])]"
+                        help="Cash advance to review"/>
+                <separator/>
+                <filter name="tier_validated" string="Validated"
+                        domain="[('validated', '=', True)]"
+                        help="Cash advance validated and ready to be confirmed"/>
+                <filter name="tier_not_validated" string="Not Validated"
+                        domain="[('validated', '=', False)]"
+                        help="Cash advance validated and ready to be confirmed"/>
+            </group>
+        </field>
+    </record>
+</odoo>

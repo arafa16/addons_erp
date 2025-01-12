@@ -36,6 +36,7 @@
                                 attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                         <button string="Reject" name="budget_request_reject_action" type="object"
                                 attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done,release"/>
                     </header>
                     <sheet string="Budget Approval">
                         <div class="oe_title">
@@ -46,7 +47,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="state" invisible="1"/>
+                                <!--<field name="state" invisible="1"/>-->
                                 <field name="date"/>
                                 <field name="description"/>
                                 <field name="requested_amount"/>

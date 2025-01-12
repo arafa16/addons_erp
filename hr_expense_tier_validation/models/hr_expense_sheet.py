@@ -1,0 +1,73 @@
+# Copyright 2017 Eficent Business and IT Consulting Services S.L.
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+from odoo import models, fields, api
+
+
+class ExpenseSheet(models.Model):
+    _name = "hr.expense.sheet"
+    _inherit = ['hr.expense.sheet', 'tier.validation']
+    _state_from = ['submit','budget']
+    _state_to = ['approve']
+
+    @api.multi
+    def request_validation(self):
+        if not self.is_unbudget:
+            self.budget_approval()
+            if not self.need_validation:
+                self.need_validation = True
+        return super(ExpenseSheet, self).request_validation()
+
+    # def _get_approver_status(self):
+    #     for boq in self:
+    #         boq.review_inprogress = True #len(self.reviewer_ids.ids) > 0
+
+    # allow_edit = fields.Boolean(compute='_get_allow_edit', default=True)
+    #
+    # def _get_allow_edit(self):
+    #     for travel in self:
+    #         if travel.state == 'draft':
+    #             if travel.need_validation:
+    #                 travel.allow_edit = True
+    #             else:
+    #                 travel.allow_edit = False
+    #         else:
+    #             travel.allow_edit = False
+
+    @api.multi
+    def validate_tier(self):
+        if not self.is_unbudget and self.budget_request_id.state != 'done':
+            self.budget_request_id.tier_validate = True
+            self.budget_request_id._budget_request_approve_action()
+        super(ExpenseSheet, self).validate_tier()
+        if not any(self.reviewer_ids):
+            self.state = 'approve'
+
+    @api.multi
+    def restart_validation(self):
+        super(ExpenseSheet, self).restart_validation()
+        for budget_request_line_id in self.expense_line_ids.filtered(lambda b: b.budget_request_line_id).mapped('budget_request_line_id'):
+            budget_request_line_id.budget_request_id.unlink()
+        self.state = 'submit'
+
+    @api.multi
+    def reject_tier(self):
+        for rec in self:
+            user_reviews = rec.review_ids.filtered(lambda r: r.status in ('pending', 'approved'))
+            user_reviews.write({
+                'status': 'rejected',
+                'done_by': self.env.user.id,
+                'reviewed_date': fields.Datetime.now(),
+            })
+            rec._notify_rejected_review()
+            rec._update_counter()
+            rec.state = 'cancel'
+
+    # def _get_allow_post(self):
+    #     for boq in self:
+    #         boq.allow_post = ((boq.state == 'draft' and boq.using_mitra) or (boq.state == 'to_rfi' and not boq.using_mitra)) and boq.total_sale and boq.need_validation
+    #
+    # def _get_allow_cancel(self):
+    #     for boq in self:
+    #         # boq.allow_cancel = boq.state != 'cancel' and (boq.need_validation or boq.state == 'posted' or boq.total_sale == 0)
+    #         boq.allow_cancel = boq.state != 'cancel' # and (boq.need_validation or boq.state == 'posted' or boq.total_sale == 0)

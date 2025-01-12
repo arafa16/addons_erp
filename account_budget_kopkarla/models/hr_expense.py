@@ -7,6 +7,11 @@ class HrExpenseSheet(models.Model):
 
     active_budget_count = fields.Integer(string='Active Budget', compute='_compute_active_budget_count',)
     state = fields.Selection(selection_add_after={'submit': [('budget', 'Budget')]})
+    budget_request_id = fields.Many2one('budget.request', 'Budget Request', compute='_get_budget_request')
+
+    def _get_budget_request(self):
+        for sheet in self:
+            sheet.budget_request_id = self.env['budget.request'].sudo().search([('sheet_id', '=', sheet.id)]).id
 
     @api.onchange('cost_center_id','analytic_account_id','report_date')
     def _onchange_budget(self):
@@ -27,6 +32,54 @@ class HrExpenseSheet(models.Model):
         fetch_data = budget_model.read_group(domain, [], [], lazy=False)
         result = [data['__count'] for data in fetch_data]
         self.active_budget_count = str(result[0])
+
+    def show_selected_budget(self):
+        budget_approval_view_id = self.env.ref('account_budget_kopkarla.view_budget_request_form')
+        return {
+            'name': _('Budget Approval'),
+            'res_model': 'budget.request',
+            'type': 'ir.actions.act_window',
+            'view_type': 'tree,form',
+            'view_mode': 'form',
+            'view_id': budget_approval_view_id.id,
+            'target': 'current',
+            'res_id': self.budget_request_id.id,
+        }
+
+        # view = self.env.ref('account_budget_kopkarla.view_account_budget_available_tree_expense')
+        # form_view = self.env.ref()
+        # search_view = self.env.ref('account_budget_kopkarla.view_account_budget_available_search')
+
+        # context = {'group_by': 'general_budget_id'}
+        # context = {}
+        # # context = {'budget_adjustment_id': self.id,
+        # #             'budget_position': self.env.context.get('budget_position'),
+        # #         }
+        # domain = [('date_from', '<=', self.report_date), ('date_to', '>=', self.report_date), ('state', '=', 'ready'),
+        #           ('id', 'in',
+        #            self.expense_line_ids.filtered(lambda b: b.budget_lines_id).mapped('budget_lines_id').ids),
+        #           ]
+        # if self.cost_center_id:
+        #     domain.append(('cost_center_id', '=', self.cost_center_id.id))
+        # if self.analytic_account_id:
+        #     domain.append(('analytic_account_id', '=', self.analytic_account_id.id))
+
+            # context.update({'cost_center_adj': self.cost_center_id_adj.id})
+            # context.update({'analytic_account_adj': self.analytic_account_id_adj.id})
+        # return {
+        #     'name': 'Available Budgets',
+        #     'type': 'ir.actions.act_window',
+        #     # 'view_type': 'form',
+        #     # 'view_mode': 'tree,form',
+        #     'res_model': 'budget.request',
+        #     'views': [(form_view.id, 'form')],
+        #     # 'view_id': view.id,
+        #     'target': 'current',
+        #     # 'search_view_id': search_view.id,
+        #     # 'limit': 5,
+        #     'domain': domain,
+        #     'context': context,
+        # }
 
     def show_available_budget(self):
         view = self.env.ref('account_budget_kopkarla.view_account_budget_available_tree_expense')

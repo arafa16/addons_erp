@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--<record model="ir.actions.act_window" id="action_request_cash_advance">
+            <field name="name">Request Cash Advance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.advance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('task_id','=',active_id)]</field>
+            <field name="context">{'default_task_id': active_id, 'default_order_id': active_id.sale_order_id}</field>
+        </record>-->
+
+        <record model="ir.ui.view" id="project_pr_inherit_main_form">
+            <field name="name">project.pr.inherit.main.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header" position="inside">
+                    <button name="action_request_cash_advance" string="Cash Advance" type="object"/>
+                    <button name="action_expense_sheet" string="Expense" type="object"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[@name='description_page']" position="before">
+                    <page name="page_cash_advance" string="Cash Advance">
+                        <field name="advance_ids" readonly="1"/>
+                    </page>
+                    <page name="page_expense_sheete" string="Expense">
+                        <field name="sheet_ids" readonly="1"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

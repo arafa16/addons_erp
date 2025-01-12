@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="employee_advance_expense_form_view_task" model="ir.ui.view">
+            <field name="model">hr.advance</field>
+            <field name="inherit_id" ref="hr_expense_kopkarla.employee_advance_expense_form_view"/>
+            <field name="arch" type="xml">
+                <field name="order_id" position="before">
+                    <field name="task_id" options="{'no_create': True}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="employee_advance_expense_tree_view_task" model="ir.ui.view">
+            <field name="model">hr.advance</field>
+            <field name="inherit_id" ref="hr_expense_kopkarla.employee_advance_expense_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="expense_id" position="after">
+                    <field name="task_id" invisible="1"/>
+                    <field name="order_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="employee_advance_expense_search_view_task" model="ir.ui.view">
+            <field name="model">hr.advance</field>
+            <field name="inherit_id" ref="hr_expense_kopkarla.employee_advance_expense_search_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="task_id"/>
+                    <field name="order_id"/>
+                </field>
+                <group position="inside">
+                    <filter string="Project Task" context="{'group_by':'task_id'}"/>
+                    <filter string="Sales Order" context="{'group_by':'order_id'}"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -142,6 +142,8 @@ class account_payment(models.Model):
                 amount_currency = 0
             liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
             liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
+            if self.sheet_ids and all([x.currency_id == self.sheet_ids[0].currency_id for x in self.sheet_ids]):
+                liquidity_aml_dict['account_id'] = self.sheet_ids[0].partner_id.property_account_receivable_id.id
             aml_obj.create(liquidity_aml_dict)
 
         #validate the payment

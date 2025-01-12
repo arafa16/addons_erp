@@ -10,9 +10,10 @@ from odoo.exceptions import UserError, Warning
 from odoo import models, fields, api, _
 from odoo.tools import float_compare, float_is_zero
 
+
 class HRAdvance(models.Model):
     _name = 'hr.advance'
-    _description = "Employee Cash Advance"
+    _description = "Cash Advance"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _order = 'id desc'
 
@@ -83,7 +84,7 @@ class HRAdvance(models.Model):
                         ('cancel', 'Cancelled'),\
                         ('reject', 'Rejected')],string='State', \
                         default='draft', track_visibility='onchange') # , readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Employee Partner', store=True, default=_default_partner, required=True) # , readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Advance Type', required=True, default=_default_partner)
     journal_id = fields.Many2one('account.journal', string='Payment Method')
     payment_id = fields.Many2one('account.payment', string='Payment', readonly=True)
     paid_in_currency = fields.Many2one('res.currency', string='Paid in Currency',compute='_compute_paid_currency')
@@ -96,7 +97,7 @@ class HRAdvance(models.Model):
     cost_center_id = fields.Many2one('cost.center', string="Cost Center", required=True, ondelete="set null")
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', required=True, ondelete="set null")
     expense_id = fields.Many2one('hr.expense.sheet', string="Expense", readonly=True, ondelete="set null")
-    order_id = fields.Many2one('sale.order', string="Sale Order", readonly=True, states={'draft': [('readonly', False)]}, ondelete="set null")
+    order_id = fields.Many2one('sale.order', string="Sale Order", readonly=True, states={'draft': [('readonly', False)]}, ondelete="set null", tracking=True)
     request_id = fields.Many2one('sprogroup.purchase.request', string="Purchase Request", readonly=True, states={'draft': [('readonly', False)]}, ondelete="set null")
     department_id_charge_to = fields.Many2one('hr.department', string="Charge Department", readonly=True, states={'draft': [('readonly', False)]}, ondelete="restrict")
     aging_days = fields.Integer('Aging', compute='_get_aging_day')
@@ -115,25 +116,26 @@ class HRAdvance(models.Model):
             self.cost_center_id = self.employee_id.cost_center_id.id
             self.analytic_account_id = self.employee_id.analytic_account_id.id
 
-    @api.onchange('request_id')
-    def _onchange_request_id(self):
-        if self.request_id.id:
-            self.cost_center_id = self.request_id.cost_center_id.id
-            self.analytic_account_id = self.request_id.analytic_account_id.id
-            self.order_id = self.request_id.salesorder_id.id
-        else:
-            self.cost_center_id = self.employee_id.cost_center_id.id
-            self.analytic_account_id = self.employee_id.analytic_account_id.id
-            self.order_id = False
+    # @api.onchange('request_id')
+    # def _onchange_request_id(self):
+    #     if self.request_id.id:
+    #         self.cost_center_id = self.request_id.cost_center_id.id
+    #         self.analytic_account_id = self.request_id.analytic_account_id.id
+    #         self.order_id = self.request_id.salesorder_id.id
+    #     else:
+    #         self.cost_center_id = self.employee_id.cost_center_id.id
+    #         self.analytic_account_id = self.employee_id.analytic_account_id.id
+    #         self.order_id = False
 
-    @api.onchange('department_id_charge_to')
-    def _onchange_department_id_charge_to(self):
-        if self.department_id_charge_to.id:
-            self.cost_center_id = self.department_id_charge_to.cost_center_id.id
-            self.analytic_account_id = self.department_id_charge_to.analytic_account_id.id
-        else:
-            self.cost_center_id = self.employee_id.cost_center_id.id
-            self.analytic_account_id = self.employee_id.analytic_account_id.id
+    # @api.onchange('department_id_charge_to')
+    # def _onchange_department_id_charge_to(self):
+    #     if not self.order_id:
+    #         if self.department_id_charge_to.id:
+    #             self.cost_center_id = self.department_id_charge_to.cost_center_id.id
+    #             self.analytic_account_id = self.department_id_charge_to.analytic_account_id.id
+    #         else:
+    #             self.cost_center_id = self.employee_id.cost_center_id.id
+    #             self.analytic_account_id = self.employee_id.analytic_account_id.id
 
     @api.depends('account_validate_date')
     def _get_aging_day(self):
@@ -146,7 +148,7 @@ class HRAdvance(models.Model):
     @api.model
     def create(self, vals):
         default_payment_journal_id = self.env['ir.config_parameter'].sudo().get_param('default_payment_id')
-        # vals.update({'name': self.env['ir.sequence'].next_by_code('hr.advance'),
+        vals.update({'name': self.env['ir.sequence'].next_by_code('hr.advance')})
         #              'journal_id': default_payment_journal_id})
         vals.update({'journal_id': default_payment_journal_id})
         return super(HRAdvance, self).create(vals)
@@ -155,17 +157,18 @@ class HRAdvance(models.Model):
     def get_department(self):
         for line in self:
             line.department_id = line.employee_id.department_id.id
-            line.cost_center_id = line.employee_id.cost_center_id.id
-            line.analytic_account_id = line.employee_id.analytic_account_id.id
             line.job_id = line.employee_id.job_id.id
             line.manager_id = line.employee_id.parent_id.id
             # line.partner_id = line.employee_id.address_home_id and line.employee_id.address_home_id.id or False
+            if not line.order_id:
+                line.cost_center_id = line.employee_id.cost_center_id.id
+                line.analytic_account_id = line.employee_id.analytic_account_id.id
 
-    @api.onchange('department_id_charge_to')
-    def get_charge_to(self):
-        if self.department_id_charge_to.id:
-            self.cost_center_id = self.department_id_charge_to.cost_center_id.id
-            self.analytic_account_id = self.department_id_charge_to.analytic_account_id.id
+    # @api.onchange('department_id_charge_to')
+    # def get_charge_to(self):
+    #     if self.department_id_charge_to.id:
+    #         self.cost_center_id = self.department_id_charge_to.cost_center_id.id
+    #         self.analytic_account_id = self.department_id_charge_to.analytic_account_id.id
 
     @api.multi
     def request_set(self):
@@ -194,8 +197,8 @@ class HRAdvance(models.Model):
            raise Warning(_('Please add some advance expense lines.'))
         else:
             self.validate_cash_advance()
-            if self.name == 'New':
-                self.name = self.env['ir.sequence'].next_by_code('hr.advance')
+            # if self.name == 'New':
+            #     self.name = self.env['ir.sequence'].next_by_code('hr.advance')
             self.state = 'confirm'
             self.confirm_date = time.strftime('%Y-%m-%d')
             self.confirm_by_id = self.env.user.id

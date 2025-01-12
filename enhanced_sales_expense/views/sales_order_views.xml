@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_sales_order_expense_form">
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//form/header" position="inside">
+                    <button name="action_request_cash_advance" string="Cash Advance" type="object"/>
+                    <button name="action_expense_sheet" string="Expense" type="object"/>
+                </xpath>-->
+                <div name="button_box" position="inside">
+                    <button name="action_view_cash_advance" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('state', '!=', 'sale')]}">
+                        <field name="advance_sum" widget="statinfo" string="Cash Advance"/>
+                    </button>
+                    <button name="action_expense_sheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('state', '!=', 'sale')]}">
+                        <field name="expense_sum" widget="statinfo" string="Expense"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
