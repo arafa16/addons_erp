@@ -98,7 +98,7 @@
                                 <group>
                                     <group string="Charge To" attrs="{'invisible': [('employee_id', '=', False)]}">
                                         <field name="order_id" options="{'no_create': True}"/> <!--attrs="{'invisible': ['|',('request_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
-                                        <!--<field name="request_id" options="{'no_create': True, 'no_open': True}"/>--> <!--attrs="{'invisible': ['|',('order_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
+                                        <field name="request_id" options="{'no_create': True}"/> <!--attrs="{'invisible': ['|',('order_id', '!=', False),('department_id_charge_to', '!=', False)]}"/>-->
                                         <field name="cost_center_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
                                         <field name="analytic_account_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('state', '=', 'paid')]}"/>
                                     </group>
