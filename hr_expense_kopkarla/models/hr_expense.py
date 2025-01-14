@@ -289,9 +289,12 @@ class HrExpenseSheet(models.Model):
     #                           ], string='Status', index=True, readonly=True, track_visibility='none', copy=False, default='submit', required=True,
     # help='Expense Report State')
 
-    @api.onchange('order_id')
+    @api.onchange('task_id', 'order_id')
     def _onchange_order_id(self):
-        if self.order_id.id:
+        if self.task_id.id:
+            self.cost_center_id = self.task_id.cost_center_id.id
+            self.analytic_account_id = self.task_id.analytic_account_id.id
+        elif self.order_id.id:
             self.cost_center_id = self.order_id.cost_center_id.id
             self.analytic_account_id = self.order_id.analytic_account_id.id
         else:

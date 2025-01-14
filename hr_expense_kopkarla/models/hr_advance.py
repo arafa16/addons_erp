@@ -107,9 +107,12 @@ class HRAdvance(models.Model):
     done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan', default=lambda self: self.env['res.config.settings'].get_values().get('default_exp_done_sign_by'))
     management_sign_by = fields.Many2one('hr.employee', string='Pengurus', default=lambda self: self.env['res.config.settings'].get_values().get('default_exp_management_sign_by'))
 
-    @api.onchange('order_id')
+    @api.onchange('task_id', 'order_id')
     def _onchange_order_id(self):
-        if self.order_id.id:
+        if self.task_id.id:
+            self.cost_center_id = self.task_id.cost_center_id.id
+            self.analytic_account_id = self.task_id.analytic_account_id.id
+        elif self.order_id.id and not self.task_id:
             self.cost_center_id = self.order_id.cost_center_id.id
             self.analytic_account_id = self.order_id.analytic_account_id.id
         else:
