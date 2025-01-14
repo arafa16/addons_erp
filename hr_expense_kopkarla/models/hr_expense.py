@@ -289,6 +289,10 @@ class HrExpenseSheet(models.Model):
     #                           ], string='Status', index=True, readonly=True, track_visibility='none', copy=False, default='submit', required=True,
     # help='Expense Report State')
 
+    acc_number = fields.Char('Account Number')
+    acc_bank_id = fields.Many2one('res.bank', string='Bank')
+    acc__holder_name = fields.Char('Pemilik Rekening')
+
     @api.onchange('task_id', 'order_id')
     def _onchange_order_id(self):
         if self.task_id.id:

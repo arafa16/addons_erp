@@ -107,6 +107,10 @@ class HRAdvance(models.Model):
     done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan', default=lambda self: self.env['res.config.settings'].get_values().get('default_exp_done_sign_by'))
     management_sign_by = fields.Many2one('hr.employee', string='Pengurus', default=lambda self: self.env['res.config.settings'].get_values().get('default_exp_management_sign_by'))
 
+    acc_number = fields.Char('Account Number')
+    acc_bank_id = fields.Many2one('res.bank', string='Bank')
+    acc__holder_name = fields.Char('Pemilik Rekening')
+
     @api.onchange('task_id', 'order_id')
     def _onchange_order_id(self):
         if self.task_id.id:

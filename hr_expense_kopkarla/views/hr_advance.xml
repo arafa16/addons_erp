@@ -85,6 +85,15 @@
                                            nolabel="1" placeholder="Add Comment"/>
                                 </group>
                             </page>
+                            <page name="bank_info" string="Bank Information">
+                                <group>
+                                    <group>
+                                        <field name="acc_bank_id" options="{'no_create': True}"/>
+                                        <field name="acc_number"/>
+                                        <field name="acc__holder_name"/>
+                                    </group>
+                                </group>
+                            </page>
                             <page name="accounting" string="Accounting Information" groups="account.group_account_user">
                                 <group>
                                     <group string="Charge To" attrs="{'invisible': [('employee_id', '=', False)]}">
