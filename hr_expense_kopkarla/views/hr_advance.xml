@@ -91,7 +91,6 @@
                                         <field name="acc_bank_id" options="{'no_create': True}"/>
                                         <field name="acc_number"/>
                                         <field name="acc_holder_name"/>
-                                        <field name="acc__holder_name"/>
                                     </group>
                                 </group>
                             </page>

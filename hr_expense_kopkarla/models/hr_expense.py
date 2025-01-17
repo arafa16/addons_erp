@@ -291,7 +291,7 @@ class HrExpenseSheet(models.Model):
 
     acc_number = fields.Char('Account Number')
     acc_bank_id = fields.Many2one('res.bank', string='Bank')
-    acc__holder_name = fields.Char('Pemilik Rekening')
+    acc_holder_name = fields.Char('Pemilik Rekening')
 
     @api.onchange('task_id', 'order_id')
     def _onchange_order_id(self):
