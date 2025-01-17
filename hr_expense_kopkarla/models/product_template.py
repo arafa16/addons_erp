@@ -4,13 +4,13 @@ from odoo import api, models, _
 class ProductTemplate(models.Model):
     _inherit = "product.product"
 
-    @api.multi
-    def name_get(self):
-        self.read(['name', 'default_code'])
-        # return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
-        return [(template.id, '%s%s' % (template.product_tmpl_id.can_be_expensed and '[%s] ' % template.product_tmpl_id.property_account_expense_id.code or
-                                       (template.default_code and '[%s] ' % template.default_code or ''), template.name))
-                for template in self]
+    # @api.multi
+    # def name_get(self):
+    #     self.read(['name', 'default_code'])
+    #     # return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
+    #     return [(template.id, '%s%s' % (template.product_tmpl_id.can_be_expensed and '[%s] ' % template.product_tmpl_id.property_account_expense_id.code or
+    #                                    (template.default_code and '[%s] ' % template.default_code or ''), template.name))
+    #             for template in self]
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
