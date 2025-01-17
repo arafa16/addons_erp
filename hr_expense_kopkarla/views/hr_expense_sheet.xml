@@ -9,9 +9,9 @@
                 <xpath expr="//button[@name='action_sheet_move_create']" position="attributes">
                     <attribute name="string">Post and Paid</attribute>
                 </xpath>
-                <button name="reset_expense_sheets" position="attributes">
+                <!--<button name="reset_expense_sheets" position="attributes">
                     <attribute name="states">approve,cancel</attribute>
-                </button>
+                </button>-->
                 <xpath expr="//button[@name='action_sheet_move_create']" position="replace">
                     <button name="%(hr_expense_kopkarla.hr_expense_sheet_register_payment_wizard_action)d" type="action"
                         string="Register Payment" class="oe_highlight o_expense_sheet_pay"
