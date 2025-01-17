@@ -193,7 +193,7 @@
                                 <span t-field="doc.reason_for_advance"/>
                             </div>
                             <br/>
-                            <t t-if="o.acc_bank_id">
+                            <t t-if="doc.acc_bank_id">
                                 <div>
                                     <strong>Transfer To :</strong>
                                     <br/>
