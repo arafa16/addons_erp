@@ -68,8 +68,12 @@
                                         <span t-field="doc.total_amount_expense"
                                               t-field-options='{"widget": "monetary", "display_currency": "doc.currency_id"}'/>
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        <strong>Sales Order</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.order_id.name"/>
+                                    </td>
                                 </tr>
                             </table>
                             <!--<h3>General Information</h3>
@@ -188,6 +192,13 @@
                                 <br/>
                                 <span t-field="doc.reason_for_advance"/>
                             </div>
+                            <br/>
+                            <div>
+                                <strong>Transfer To :</strong>
+                                <br/>
+                                <span t-esc="'%s - %s, Nama Pemilik Rekening: %s' % (doc.acc_bank_id.name, doc.acc_number, doc.acc_holder_name)"/>
+                            </div>
+                            <br/>
                             <div>
                                 <strong>Comment :</strong>
                                 <br/>
