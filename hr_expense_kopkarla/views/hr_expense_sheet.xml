@@ -58,7 +58,7 @@
                         <field name="report_date" attrs="{'readonly': [('state', '!=', 'submit')]}"/>
                         <field name="payment_mode" widget="radio" options="{'horizontal': true}"
                                attrs="{'readonly': ['|', ('state', 'not in', ['submit','approve']), ('advance_id', '!=', False)]}"/>
-                        <field name="paid_to" options="{'no_create': True,}" attrs="{'readonly': [('state', '!=', 'submit')]}" domain="[('supplier', '=', True)]"/>
+                        <!--<field name="paid_to" options="{'no_create': True,}" attrs="{'readonly': [('state', '!=', 'submit')]}" domain="[('supplier', '=', True)]"/>-->
                         <field name="communication" attrs="{'readonly': [('state', '!=', 'submit')]}" string="Description"/>
                         <field name="is_unbudget"/>
                     </group>

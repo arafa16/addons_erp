@@ -22,7 +22,7 @@
             </div>
         </xpath>
         <xpath expr="//div[hasclass('page')]/div/div[3]" position="replace">
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 <strong>Cost Center:</strong>
                 <p t-field="o.cost_center_id"/>
             </div>
@@ -33,13 +33,18 @@
                 <p t-field="o.analytic_account_id"/>
             </div>
         </xpath>
-        <xpath expr="//div[hasclass('page')]/div/div[5]" position="replace"/>
+        <xpath expr="//div[hasclass('page')]/div/div[5]" position="replace">
+            <div class="col-xs-3">
+                <strong>Sales Order:</strong>
+                <p t-field="o.order_id"/>
+            </div>
+        </xpath>
         <xpath expr="//div[hasclass('page')]/div" position="after">
             <div class="row mt32 mb32">
-                <div class="col-xs-12">
+                <!--<div class="col-xs-12">
                     <strong>Paid To:</strong>
                     <span t-field="o.paid_to"/>
-                </div>
+                </div>-->
                 <div class="col-xs-12">
                     <strong>Description:</strong>
                     <span t-field="o.communication"/>
@@ -61,6 +66,13 @@
             <td class="text-left">
                 <span t-field="line.product_id.property_account_expense_id"/>
             </td>
+        </xpath>
+        <xpath expr="//div[hasclass('row')]/div[hasclass('col-xs-4')]" position="after">
+            <div>
+                <strong>Transfer To :</strong>
+                <br/>
+                <span t-esc="'%s - %s, Nama Pemilik Rekening: %s' % (o.acc_bank_id.name, o.acc_number, o.acc_holder_name)"/>
+            </div>
         </xpath>
         <xpath expr="//div[hasclass('page')]/p" position="replace">
             <div style="height: 400px; page-break-inside: avoid;">

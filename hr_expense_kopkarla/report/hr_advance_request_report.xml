@@ -72,7 +72,7 @@
                                         <strong>Sales Order</strong>
                                     </td>
                                     <td>
-                                        <span t-field="doc.order_id.name"/>
+                                        <span t-field="doc.order_id"/>
                                     </td>
                                 </tr>
                             </table>
