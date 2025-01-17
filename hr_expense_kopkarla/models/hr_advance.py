@@ -111,6 +111,9 @@ class HRAdvance(models.Model):
     acc_bank_id = fields.Many2one('res.bank', string='Bank')
     acc_holder_name = fields.Char('Pemilik Rekening')
 
+    def get_approval_user(self, level):
+        return False
+
     @api.onchange('task_id', 'order_id')
     def _onchange_order_id(self):
         if self.task_id.id:
@@ -122,27 +125,6 @@ class HRAdvance(models.Model):
         else:
             self.cost_center_id = self.employee_id.cost_center_id.id
             self.analytic_account_id = self.employee_id.analytic_account_id.id
-
-    # @api.onchange('request_id')
-    # def _onchange_request_id(self):
-    #     if self.request_id.id:
-    #         self.cost_center_id = self.request_id.cost_center_id.id
-    #         self.analytic_account_id = self.request_id.analytic_account_id.id
-    #         self.order_id = self.request_id.salesorder_id.id
-    #     else:
-    #         self.cost_center_id = self.employee_id.cost_center_id.id
-    #         self.analytic_account_id = self.employee_id.analytic_account_id.id
-    #         self.order_id = False
-
-    # @api.onchange('department_id_charge_to')
-    # def _onchange_department_id_charge_to(self):
-    #     if not self.order_id:
-    #         if self.department_id_charge_to.id:
-    #             self.cost_center_id = self.department_id_charge_to.cost_center_id.id
-    #             self.analytic_account_id = self.department_id_charge_to.analytic_account_id.id
-    #         else:
-    #             self.cost_center_id = self.employee_id.cost_center_id.id
-    #             self.analytic_account_id = self.employee_id.analytic_account_id.id
 
     @api.depends('account_validate_date')
     def _get_aging_day(self):
@@ -171,12 +153,6 @@ class HRAdvance(models.Model):
                 line.cost_center_id = line.employee_id.cost_center_id.id
                 line.analytic_account_id = line.employee_id.analytic_account_id.id
 
-    # @api.onchange('department_id_charge_to')
-    # def get_charge_to(self):
-    #     if self.department_id_charge_to.id:
-    #         self.cost_center_id = self.department_id_charge_to.cost_center_id.id
-    #         self.analytic_account_id = self.department_id_charge_to.analytic_account_id.id
-
     @api.multi
     def request_set(self):
         self.state = 'draft'
@@ -204,8 +180,6 @@ class HRAdvance(models.Model):
            raise Warning(_('Please add some advance expense lines.'))
         else:
             self.validate_cash_advance()
-            # if self.name == 'New':
-            #     self.name = self.env['ir.sequence'].next_by_code('hr.advance')
             self.state = 'confirm'
             self.confirm_date = time.strftime('%Y-%m-%d')
             self.confirm_by_id = self.env.user.id

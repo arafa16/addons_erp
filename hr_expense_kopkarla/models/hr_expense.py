@@ -293,6 +293,9 @@ class HrExpenseSheet(models.Model):
     acc_bank_id = fields.Many2one('res.bank', string='Bank')
     acc_holder_name = fields.Char('Pemilik Rekening')
 
+    def get_approval_user(self, level):
+        return False
+
     @api.onchange('task_id', 'order_id')
     def _onchange_order_id(self):
         if self.task_id.id:

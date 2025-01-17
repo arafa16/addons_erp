@@ -55,3 +55,8 @@ class Advance(models.Model):
     #     for boq in self:
     #         # boq.allow_cancel = boq.state != 'cancel' and (boq.need_validation or boq.state == 'posted' or boq.total_sale == 0)
     #         boq.allow_cancel = boq.state != 'cancel' # and (boq.need_validation or boq.state == 'posted' or boq.total_sale == 0)
+
+    def get_approval_user(self, level):
+        if level < len(self.review_ids):
+            return self.review_ids[level].done_by
+        return False

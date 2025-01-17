@@ -78,44 +78,66 @@
         </xpath>
         <xpath expr="//div[hasclass('page')]/p" position="replace">
             <div style="height: 400px; page-break-inside: avoid;">
-                <div style="padding-top:30px;">
-                    <table class="table" style="widht:100%;height:175px;border: 1px solid black">
-                        <tr class="border-black" style="height:25px;">
-                            <td width="20%">Dibuat,</td>
-                            <td width="20%" style="border: 1px solid">Diperiksa,</td>
-                            <td width="20%" style="border: 1px solid">Mengetahui,</td>
-                            <t t-if="o.done_sign_by">
-                                <td width="20%" style="border: 1px solid">Dilaksanakan,</td>
-                            </t>
-                            <t t-if="o.management_sign_by">
+                <t t-if="o.review_ids and (o.state == 'approve' or o.state == 'post' or o.state == 'done')">
+                    <div style="padding-top:30px;">
+                        <table class="table" style="widht:100%;height:175px;border: 1px solid black">
+                            <tr class="border-black" style="height:25px;">
+                                <td width="20%">Dibuat,</td>
+                                <td width="20%" style="border: 1px solid">Diperiksa,</td>
+                                <td width="20%" style="border: 1px solid">Mengetahui,</td>
+                                <td width="20%" style="border: 1px solid">Menyetujui,</td>
                                 <td width="20%">Pengurus,</td>
-                            </t>
-                        </tr>
-                        <tr class="border-black">
-                            <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.created_sign_by.user_id.signature"/><span t-field="o.created_sign_by"/></td>
-                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.checked_sign_by.user_id.signature"/><span t-field="o.checked_sign_by"/></td>
-                            <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.known_sign_by.user_id.signature"/><span t-field="o.known_sign_by"/></td>
-                            <t t-if="o.done_sign_by">
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.done_sign_by.user_id.signature"/><span t-field="o.done_sign_by"/></td>
-                            </t>
-                            <t t-if="o.management_sign_by">
-                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by.user_id.signature"/><span t-field="o.management_sign_by"/></td>
-                            </t>
-                        </tr>
-                    </table>
-                    <!--<t t-if="o.management_sign_by">
-                        <div class="col-xs-3" style="padding:0px;">
-                            <table style="widht:33.5%;height:175px;border: 1px solid black">
-                                <tr style="height:25px;">
-                                    <td width="33.5%" style="padding-left:5px;padding-top:3px;">Pengurus,</td>
-                                </tr>
-                                <tr class="border-black">
-                                    <td style="text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by"/></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </t>-->
-                </div>
+                            </tr>
+                            <tr class="border-black">
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.create_uid.signature"/><span t-esc="o.create_uid.name.upper()"/></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><t t-if="o.get_approval_user(0)"><span t-raw="o.get_approval_user(0).signature"/><span t-esc="o.get_approval_user(0).name.upper()"/></t></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><t t-if="o.get_approval_user(1)"><span t-raw="o.get_approval_user(1).signature"/><span t-esc="o.get_approval_user(1).name.upper()"/></t></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><t t-if="o.get_approval_user(2)"><span t-raw="o.get_approval_user(2).signature"/><span t-esc="o.get_approval_user(2).name.upper()"/></t></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><t t-if="o.get_approval_user(3)"><span t-raw="o.get_approval_user(3).signature"/><span t-esc="o.get_approval_user(3).name.upper()"/></t></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+                <t t-if="o.state == 'post' or o.state == 'done'">
+                    <div style="padding-top:30px;">
+                        <table class="table" style="widht:100%;height:175px;border: 1px solid black">
+                            <tr class="border-black" style="height:25px;">
+                                <td width="20%">Dibuat,</td>
+                                <td width="20%" style="border: 1px solid">Diperiksa,</td>
+                                <td width="20%" style="border: 1px solid">Mengetahui,</td>
+                                <t t-if="o.done_sign_by">
+                                    <td width="20%" style="border: 1px solid">Dilaksanakan,</td>
+                                </t>
+                                <t t-if="o.management_sign_by">
+                                    <td width="20%">Pengurus,</td>
+                                </t>
+                            </tr>
+                            <tr class="border-black">
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.created_sign_by.user_id.signature"/><span t-field="o.created_sign_by"/></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.checked_sign_by.user_id.signature"/><span t-field="o.checked_sign_by"/></td>
+                                <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.known_sign_by.user_id.signature"/><span t-field="o.known_sign_by"/></td>
+                                <t t-if="o.done_sign_by">
+                                    <td style="font-size: 10px; text-align: center; vertical-align: bottom; border: 1px solid"><span t-field="o.done_sign_by.user_id.signature"/><span t-field="o.done_sign_by"/></td>
+                                </t>
+                                <t t-if="o.management_sign_by">
+                                    <td style="font-size: 10px; text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by.user_id.signature"/><span t-field="o.management_sign_by"/></td>
+                                </t>
+                            </tr>
+                        </table>
+                        <!--<t t-if="o.management_sign_by">
+                            <div class="col-xs-3" style="padding:0px;">
+                                <table style="widht:33.5%;height:175px;border: 1px solid black">
+                                    <tr style="height:25px;">
+                                        <td width="33.5%" style="padding-left:5px;padding-top:3px;">Pengurus,</td>
+                                    </tr>
+                                    <tr class="border-black">
+                                        <td style="text-align: center; vertical-align: bottom;"><span t-field="o.management_sign_by"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>-->
+                    </div>
+                </t>
             </div>
         </xpath>
     </template>
