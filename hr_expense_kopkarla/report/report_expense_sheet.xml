@@ -68,11 +68,13 @@
             </td>
         </xpath>
         <xpath expr="//div[hasclass('row')]/div[hasclass('col-xs-4')]" position="after">
-            <div>
-                <strong>Transfer To :</strong>
-                <br/>
-                <span t-esc="'%s - %s, Nama Pemilik Rekening: %s' % (o.acc_bank_id.name, o.acc_number, o.acc_holder_name)"/>
-            </div>
+            <t t-if="o.acc_bank_id">
+                <div>
+                    <strong>Transfer To :</strong>
+                    <br/>
+                    <span t-esc="'%s - %s, Nama Pemilik Rekening: %s' % (o.acc_bank_id.name, o.acc_number, o.acc_holder_name)"/>
+                </div>
+            </t>
         </xpath>
         <xpath expr="//div[hasclass('page')]/p" position="replace">
             <div style="height: 400px; page-break-inside: avoid;">

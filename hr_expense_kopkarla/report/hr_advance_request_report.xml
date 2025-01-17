@@ -193,12 +193,14 @@
                                 <span t-field="doc.reason_for_advance"/>
                             </div>
                             <br/>
-                            <div>
-                                <strong>Transfer To :</strong>
+                            <t t-if="o.acc_bank_id">
+                                <div>
+                                    <strong>Transfer To :</strong>
+                                    <br/>
+                                    <span t-esc="'%s - %s, Nama Pemilik Rekening: %s' % (doc.acc_bank_id.name, doc.acc_number, doc.acc_holder_name)"/>
+                                </div>
                                 <br/>
-                                <span t-esc="'%s - %s, Nama Pemilik Rekening: %s' % (doc.acc_bank_id.name, doc.acc_number, doc.acc_holder_name)"/>
-                            </div>
-                            <br/>
+                            </t>
                             <div>
                                 <strong>Comment :</strong>
                                 <br/>
