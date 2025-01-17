@@ -26,7 +26,7 @@ class Lead(models.Model):
     margin_amount = fields.Float('Margin Amount', compute='_calc_amount')
     margin_pct = fields.Float('Margin', compute='_calc_amount')
 
-    def create_quotation(self):
+    def quotation_values(self):
         order_line = []
         if self.order_type_id. name == 'Trading':
             for boq in self.boq_ids.filtered(lambda b: b.state == 'posted'):
@@ -41,49 +41,12 @@ class Lead(models.Model):
                     }))
                 if order_line:
                     break
-        #     else:
-        #         line = self.contract_id.line_ids[0]
-        #         if line:
-        #             order_line.append((0, 0, {
-        #                 "product_id": line.product_id.id,
-        #                 "name": self.contract_id.name,
-        #                 "product_uom_qty": 1,
-        #                 "product_uom": line.uom_id.id,
-        #                 "price_unit": sum(self.contract_id.line_ids.mapped('price_unit')),
-        #                 "price_subtotal": sum(self.contract_id.line_ids.mapped('price_unit'))
-        #             }))
-        # elif self.contract_ids:
-        #     line = self.contract_ids[0].line_ids[0]
-        #     order_line.append((0, 0, {
-        #         "product_id": line.product_id.id,
-        #         "name": '%s %s' % (self.service_id.name, self.area_id.name),
-        #         "product_uom_qty": 1,
-        #         "product_uom": line.uom_id.id,
-        #         "price_unit": self.planned_revenue,
-        #         # "price_subtotal": sum(self.contract_id.line_ids.mapped('qty')) * line.price_unit
-        #     }))
-        # order_line.append((0, 0, {
-        #     "product_id": line.product_id.id,
-        #     "name": self.contract_id.name,
-        #     "product_uom_qty": 1,
-        #     "product_uom": line.uom_id.id,
-        #     "price_unit": sum(self.contract_id.line_ids.mapped('price_unit')),
-        #     "price_subtotal": sum(self.contract_id.line_ids.mapped('price_unit'))
-        # }))
-
-        # if self.doc_date:
-        #     number = self.env['ir.sequence'].with_context({'ir_sequence_date': self.doc_date}).next_by_code('quotation.number')
-        # else:
-        #     number = self.env['ir.sequence'].next_by_code('quotation.number')
-        # area_id = self.env['kamaju.area'].browse(self.area_id.id)
-        # number = number.replace("AREA", area_id.code)
         addr = self.partner_id.address_get(['delivery', 'invoice'])
         val = {
             'partner_id': self.partner_id.id,
             'partner_invoice_id': self.partner_invoice_id.id or addr['invoice'],
             'partner_shipping_id': self.partner_shipping_id.id or addr['delivery'],
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
-            # 'customer_code': self.partner_id.ref,
             'team_id': self.team_id.id,
             'campaign_id': self.campaign_id.id,
             'medium_id': self.medium_id.id,
@@ -96,27 +59,17 @@ class Lead(models.Model):
 
             'cost_center_id': self.cost_center_id.id,
             'analytic_account_id': self.analytic_account_id.id,
-            # 'client_order_ref': self.data_customer,
-            # 'requested_date': self.doc_date,
             'origin': self.name,
             'opportunity_id': self.id,
-            # 'agreement_template_id': self.contract_id.id,
-            # 'seq_name': '4%s' % self.name[1:5],
-            # 'name': '4%s' % self.name[1:],
-            # 'number': number,
             'order_line': order_line,
-            # 'spk_no': self.data_customer, # if self.transaction_id.name == 'JOB SUPPLY' else False, # contract_id.name,
-            # 'spk_date': self.doc_date, # if self.transaction_id.name == 'JOB SUPPLY' else False,
-            # 'bast': self.data_customer, # if self.transaction_id.name == 'JOB SUPPLY' else False, # contract_id.name,
-            # 'bast_date': self.doc_date, # if self.transaction_id.name == 'JOB SUPPLY' else False,
         }
-        return self.env['sale.order'].create(val)
+        return val
 
     @api.multi
     def action_quotations_new(self):
         view_id = self.env.ref('sale.view_order_form')
-        order_line = []
-        res = self.create_quotation()
+        # order_line = []
+        res = self.env['sale.order'].create(self.quotation_values())
         return {
             'name': _("New Quotation"),
             'res_model': 'sale.order',
