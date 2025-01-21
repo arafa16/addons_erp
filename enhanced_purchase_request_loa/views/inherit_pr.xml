@@ -25,21 +25,18 @@
                 <!--<xpath expr="//field[@name='create_date']" position="after">
                     <field name="coannya" attrs="{'readonly': [('state', 'not in', ['draft','to_approve'])]}"/>
                 </xpath>-->
-                <xpath expr="//field[@name='salesorder_id']" position="attributes">
-                    <attribute name="attrs">{'readonly':['|',('state','!=','draft')]}</attribute>
-                </xpath>
                 <xpath expr="//form/sheet/notebook/page[1]" position="after">
                     <page name="pr_loa" string="Level of Approval">
                         <group>
                             <group>
-                                <field name="penandatangan1" domain="[('otoritas_purchase.urutan', '=', 1)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
-                                <field name="penandatangan2" domain="[('otoritas_purchase.urutan', '=', 2)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
-                                <field name="penandatangan3" domain="[('otoritas_purchase.urutan', '=', 3)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
-                                <field name="penandatangan4" domain="[('otoritas_purchase.urutan', '=', 4)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
-                                <field name="penandatangan5" domain="[('otoritas_purchase.urutan', '=', 5)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
+                                <field name="penandatangan1" options="{'no_create': True}" domain="[('otoritas_purchase.urutan', '=', 1)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required1', '=', True)],'invisible':[('required1', '=', False)]}"/>
+                                <field name="penandatangan2" options="{'no_create': True}" domain="[('otoritas_purchase.urutan', '=', 2)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required2', '=', True)],'invisible':[('required2', '=', False)]}"/>
+                                <field name="penandatangan3" options="{'no_create': True}" domain="[('otoritas_purchase.urutan', '=', 3)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required3', '=', True)],'invisible':[('required3', '=', False)]}"/>
+                                <field name="penandatangan4" options="{'no_create': True}" domain="[('otoritas_purchase.urutan', '=', 4)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required4', '=', True)],'invisible':[('required4', '=', False)]}"/>
+                                <field name="penandatangan5" options="{'no_create': True}" domain="[('otoritas_purchase.urutan', '=', 5)]" attrs="{'readonly':['|',('state', '!=', 'draft'),('setConfirmLoA', '=', True)],'required':[('required5', '=', True)],'invisible':[('required5', '=', False)]}"/>
                             </group>   
                             <group>
-                                <field name="assman" domain="[('checkerPR','=',True)]" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="assman" options="{'no_create': True}" domain="[('checkerPR','=',True)]" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="issasman" invisible="1"/>
                                 <field name="required1" invisible="1"/>
                                 <field name="required2" invisible="1"/>
