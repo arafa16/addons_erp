@@ -9,7 +9,7 @@
                 <xpath expr="//field[@name='module_sale_management']/../.." position="after">
                     <div class="col-xs-12 col-md-6 o_setting_box" title="Open cash advance">
                         <div class="o_setting_right_pane">
-                            <label for="eam_journal_id"/><field name="eam_journal_id"/>
+                            <label for="eam_journal_id"/><field name="eam_journal_id" options="{'no_create': True}"/>
                             <div class="text-muted">
                                 Default journal of expense and advance payable.
                             </div>
@@ -17,7 +17,7 @@
                     </div>
                     <div class="col-xs-12 col-md-6 o_setting_box" title="Return cash advance journal">
                         <div class="o_setting_right_pane">
-                            <label for="ret_journal_id"/><field name="ret_journal_id"/>
+                            <label for="ret_journal_id"/><field name="ret_journal_id" options="{'no_create': True}"/>
                             <div class="text-muted">
                                 Default journal of return cash advance.
                             </div>
@@ -25,7 +25,7 @@
                     </div>
                     <div class="col-xs-12 col-md-6 o_setting_box" title="Default payment journal">
                         <div class="o_setting_right_pane">
-                            <label for="default_payment_id"/><field name="default_payment_id"/>
+                            <label for="default_payment_id"/><field name="default_payment_id" options="{'no_create': True}"/>
                             <div class="text-muted">
                                 Default journal for payment to employee.
                             </div>
@@ -37,7 +37,7 @@
                     <div class="row mt16 o_settings_container">
                         <div class="col-xs-12 col-md-6 o_setting_box" title="Product Un-Budget">
                             <label for="default_product_unbudget"/>
-                            <field name="default_product_unbudget"/>
+                            <field name="default_product_unbudget" options="{'no_create': True}"/>
                             <div class="text-muted">
                                 Default product un-budget.
                             </div>
@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="default_expense_partner_id"/><field name="default_expense_partner_id"/>
+                            <label for="default_expense_partner_id"/><field name="default_expense_partner_id" options="{'no_create': True}"/>
                             <div class="text-muted">
                                 Default partner for expense and advance.
                             </div>
@@ -72,7 +72,7 @@
                                     Dibuat
                                 </div>
                                 <div class="text-muted">
-                                    <field name="default_exp_created_sign_by"/>
+                                    <field name="default_exp_created_sign_by" options="{'no_create': True}"/>
                                 </div>
                             </div>
                             <div class="o_setting_right_pane">
@@ -81,7 +81,7 @@
                                     Mengetahui
                                 </div>
                                 <div class="text-muted">
-                                    <field name="default_exp_known_sign_by"/>
+                                    <field name="default_exp_known_sign_by" options="{'no_create': True}"/>
                                 </div>
                             </div>
                             <div class="o_setting_right_pane">
@@ -90,7 +90,7 @@
                                     Pengurus
                                 </div>
                                 <div class="text-muted">
-                                    <field name="default_exp_management_sign_by"/>
+                                    <field name="default_exp_management_sign_by" options="{'no_create': True}"/>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                                     Pemeriksa
                                 </div>
                                 <div class="text-muted">
-                                    <field name="default_exp_checked_sign_by"/>
+                                    <field name="default_exp_checked_sign_by" options="{'no_create': True}"/>
                                 </div>
                             </div>
                             <div class="o_setting_right_pane">
@@ -110,7 +110,7 @@
                                     Pelaksana
                                 </div>
                                 <div class="text-muted">
-                                    <field name="default_exp_done_sign_by"/>
+                                    <field name="default_exp_done_sign_by" options="{'no_create': True}"/>
                                 </div>
                             </div>
                         </div>

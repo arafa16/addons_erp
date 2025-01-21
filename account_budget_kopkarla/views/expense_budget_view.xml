@@ -25,7 +25,7 @@
                     </button>
                 </xpath>
                 <field name="account_id" position="replace">
-                    <field name="account_id" force_save="1" invisible="0"/>
+                    <field name="account_id" force_save="1" invisible="0" options="{'no_create': True}"/>
                     <field name="budget_lines_id" force_save="1" attrs="{'column_invisible': [('parent.state', 'in', ('post', 'done'))]}"/>
                     <field name="budget_request_line_id" attrs="{'column_invisible': [('parent.state', 'not in', ('post', 'done'))]}"/>
                 </field>

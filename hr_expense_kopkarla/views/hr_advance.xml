@@ -156,11 +156,11 @@
                             <page string="Sign By">
                                 <group>
                                     <group>
-                                        <field name="created_sign_by"/>
-                                        <field name="checked_sign_by"/>
-                                        <field name="known_sign_by"/>
-                                        <field name="done_sign_by"/>
-                                        <field name="management_sign_by"/>
+                                        <field name="created_sign_by" options="{'no_create': True}"/>
+                                        <field name="checked_sign_by" options="{'no_create': True}"/>
+                                        <field name="known_sign_by" options="{'no_create': True}"/>
+                                        <field name="done_sign_by" options="{'no_create': True}"/>
+                                        <field name="management_sign_by" options="{'no_create': True}"/>
                                     </group>
                                 </group>
                             </page>

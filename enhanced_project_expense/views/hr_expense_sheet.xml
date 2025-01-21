@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="hr_expense_kopkarla.view_hr_expense_sheet_form_inherit_advance_expense"/>
             <field name="arch" type="xml">
                 <field name="order_id" position="before">
-                    <field name="task_id" attrs="{'no_create': True}"/>
+                    <field name="task_id" options="{'no_create': True}"/>
                 </field>
                 <field name="user_id" position="after">
                     <field name="create_date" readonly="1"/>

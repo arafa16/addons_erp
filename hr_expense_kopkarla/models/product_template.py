@@ -15,25 +15,27 @@ class ProductTemplate(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         def _name_search_expense(name):
-            Product = self.env['product.product']
-            templates = self.browse([])
-            products_ns = Product.search([('can_be_expensed', '=', True)])
-            # products = Product.browse([x[0] for x in products_ns])
-            for x in products_ns:
-                if name in x.product_tmpl_id.name.lower():
-                    templates |= x
-            for x in products_ns:
-                if x.product_tmpl_id.property_account_expense_id and name in x.product_tmpl_id.property_account_expense_id.code:
-                    templates |= x
+            # Product = self.env['product.product']
+            # templates = self.browse([])
+            # products_ns = Product.search([('can_be_expensed', '=', True)])
+            # # products = Product.browse([x[0] for x in products_ns])
+            # for x in products_ns:
+            #     if name in x.product_tmpl_id.name.lower() or name in x.product_tmpl_id.default_code.lower():
+            #         templates |= x
+            # for x in products_ns:
+            #     if x.product_tmpl_id.property_account_expense_id and name in x.product_tmpl_id.property_account_expense_id.code:
+            #         templates |= x
             # templates |= products.mapped('product_tmpl_id')
                 # if (not products) or (limit and (len(templates) > limit)):
                 #     break
 
             # re-apply product.template order + name_get
+            # return super(ProductTemplate, self).name_search(
+            #     '', args=[('id', 'in', list(set(templates.ids)))],
+            #     operator='ilike', limit=limit)
             return super(ProductTemplate, self).name_search(
-                '', args=[('id', 'in', list(set(templates.ids)))],
+                '', args=[('can_be_expensed', '=', True), '|', ('name', 'ilike', name), ('default_code', 'ilike', name)],
                 operator='ilike', limit=limit)
-
         if args:
             for term in (args or []):
                 if term == ['can_be_expensed', '=', True]:

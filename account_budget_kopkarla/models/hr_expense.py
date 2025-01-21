@@ -226,7 +226,8 @@ class HrExpense(models.Model):
     @api.onchange('product_id')
     def _get_budget_lines(self):
         for exp in self:
-            exp.budget_lines_id = self._get_budget_line(exp.product_id.property_account_expense_id.id, exp.sheet_id.cost_center_id.id, exp.sheet_id.analytic_account_id.id, exp.sheet_id.report_date)
+            account_id = exp.account_id | exp.product_id.property_account_expense_id
+            exp.budget_lines_id = self._get_budget_line(account_id.id, exp.sheet_id.cost_center_id.id, exp.sheet_id.analytic_account_id.id, exp.sheet_id.report_date)
             # exp.budget_lines_id = False
             # budget_postition_id = self.env['account.budget.post'].sudo().search([('account_ids', '=', exp.product_id.property_account_expense_id.id)], limit=1)
             # if budget_postition_id:
