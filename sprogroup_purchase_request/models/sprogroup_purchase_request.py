@@ -84,7 +84,11 @@ class SprogroupPurchaseRequest(models.Model):
             ww = 4
             result.append((0,0,{'product_id':barang.product_id.id,'name':barang.name,'product_qty':barang.product_uom_qty,'product_uom_id':barang.product_id.uom_po_id,'cost_product':barang.product_id.standard_price,'date_required':fields.Date.today()}))
         self.line_ids = result
-    
+        # if self.salesorder_id:
+        #     self._context['salesorder_id'] = 1
+        # else:
+        #     self.env._context['salesorder_id'] = 0
+
     @api.onchange('state')
     def onchange_state(self):
         assigned_to = None

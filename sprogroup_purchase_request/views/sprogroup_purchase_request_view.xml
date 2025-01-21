@@ -27,9 +27,9 @@
                             <field name="can_reject" invisible="1"/>
                             <field name="requested_by" readonly="1"/>
                             <field name="department_id" />
-                            <field name="assigned_to" string="Budget Approver" attrs="{'readonly': [('is_editable','=', False)]}"/>
+                            <field name="assigned_to" string="Budget Approver" attrs="{'readonly': [('is_editable','=', False)]}" options="{'no_create': True}"/>
                             <field name="idpo" invisible="1" readonly="1"/>
-                            <field name="salesorder_id"/>
+                            <field name="salesorder_id" options="{'no_create': True}" attrs="{'readonly':['|',('state','!=','draft')]}"/>
                         </group>
                         <group>
                             <field name="date_start"
@@ -46,7 +46,7 @@
                                     <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="product_uom_id" groups="product.group_uom" options="{'no_create': True}"/>
                                     <field name="date_required"/>
                                     <field name="cancelled" invisible="1"/>
                                     <field name="is_editable" invisible="1"/>
