@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view_kopkarla" model="ir.ui.view">
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <div name="options" position="inside">
+                    <div>
+                        <field name="warehouse_ok"/>
+                        <label for="warehouse_ok"/>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <record id="product_template_search_view_kopkarla" model="ir.ui.view">
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <filter name="filter_to_purchase" position="after">
+                    <filter string="Warehouse Maintained" name="filter_to_warehouse_maintained" domain="[('warehouse_ok', '=', 1)]"/>
+                </filter>
+            </field>
+        </record>
+    </data>
+</odoo>
