@@ -31,8 +31,8 @@
                             <field name="analytic_account_id" options="{'no_create': True, 'no_open':True}" attrs="{'readonly': [('state', '!=', 'draft')], 'required': 1}"/>
                         </group>
                         <group string="Log">
-                            <field name="create_uid"/>
-                            <field name="create_date"/>
+                            <field name="create_uid" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
                         </group>
                     </group>
                 </xpath>
