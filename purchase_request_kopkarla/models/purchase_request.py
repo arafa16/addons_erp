@@ -2,78 +2,29 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class PurchaseRequestType(models.Model):
-    _name = 'purchase.request.type'
-
-    prod_categ_id = fields.Many2one('product.category', 'Product Category')
-    account_trade_request_id = fields.Many2one('account.account', 'Trading Account')
-    account_datacom_request_id = fields.Many2one('account.account', 'Datacom Account')
-    account_overhead_request_id = fields.Many2one('account.account', 'Overhead Account')
-
-
 class SprogroupPurchaseRequest(models.Model):
-
     _inherit = 'sprogroup.purchase.request'
 
+    salesorder_id = fields.Many2one('sale.order', string='SO Number')
     request_type = fields.Selection([
-        ('trade', 'Trading'),
-        ('datacom', 'Datacom'),
+        # ('trade', 'Trading'),
+        ('trade', 'TRD ELEKTRONIK'),
+        ('trd_brt', 'TRD BRT'),
+        ('trd_perl_kantor', 'TRD PERL KANTOR'),
+        ('trd_voucher_pulsa', 'TRD VOUCHER PULSA'),
+        ('trd_sarpen', 'TRD SARPEN'),
+        # ('datacom', 'Datacom'),
+        ('datacom', 'DTC PSB'),
+        ('dtc_pmcm_fo', 'DTC PMCM FO'),
+        ('dtc_pmcm_central', 'DTC PMCM CENTRAL'),
+        ('dtc_pmtl_remote', 'DTC PMTL REMOTE'),
+        ('dtc_dtc_project', 'DTC PROJECT'),
         ('overhead', 'Overhead'),
     ], 'Request Type', readonly=True, states={'draft': [('readonly', False)]})
     account_id = fields.Many2one('account.account', 'Account Ledger', compute='_set_account_id')
     allow_on_behalf_of = fields.Boolean('Allow On Behalf Of', compute='_set_allow_on_behalf_of')
     on_behalf_of = fields.Many2one('hr.employee', 'On Behalf Of') #, domain=lambda self: self._get_employee_mapping())
     department_id = fields.Many2one('hr.department', string='Department', compute='_compute_department', store=True,)
-
-    # active_budget_count = fields.Integer(
-    #     string='Active Budget',
-    #     compute='_compute_active_budget_count',
-    # )
-    #
-    # def _compute_active_budget_count(self):
-    #     budget_model = self.env['crossovered.budget.lines']
-    #     # today = fields.Date.today()
-    #     fetch_data = budget_model.read_group([
-    #             ('state', '=', 'ready'),
-    #             ('cost_center_id', '=', self.cost_center_id.id),
-    #             ('analytic_account_id', '=', self.analytic_account_id.id),
-    #         ],
-    #         [],
-    #         [],
-    #         lazy=False)
-    #     result = [data['__count'] for data in fetch_data]
-    #     self.active_budget_count = str(result[0])
-    #
-    # def show_available_budget(self):
-    #     view = self.env.ref('account_budget_kopkarla.view_account_budget_available_tree')
-    #     # form = self.env.ref('account_budget_kopkarla.view_account_budget_available_form')
-    #     search_view = self.env.ref('account_budget_kopkarla.view_account_budget_available_search')
-    #
-    #     # context = {'budget_adjustment_id': self.id,
-    #     #             'budget_position': self.env.context.get('budget_position'),
-    #     #         }
-    #     domain = [('state', '=', 'ready')]
-    #     if self.cost_center_id:
-    #         domain.append(('cost_center_id', '=', self.cost_center_id.id))
-    #     if self.analytic_account_id:
-    #         domain.append(('analytic_account_id', '=', self.analytic_account_id.id))
-    #
-    #         # context.update({'cost_center_adj': self.cost_center_id_adj.id})
-    #         # context.update({'analytic_account_adj': self.analytic_account_id_adj.id})
-    #     return {
-    #         'name': 'Available Budgets',
-    #         'type': 'ir.actions.act_window',
-    #         # 'view_type': 'form',
-    #         # 'view_mode': 'tree,form',
-    #         'res_model': 'crossovered.budget.lines',
-    #         'views': [(view.id, 'tree')], #(form.id, 'form')],
-    #         # 'view_id': view.id,
-    #         'target': 'current',
-    #         'search_view_id': search_view.id,
-    #         # 'limit': 5,
-    #         'domain': domain,
-    #         # 'context': context,
-    #     }
 
     @api.one
     @api.depends('requested_by', 'on_behalf_of')
@@ -134,8 +85,26 @@ class SprogroupPurchaseRequest(models.Model):
                 if request_type.id:
                     if self.request_type == 'trade':
                         account_id = request_type.account_trade_request_id.id
+                    elif self.request_type == 'trd_brt':
+                        account_id = request_type.account_trd_brt_request_id.id
+                    elif self.request_type == 'trd_perl_kantor':
+                        account_id = request_type.account_trd_perl_kantor_request_id.id
+                    elif self.request_type == 'trd_voucher_pulsa':
+                        account_id = request_type.account_trd_voucher_pulsa_request_id.id
+                    elif self.request_type == 'trd_sarpen':
+                        account_id = request_type.account_trd_sarpen_request_id.id
+
                     elif self.request_type == 'datacom':
                         account_id = request_type.account_datacom_request_id.id
+                    elif self.request_type == 'dtc_pmcm_fo':
+                        account_id = request_type.account_dtc_pmcm_fo_request_id.id
+                    elif self.request_type == 'dtc_pmcm_central':
+                        account_id = request_type.account_dtc_pmcm_central_request_id.id
+                    elif self.request_type == 'dtc_pmtl_remote':
+                        account_id = request_type.account_dtc_pmtl_remote_request_id.id
+                    elif self.request_type == 'dtc_dtc_project':
+                        account_id = request_type.account_dtc_dtc_project_request_id.id
+
                     elif self.request_type == 'overhead':
                         account_id = request_type.account_overhead_request_id.id
                 if not account_id:
@@ -151,17 +120,31 @@ class SprogroupPurchaseRequest(models.Model):
                         # line.account_id = account_id
                 line.account_id = account_id
 
+    # @api.onchange('salesorder_id')
+    # def _onchange_salesorder_id(self):
+    #     if self.salesorder_id:
+    #         return {'domain': {'product_id': [('purchase_ok', '=', True), ('warehouse_ok', '=', False)]}}
+    #     else:
+    #         return {'domain': {'product_id': [('purchase_ok', '=', True)]}}
+
 
 class SprogroupPurchaseRequestLine(models.Model):
     _inherit = "sprogroup.purchase.request.line"
 
     account_id = fields.Many2one('account.account', 'Account Ledger', store=True, compute='_get_account_id',
                                  domain="[('code','in',['5100-01','5100-02','5100-03'])]") #, required=True)
-    product_id = fields.Many2one(
-        'product.product', 'Product',
-        domain=[('purchase_ok', '=', True)], required=True,
-        track_visibility='onchange')
+    product_id = fields.Many2one('product.product', 'Product', domain=[], required=True, track_visibility='onchange')
+    product_all_id = fields.Many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)], required=True, related='product_id')
+    product_nwh_id = fields.Many2one('product.product', 'Product', domain=[('purchase_ok', '=', True), ('warehouse_ok', '=', False)], required=True, related='product_id')
     salesorder_id = fields.Many2one('sale.order', related="request_id.salesorder_id")
+
+    @api.onchange('product_all_id')
+    def _onchange_product_all_id(self):
+        self.product_id = self.product_all_id.id
+
+    @api.onchange('product_nwh_id')
+    def _onchange_product_nwh_id(self):
+        self.product_id = self.product_nwh_id.id
 
     @api.onchange('product_id')
     def _get_account_id(self):
@@ -183,8 +166,26 @@ class SprogroupPurchaseRequestLine(models.Model):
                 if request_type.id:
                     if self.request_id.request_type == 'trade':
                         request_expense_id = request_type.account_trade_request_id.id
+                    elif self.request_id.request_type == 'trd_brt':
+                        request_expense_id = request_type.account_trd_brt_request_id.id
+                    elif self.request_id.request_type == 'trd_perl_kantor':
+                        request_expense_id = request_type.account_trd_perl_kantor_request_id.id
+                    elif self.request_id.request_type == 'trd_voucher_pulsa':
+                        request_expense_id = request_type.account_trd_voucher_pulsa_request_id.id
+                    elif self.request_id.request_type == 'trd_sarpen':
+                        request_expense_id = request_type.account_trd_sarpen_request_id.id
+
                     elif self.request_id.request_type == 'datacom':
                         request_expense_id = request_type.account_datacom_request_id.id
+                    elif self.request_id.request_type == 'dtc_pmcm_fo':
+                        request_expense_id = request_type.account_dtc_pmcm_fo_request_id.id
+                    elif self.request_id.request_type == 'dtc_pmcm_central':
+                        request_expense_id = request_type.account_dtc_pmcm_central_request_id.id
+                    elif self.request_id.request_type == 'dtc_pmtl_remote':
+                        request_expense_id = request_type.account_dtc_pmtl_remote_request_id.id
+                    elif self.request_id.request_type == 'dtc_dtc_project':
+                        request_expense_id = request_type.account_dtc_dtc_project_request_id.id
+
                     else: # self.request_id.request_type == 'overhead':
                         request_expense_id = request_type.account_overhead_request_id.id
                     # else:
@@ -218,6 +219,7 @@ class SprogroupPurchaseRequestLine(models.Model):
         result['domain'] = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
 
         return result
+
 
 class purchase_request_employees_mapping(models.Model):
     _name = 'purchase.request.employee.mapping'

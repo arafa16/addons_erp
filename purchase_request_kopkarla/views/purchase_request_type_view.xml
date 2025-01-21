@@ -8,10 +8,20 @@
                 <form string="Purchase Request Type">
                     <sheet>
                         <group>
-                            <field name="prod_categ_id"/>
-                            <field name="account_trade_request_id"/>
-                            <field name="account_datacom_request_id"/>
-                            <field name="account_overhead_request_id"/>
+                            <field name="prod_categ_id" options="{'no_create': True}"/>
+                            <field name="account_trade_request_id" options="{'no_create': True}"/>
+                            <field name="account_trd_brt_request_id" options="{'no_create': True}"/>
+                            <field name="account_trd_perl_kantor_request_id" options="{'no_create': True}"/>
+                            <field name="account_trd_voucher_pulsa_request_id" options="{'no_create': True}"/>
+                            <field name="account_trd_sarpen_request_id" options="{'no_create': True}"/>
+
+                            <field name="account_datacom_request_id" options="{'no_create': True}"/>
+                            <field name="account_dtc_pmcm_fo_request_id" options="{'no_create': True}"/>
+                            <field name="account_dtc_pmcm_central_request_id" options="{'no_create': True}"/>
+                            <field name="account_dtc_pmtl_remote_request_id" options="{'no_create': True}"/>
+                            <field name="account_dtc_dtc_project_request_id" options="{'no_create': True}"/>
+
+                            <field name="account_overhead_request_id" options="{'no_create': True}"/>
                         </group>
                     </sheet>
                 </form>
@@ -25,7 +35,15 @@
                 <tree>
                     <field name="prod_categ_id"/>
                     <field name="account_trade_request_id"/>
+                    <field name="account_trd_brt_request_id"/>
+                    <field name="account_trd_perl_kantor_request_id"/>
+                    <field name="account_trd_voucher_pulsa_request_id"/>
+                    <field name="account_trd_sarpen_request_id"/>
                     <field name="account_datacom_request_id"/>
+                    <field name="account_dtc_pmcm_fo_request_id"/>
+                    <field name="account_dtc_pmcm_central_request_id"/>
+                    <field name="account_dtc_pmtl_remote_request_id"/>
+                    <field name="account_dtc_dtc_project_request_id"/>
                     <field name="account_overhead_request_id"/>
                 </tree>
           </field>
