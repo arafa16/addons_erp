@@ -207,7 +207,7 @@
                                 <span t-field="doc.comment"/>
                             </div>
                             <div style="height: 400px; page-break-inside: avoid;">
-                                <t t-if="doc.review_ids and (doc.state == 'approved_hr_manager' or doc.state == 'paid' or doc.state == 'done')">
+                                <t t-if="doc.review_ids"> <!--and (doc.state == 'approved_hr_manager' or doc.state == 'paid' or doc.state == 'done')">-->
                                     <div style="padding-top:30px;">
                                         <table class="table" style="widht:100%;height:175px;border: 1px solid black">
                                             <tr class="border-black" style="height:25px;">
@@ -227,7 +227,7 @@
                                         </table>
                                     </div>
                                 </t>
-                                <t t-if="doc.state == 'paid' or doc.state == 'done'">
+                                <!--<t t-if="doc.state == 'paid' or doc.state == 'done'">-->
                                     <div style="padding-top:30px;">
                                         <table class="table" style="widht:100%;height:175px;border: 1px solid black">
                                             <tr class="border-black" style="height:25px;">
@@ -254,7 +254,7 @@
                                             </tr>
                                         </table>
                                     </div>
-                                </t>
+                                <!--</t>-->
                             </div>
                         </div>
                     </t>
