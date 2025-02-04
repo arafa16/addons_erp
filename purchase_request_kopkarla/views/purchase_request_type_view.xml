@@ -34,12 +34,12 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="prod_categ_id"/>
-                    <field name="account_trade_request_id"/>
+                    <field name="account_trade_request_id" string="Trading Elektronik"/>
                     <field name="account_trd_brt_request_id"/>
                     <field name="account_trd_perl_kantor_request_id"/>
                     <field name="account_trd_voucher_pulsa_request_id"/>
                     <field name="account_trd_sarpen_request_id"/>
-                    <field name="account_datacom_request_id"/>
+                    <field name="account_datacom_request_id" string="Datacom PSB"/>
                     <field name="account_dtc_pmcm_fo_request_id"/>
                     <field name="account_dtc_pmcm_central_request_id"/>
                     <field name="account_dtc_pmtl_remote_request_id"/>
