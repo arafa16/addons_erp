@@ -13,12 +13,17 @@ class SprogroupPurchaseRequest(models.Model):
         ('trd_perl_kantor', 'TRD PERL KANTOR'),
         ('trd_voucher_pulsa', 'TRD VOUCHER PULSA'),
         ('trd_sarpen', 'TRD SARPEN'),
+        ('trd_ecom', 'TRD E-COMMERCE'),
         # ('datacom', 'Datacom'),
         ('datacom', 'DTC PSB'),
         ('dtc_pmcm_fo', 'DTC PMCM FO'),
+        ('dtc_fo_lastmile', 'DTC FO LASTMILE'),
         ('dtc_pmcm_central', 'DTC PMCM CENTRAL'),
         ('dtc_pmtl_remote', 'DTC PMTL REMOTE'),
         ('dtc_dtc_project', 'DTC PROJECT'),
+        ('dtc_dtc_tools', 'DTC TOOLS'),
+        ('dtc_dtc_sewa_home_base', 'DTC SEWA HOME BASE'),
+        ('dtc_dtc_brt', 'DTC BRT'),
         ('overhead', 'Overhead'),
     ], 'Request Type', readonly=True, states={'draft': [('readonly', False)]})
     account_id = fields.Many2one('account.account', 'Account Ledger', compute='_set_account_id')
