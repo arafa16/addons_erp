@@ -104,14 +104,14 @@
             <button name="post" position="attributes">
                 <!-- idem cancel -->
                 <!-- <attribute name="invisible">1</attribute> -->
-                <attribute name="groups">base.group_no_one</attribute>
+                <attribute name="groups"><!--base.group_no_one--></attribute>
                 <attribute name="confirm">IMPORTANTE: La validación de la línea de pago se debe hacer desde el recibo. La validación manual de una línea de pago se usa solo para correcciones y usos avanzados. Seguro desea continuar?</attribute>
             </button>
              
             <button name="cancel" position="attributes">
                 <!-- al final lo hacemos visible para poder hacer ajustes sin cancelar todo el payment group, pero solo si no transfer, con tec group y un confirm -->
                 <!-- <attribute name="invisible">1</attribute> -->
-                <attribute name="groups">base.group_no_one</attribute>
+                <attribute name="groups"><!--base.group_no_one--></attribute>
                 <attribute name="confirm">IMPORTANTE: La validación de la línea de pago se debe hacer desde el recibo. La cancelación manual de una línea de pago se usa solo para correcciones y usos avanzados. Seguro desea continuar?</attribute>
             </button>
 
