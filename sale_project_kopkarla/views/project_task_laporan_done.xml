@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_task_laporan_done_form">
+            <field name="model">project.task</field>
+            <!--<field name="inherit_id" ref="project.view_task_form2"/>-->
+            <field name="inherit_id" ref="enhanced_project_task_badges.etb_badges_kanban_form"/>
+            <field name="arch" type="xml">
+                <field name="kanban_baru" position="after">
+                    <field name="date_laporan_done" readonly="1"/>
+                </field>
+            </field>
+        </record>    
+    </data>
+</odoo>

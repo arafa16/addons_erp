@@ -34,6 +34,7 @@
         'views/sale_view.xml',
         'views/sale_report.xml',
         'views/account_invoice_view.xml',
+        'views/project_task_laporan_done.xml',
         'reports/sale_pr_po_views.xml',
         'reports/sale_costs_margin.xml',
         # 'reports/sale_report_margin_views.xml',
