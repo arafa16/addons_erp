@@ -200,6 +200,7 @@
                                 <tbody class="sale_tbody">
                                     <t t-set="no" t-value="0"/>
                                     <t t-set="price_subtotal" t-value="0"/>
+                                    <t t-set="service_subtotal" t-value="0"/>
                                     <t t-foreach="doc.line_material_ids" t-as="baris">
                                         <t t-if="baris.sale_subtotal">
                                             <tr style="font-size:12px;">
