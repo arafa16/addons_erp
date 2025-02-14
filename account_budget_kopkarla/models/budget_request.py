@@ -163,9 +163,9 @@ class BudgetRequest(models.Model):
 
     @api.multi
     def unlink(self):
-        for budget in self:
-            if budget.state not in ('draft', 'cancel'):
-                raise UserError(_('In order to delete a budget, you must first reject it or set to draft.'))
+        # for budget in self:
+        #     if budget.state not in ('draft', 'cancel'):
+        #         raise UserError(_('In order to delete a budget, you must first reject it or set to draft.'))
         return super(BudgetRequest, self).unlink()
 
 
