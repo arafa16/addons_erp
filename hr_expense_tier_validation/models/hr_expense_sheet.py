@@ -43,15 +43,21 @@ class ExpenseSheet(models.Model):
         if not any(self.reviewer_ids):
             self.state = 'approve'
 
+    def manage_budget(self):
+        for budget_request_line_id in self.expense_line_ids.filtered(lambda b: b.budget_request_line_id).mapped('budget_request_line_id'):
+            if budget_request_line_id.budget_request_id.state != 'draft':
+                budget_request_line_id.budget_request_id.state = 'draft'
+            budget_request_line_id.budget_request_id.unlink()
+
     @api.multi
     def restart_validation(self):
         super(ExpenseSheet, self).restart_validation()
-        for budget_request_line_id in self.expense_line_ids.filtered(lambda b: b.budget_request_line_id).mapped('budget_request_line_id'):
-            budget_request_line_id.budget_request_id.unlink()
+        self.manage_budget()
         self.state = 'submit'
 
     @api.multi
     def reject_tier(self):
+        self.manage_budget()
         for rec in self:
             user_reviews = rec.review_ids.filtered(lambda r: r.status in ('pending', 'approved'))
             user_reviews.write({

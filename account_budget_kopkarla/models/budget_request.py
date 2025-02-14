@@ -161,6 +161,13 @@ class BudgetRequest(models.Model):
                     line.restrict_allow = appropriate_budget.restrict_allow
                     break
 
+    @api.multi
+    def unlink(self):
+        for budget in self:
+            if budget.state not in ('draft', 'cancel'):
+                raise UserError(_('In order to delete a budget, you must first reject it or set to draft.'))
+        return super(BudgetRequest, self).unlink()
+
 
 class BudgetRequestLine(models.Model):
     _name = "budget.request.line"
