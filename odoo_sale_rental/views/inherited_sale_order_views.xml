@@ -53,8 +53,8 @@
 
             <xpath expr="//tree/field[@name='tax_id']" position="after">
                 <!-- uncomment if using own module-->
-                    <field name="rental_tenure" readonly="1"/>
-                    <field name="rental_uom_id" readonly="1"/>
+                    <field name="rental_tenure" readonly="0"/>
+                    <field name="rental_uom_id" readonly="0"/>
                 <!-- end of uncomment-->
                 <!-- <field name="unit_security_amount" invisible="1"/> -->
                 <field name="is_rental_order" invisible="1"/>

@@ -28,7 +28,7 @@ class Lead(models.Model):
 
     def quotation_values(self):
         order_line = []
-        if self.order_type_id. name == 'Trading':
+        if self.order_type_id. name in ('Trading', 'Rental'):
             for boq in self.boq_ids.filtered(lambda b: b.state == 'posted'):
                 for line in boq.line_material_ids:
                     order_line.append((0, 0, {
