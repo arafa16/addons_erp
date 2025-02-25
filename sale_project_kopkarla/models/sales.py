@@ -46,6 +46,12 @@ class EnhancedSalesArea(models.Model):
         return super(EnhancedSalesArea, self).create(vals)
 
     @api.multi
+    def write(self, vals):
+        if 'opportunity_id' in vals and not vals.get('opportunity_id', True):
+            raise UserError('Opportunity / pipeline CRM tidak boleh kosong!')
+        return super(EnhancedSalesArea, self).write(vals)
+
+    @api.multi
     def convert_to_project(self):
         # super(EnhancedSalesArea, self)
         projid = 0
