@@ -21,6 +21,26 @@ class AccountInvoice(models.Model):
     done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan', default=lambda self: self.env['res.config.settings'].get_values().get('default_done_sign_by'))
     management_sign_by = fields.Many2one('hr.employee', string='Pengurus', default=lambda self: self.env['res.config.settings'].get_values().get('default_management_sign_by'))
 
+    kpp_status = fields.Selection([('bersedia', 'Bersedia'), ('tidak bersedia', 'Tidak Bersedia')], 'Status')
+    kpp_pph21 = fields.Selection([('Tarif 2,5%', 'Tarif 2,5%'), ('Tarif 5%', 'Tarif 5%')], 'PPh 21')
+    kpp_pph21_op = fields.Char('Kode OP PPh 21')
+    kpp_pph23 = fields.Selection([('Bunga/royalty/Hadiah**) sebesar 15%', 'Bunga/royalty/Hadiah**) sebesar 15%'), ('Jasa / Sewa*) sebesar 2%', 'Jasa / Sewa*) sebesar 2%')], 'PPh 23')
+    kpp_pph23_op = fields.Char('Kode OP PPh 23')
+    kpp_pph4_2 = fields.Selection([('None', 'None'), ('Ruang/Lahan/Listrik**) sebesar 10%', 'Ruang/Lahan/Listrik**) sebesar 10%')], 'PPh Pasal 4(2)')
+    kpp_pph4_2_op_1 = fields.Char('Kode OP PPh Pasal 4(2)')
+    kpp_pph4_2_1 = fields.Selection([('Klasifikasi menengah dan besar tarif 2,65%', 'Klasifikasi menengah dan besar tarif 2,65%'),
+                                     ('Klasifikasi kecil tarif 1,75%', 'Klasifikasi kecil tarif 1,75%'),
+                                     ('Tidak memiliki kualifikasi tarif 4%', 'Tidak memiliki kualifikasi tarif 4%')], 'PPh Pasal 4(2) Pelaksanaan')
+    kpp_pph4_2_2 = fields.Selection([('Semua klasifikasi tarif 3,5%', 'Semua klasifikasi tarif 3,5%'),
+                                     ('Tidak memiliki kualifikasi tarif 6%', 'Tidak memiliki kualifikasi tarif 6%')], 'PPh Pasal 4(2) Perencanaan')
+    kpp_pph4_2_3 = fields.Selection([('Tidak memiliki SBU tarif 4%', 'Tidak memiliki SBU tarif 4%'),
+                                     ('Memiliki SBU tarif 2,65%', 'Memiliki SBU tarif 2,65%')], 'PPh Pasal 4(2) Kontruksi')
+    kpp_pph4_2_op_2 = fields.Char('Kode OP PPh Pasal 4(2)')
+    fasilitas_pajak_1 = fields.Char('Nomor Bebas Pemotongan Pajak')
+    fasilitas_pajak_2 = fields.Selection([('0,5% dipotong oleh Lintasarta', '0,5% dipotong oleh Lintasarta'),
+                                          ('0,5% disetor sendiri (wajib melampirkan bukti penyetoran PPh)', '0,5% disetor sendiri (wajib melampirkan bukti penyetoran PPh)')], 'Kriteria Wajib Pajak')
+    fasilitas_pajak_3 = fields.Char('Nomor Fasilitas Pajak lainnya')
+
     @api.multi
     def action_invoice_open(self):
         # to_open_invoices = self.filtered(lambda inv: inv.state != 'open')

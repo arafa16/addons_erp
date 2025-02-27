@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="pemotongan_pajak_format" model="report.paperformat">
+            <field name="name">Pemotongan Pajak A4</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">15</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">25</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <template id="pemotongan_pajak_document">
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-size: 16px;">
+                    <div class="row">
+                        <h3 class="text-center">
+                            <div style="text-decoration: underline; font-weight: bold;">KONFIRMASI PEMOTONGAN PAJAK</div>
+                        </h3>
+                    </div>
+                    <div class="row mt32 mb32" style="padding-left: 20px;">
+                        <table style="width:100%;">
+                            <tr>
+                                <td style="padding-top: 10px; width: 21%;">No. Invoice</td><td style="width: 1%; text-align: right;">:</td><td style="width: 78%; padding-left: 7px;"><t t-esc="o.number"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;">No. PO/Kontrak</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><t t-esc="o.sale_nomor_spk"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;">Tanggal Invoice/PO</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><span t-field="o.date_invoice" t-field-options="{'widget': 'date'}"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;">Nama Perusahaan</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><t t-esc="o.partner_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;">Alamat</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px;">NPWP/NIK*)</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><t t-esc="o.partner_id.vat"/></td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <p>
+                            Berdasarkan hal tersebut, kami <strong><t t-if="o.kpp_status != 'bersedia'"><del>bersedia</del>/tidak bersedia</t><t t-else="">bersedia/<del>tidak bersedia</del></t> **)</strong> dipotong pajak dengan:
+                        </p>
+                        <table style="width:100%;">
+                            <tr><td colspan="3" style="padding-top: 10px; padding-bottom: 10px;">Dasar pengenaan pajak sebesar <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td></tr>
+
+                            <tr><td style="padding-top: 10px; padding-left: 20px; width: 7%; font-weight: bold;">1.</td><td colspan="2" style="padding-top: 10px; width: 93%; font-weight: bold;">PPh 21</td></tr>
+                            <t t-if="o.kpp_pph21 == 'Tarif 2,5%'">
+                                <tr><td/><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Tarif 2,5%</td><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Tarif 5%</td></tr>
+                            </t>
+                            <t t-elif="o.kpp_pph21 == 'Tarif 5%'">
+                                <tr><td/><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Tarif 2,5%</td><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Tarif 5%</td></tr>
+                            </t>
+                            <t t-else="">
+                                <tr><td/><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Tarif 2,5%</td><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Tarif 5%</td></tr>
+                            </t>
+                            <tr><td/><td colspan="2" style="padding-top: 10px; padding-bottom: 10px;">Kode Object Pajak*) : <span t-field="o.kpp_pph21_op"/></td></tr>
+
+                            <tr><td style="padding-top: 10px; padding-left: 20px; width: 7%; font-weight: bold;">2.</td><td colspan="2" style="padding-top: 10px; width: 93%; font-weight: bold;">PPh 23</td></tr>
+                            <t t-if="o.kpp_pph23 == 'Bunga/royalty/Hadiah**) sebesar 15%'">
+                                <tr><td/><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Bunga/royalty/Hadiah**) sebesar 15%</td><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Jasa / Sewa*) sebesar 2%</td></tr>
+                            </t>
+                            <t t-elif="o.kpp_pph23 == 'Jasa / Sewa*) sebesar 2%'">
+                                <tr><td/><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Bunga/royalty/Hadiah**) sebesar 15%</td><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Jasa / Sewa*) sebesar 2%</td></tr>
+                            </t>
+                            <t t-else="">
+                                <tr><td/><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Bunga/royalty/Hadiah**) sebesar 15%</td><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Jasa / Sewa*) sebesar 2%</td></tr>
+                            </t>
+                            <tr><td/><td colspan="2" style="padding-top: 10px; padding-bottom: 10px;">Kode Object Pajak*) : <span t-field="o.kpp_pph23_op"/></td></tr>
+
+                            <tr><td style="padding-top: 10px; padding-left: 20px; width: 7%; font-weight: bold;">3.</td><td colspan="2" style="padding-top: 10px; width: 93%; font-weight: bold;">PPh Pasal 4(2)</td></tr>
+                            <t t-if="o.kpp_pph4_2 == 'Ruang/Lahan/Listrik**) sebesar 10%'">
+                                <tr><td/><td colspan="2" style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Ruang/Lahan/Listrik**) sebesar 10%</td></tr>
+                            </t>
+                            <t t-else="">
+                                <tr><td/><td colspan="2" style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Ruang/Lahan/Listrik**) sebesar 10%</td></tr>
+                            </t>
+                            <tr><td/><td colspan="2" style="padding-top: 10px;">Kode Object Pajak*) : <span t-field="o.kpp_pph4_2_op_1"/></td></tr>
+                            <tr><td/><td colspan="2" style="padding-top: 15px;"><u>Konstruksi</u> :</td></tr>
+                            <tr><td/><td style="padding-top: 10px; vertical-align: top;">3.1 Pelaksanaan</td><td style="padding-top: 10px; vertical-align: top;">3.2 Perencanaaan/Pengawasan/Konsultasi</td></tr>
+                            <tr>
+                                <td/>
+                                <td style="padding-top: 5px; vertical-align: top;">
+                                    <table style="width:100%;">
+                                        <t t-if="o.kpp_pph4_2_1 == 'Klasifikasi menengah dan besar tarif 2,65%'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Klasifikasi menengah dan besar tarif 2,65%</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Klasifikasi menengah dan besar tarif 2,65%</td></tr>
+                                        </t>
+                                        <t t-if="o.kpp_pph4_2_1 == 'Klasifikasi kecil tarif 1,75%'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Klasifikasi kecil tarif 1,75%</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Klasifikasi kecil tarif 1,75%</td></tr>
+                                        </t>
+                                        <t t-if="o.kpp_pph4_2_1 == 'Tidak memiliki kualifikasi tarif 4%'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Tidak memiliki kualifikasi tarif 4%</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Tidak memiliki kualifikasi tarif 4%</td></tr>
+                                        </t>
+                                    </table>
+                                </td>
+                                <td style="padding-top: 5px; vertical-align: top;">
+                                    <table style="width:100%;">
+                                        <t t-if="o.kpp_pph4_2_2 == 'Semua klasifikasi tarif 3,5%'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Semua klasifikasi tarif 3,5%</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Semua klasifikasi tarif 3,5%</td></tr>
+                                        </t>
+                                        <t t-if="o.kpp_pph4_2_2 == 'Tidak memiliki kualifikasi tarif 6%'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Tidak memiliki kualifikasi tarif 6%</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Tidak memiliki kualifikasi tarif 6%</td></tr>
+                                        </t>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td/><td colspan="2" style="padding-top: 15px; vertical-align: top;">3.3 Kontruksi terintegarasi</td></tr>
+                            <tr>
+                                <td/>
+                                <td colspan="2" style="padding-top: 5px; vertical-align: top;">
+                                    <table style="width:100%;">
+                                        <t t-if="o.kpp_pph4_2_3 == 'Tidak memiliki SBU tarif 4%'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Tidak memiliki SBU tarif 4%</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Tidak memiliki SBU tarif 4%</td></tr>
+                                        </t>
+                                        <t t-if="o.kpp_pph4_2_3 == 'Memiliki SBU tarif 2,65%'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>Memiliki SBU tarif 2,65%</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>Memiliki SBU tarif 2,65%</td></tr>
+                                        </t>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td/><td colspan="2" style="padding-top: 10px;">Kode Object Pajak*) : <span t-field="o.kpp_pph4_2_op_2"/></td></tr>
+                        </table>
+                        <div style="page-break-before: always;"/>
+                        <table style="width:100%;">
+                            <tr><td style="padding-top: 10px; padding-left: 20px; width: 7%; font-weight: bold;">4.</td><td colspan="2" style="padding-top: 10px; width: 93%; font-weight: bold;">Memperoleh Fasilitas Pajak/ Bebas Pajak**)</td></tr>
+                            <tr><td/><td colspan="2" style="padding-top: 10px; vertical-align: top;">4.1 Surat Keterangan Bebas Pemotongan Pajak Nomor <span t-field="o.fasilitas_pajak_1"/>***)</td></tr>
+                            <tr><td/><td colspan="2" style="padding-top: 10px; vertical-align: top;">4.2 Surat Keterangan Memenuhi Kriteria Sebagai Wajib Pajak Berdasarkan PP No. 23 Tahun 2018***)</td></tr>
+                            <tr>
+                                <td/>
+                                <td colspan="2" style="padding-top: 5px; vertical-align: top;">
+                                    <table style="width:100%;">
+                                        <t t-if="o.fasilitas_pajak_2 == '0,5% dipotong oleh Lintasarta'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>0,5% dipotong oleh Lintasarta</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>0,5% dipotong oleh Lintasarta</td></tr>
+                                        </t>
+                                        <t t-if="o.fasilitas_pajak_2 == '0,5% disetor sendiri (wajib melampirkan bukti penyetoran PPh)'">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-check-square-o" style="font-size: 20px; padding-right: 10px;"/>0,5% disetor sendiri (wajib melampirkan bukti penyetoran PPh)</td></tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr><td style="padding-top: 10px; padding-left: 10px; vertical-align: top;"><span class="fa fa-square-o" style="font-size: 20px; padding-right: 10px;"/>0,5% disetor sendiri (wajib melampirkan bukti penyetoran PPh)</td></tr>
+                                        </t>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td/><td colspan="2" style="padding-top: 15px; vertical-align: top;">4.3 Surat Keterangan dan/atau Fasilitas Pajak lainnya Nomor <span t-field="o.fasilitas_pajak_3"/>***)</td></tr>
+                        </table>
+                        <br/>
+                        <br/>
+                        <div style="padding-left: 55px; width: 100%">
+                            <table style="widht: 100%;">
+                                <tr><td colspan="3">Menyetujui,</td></tr>
+                                <tr><td style="padding-top: 10px; width: 50%;">Nama</td><td style="padding-top: 10px; padding-right: 5px; width: 4%; text-align: right;">:</td><td style="padding-top: 10px; width: 40%;">Khresna Wimba</td></tr>
+                                <tr><td style="padding-top: 10px; padding-bottom: 10px;">Tanda tangan dan Cap Perusahaan</td><td style="padding-top: 10px; padding-bottom: 10px; padding-right: 5px; text-align: right;">:</td><td></td></tr>
+                                <!--<tr>
+                                    <td style="padding-top: 10px; padding-left: 25px; width: 9%;"/>
+                                    <td style="padding-top: 10px; width: 91%;" colspan="3">
+                                        <table style="font-size: 10px; widht: 100%;">
+                                            <tr><td/><td>*)</td><td style="padding-left: 10px;">wajib diisi</td></tr>
+                                            <tr><td/><td>**)</td><td style="padding-left: 10px;">Pilih salah satu</td></tr>
+                                            <tr><td/><td>***)</td><td style="padding-left: 10px;">Dokumen SKB maupun S-Ket PP 23 wajib dilampirkan</td></tr>
+                                        </table>
+                                    </td>
+                                </tr>-->
+                            </table>
+                            <table style="font-size: 11px; widht: 100%;">
+                                <tr><td/><td>*)</td><td style="padding-left: 5px;">wajib diisi</td></tr>
+                                <tr><td/><td>**)</td><td style="padding-left: 5px;">Pilih salah satu</td></tr>
+                                <tr><td/><td>***)</td><td style="padding-left: 5px;">Dokumen SKB maupun S-Ket PP 23 wajib dilampirkan</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="pemotongan_pajak_template">
+            <t t-call="web.html_container">
+                <t t-set="company" t-value="res_company"/>
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account_kopkarla.pemotongan_pajak_document" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <report
+            id="report_pemotongan_pajak"
+            model="account.invoice"
+            string="Konfirmasi Pemotongan Pajak"
+            report_type="qweb-pdf"
+            name="account_kopkarla.pemotongan_pajak_template"
+            file="account_kopkarla.pemotongan_pajak_template"
+            print_report_name="(object._get_printed_report_name())"
+            groups="account.group_account_invoice"
+            paperformat="account_kopkarla.pemotongan_pajak_format"
+        />
+        <!--attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"-->
+    </data>
+</odoo>
