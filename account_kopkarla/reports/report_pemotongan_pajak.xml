@@ -37,13 +37,13 @@
                                 <td style="padding-top: 10px;">Tanggal Invoice/PO</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><span t-field="o.date_invoice" t-field-options="{'widget': 'date'}"/></td>
                             </tr>
                             <tr>
-                                <td style="padding-top: 10px;">Nama Perusahaan</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><t t-esc="o.partner_id.name"/></td>
+                                <td style="padding-top: 10px;">Nama Perusahaan</td><td style="text-align: right;">:</td><td style="padding-left: 7px;">Koperasi Konsumen Karyawan PT Aplikanusa Lintasarta</td>
                             </tr>
                             <tr>
-                                <td style="padding-top: 10px;">Alamat</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/></td>
+                                <td style="padding-top: 10px;">Alamat</td><td style="text-align: right;">:</td><td style="padding-left: 7px;">Gedung Kopkarla, Jalan Lebak Bulus Raya No. 7, Lebak Bulus, Cilandak, Jakarta Selatan</td>
                             </tr>
                             <tr>
-                                <td style="padding-top: 10px;">NPWP/NIK*)</td><td style="text-align: right;">:</td><td style="padding-left: 7px;"><t t-esc="o.partner_id.vat"/></td>
+                                <td style="padding-top: 10px;">NPWP/NIK*)</td><td style="text-align: right;">:</td><td style="padding-left: 7px;">01.620.587.4-073.000</td>
                             </tr>
                         </table>
                         <br/>
@@ -182,7 +182,7 @@
                             <table style="widht: 100%;">
                                 <tr><td colspan="3">Menyetujui,</td></tr>
                                 <tr><td style="padding-top: 10px; width: 50%;">Nama</td><td style="padding-top: 10px; padding-right: 5px; width: 4%; text-align: right;">:</td><td style="padding-top: 10px; width: 40%;">Khresna Wimba</td></tr>
-                                <tr><td style="padding-top: 10px; padding-bottom: 10px;">Tanda tangan dan Cap Perusahaan</td><td style="padding-top: 10px; padding-bottom: 10px; padding-right: 5px; text-align: right;">:</td><td></td></tr>
+                                <tr><td style="padding-top: 10px; padding-bottom: 10px;">Tanda tangan dan Cap Perusahaan</td><td style="padding-top: 10px; padding-bottom: 10px; padding-right: 5px; text-align: right;">:</td><td><img src="/account_kopkarla/static/src/img/esign.png" width="20%" style="position: absolute; padding: 4px; diplay: inline-block"/></td></tr>
                                 <!--<tr>
                                     <td style="padding-top: 10px; padding-left: 25px; width: 9%;"/>
                                     <td style="padding-top: 10px; width: 91%;" colspan="3">
