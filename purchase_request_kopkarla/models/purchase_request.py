@@ -98,17 +98,27 @@ class SprogroupPurchaseRequest(models.Model):
                         account_id = request_type.account_trd_voucher_pulsa_request_id.id
                     elif self.request_type == 'trd_sarpen':
                         account_id = request_type.account_trd_sarpen_request_id.id
+                    elif self.request_type == 'trd_ecom':
+                        account_id = request_type.account_trd_ecommerce_id.id
 
                     elif self.request_type == 'datacom':
                         account_id = request_type.account_datacom_request_id.id
                     elif self.request_type == 'dtc_pmcm_fo':
                         account_id = request_type.account_dtc_pmcm_fo_request_id.id
+                    elif self.request_type == 'dtc_fo_lastmile':
+                        account_id = request_type.account_dtc_fo_lastmile_request_id.id
                     elif self.request_type == 'dtc_pmcm_central':
                         account_id = request_type.account_dtc_pmcm_central_request_id.id
                     elif self.request_type == 'dtc_pmtl_remote':
                         account_id = request_type.account_dtc_pmtl_remote_request_id.id
                     elif self.request_type == 'dtc_dtc_project':
                         account_id = request_type.account_dtc_dtc_project_request_id.id
+                    elif self.request_type == 'dtc_dtc_tools':
+                        account_id = request_type.account_dtc_dtc_tools_request_id.id
+                    elif self.request_type == 'dtc_dtc_sewa_home_base':
+                        account_id = request_type.account_dtc_dtc_sewa_home_base_request_id.id
+                    elif self.request_type == 'dtc_dtc_brt':
+                        account_id = request_type.account_dtc_dtc_brt_request_id.id
 
                     elif self.request_type == 'overhead':
                         account_id = request_type.account_overhead_request_id.id
@@ -179,17 +189,27 @@ class SprogroupPurchaseRequestLine(models.Model):
                         request_expense_id = request_type.account_trd_voucher_pulsa_request_id.id
                     elif self.request_id.request_type == 'trd_sarpen':
                         request_expense_id = request_type.account_trd_sarpen_request_id.id
+                    elif self.request_id.request_type == 'trd_ecom':
+                        request_expense_id = request_type.account_trd_ecommerce_id.id
 
                     elif self.request_id.request_type == 'datacom':
                         request_expense_id = request_type.account_datacom_request_id.id
                     elif self.request_id.request_type == 'dtc_pmcm_fo':
                         request_expense_id = request_type.account_dtc_pmcm_fo_request_id.id
+                    elif self.request_id.request_type == 'dtc_fo_lastmile':
+                        request_expense_id = request_type.account_dtc_fo_lastmile_request_id.id
                     elif self.request_id.request_type == 'dtc_pmcm_central':
                         request_expense_id = request_type.account_dtc_pmcm_central_request_id.id
                     elif self.request_id.request_type == 'dtc_pmtl_remote':
                         request_expense_id = request_type.account_dtc_pmtl_remote_request_id.id
                     elif self.request_id.request_type == 'dtc_dtc_project':
                         request_expense_id = request_type.account_dtc_dtc_project_request_id.id
+                    elif self.request_id.request_type == 'dtc_dtc_tools':
+                        request_expense_id = request_type.account_dtc_dtc_tools_request_id.id
+                    elif self.request_id.request_type == 'dtc_dtc_sewa_home_base':
+                        request_expense_id = request_type.account_dtc_dtc_sewa_home_base_request_id.id
+                    elif self.request_id.request_type == 'dtc_dtc_brt':
+                        request_expense_id = request_type.account_dtc_dtc_brt_request_id.id
 
                     else: # self.request_id.request_type == 'overhead':
                         request_expense_id = request_type.account_overhead_request_id.id
