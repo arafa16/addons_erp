@@ -42,6 +42,12 @@ class Lead(models.Model):
                 if order_line:
                     break
         addr = self.partner_id.address_get(['delivery', 'invoice'])
+        boq_id = False
+        if self.boq_id:
+            boq_id = self.boq_id.id
+        if not boq_id:
+            if self.boq_ids.filtered(lambda b: b.state == 'posted'):
+                boq_id = self.boq_ids.filtered(lambda b: b.state == 'posted')[0].id
         val = {
             'partner_id': self.partner_id.id,
             'partner_invoice_id': self.partner_invoice_id.id or addr['invoice'],
@@ -61,7 +67,7 @@ class Lead(models.Model):
             'analytic_account_id': self.analytic_account_id.id,
             'origin': self.name,
             'opportunity_id': self.id,
-            'boq_id': self.boq_id.id or self.boq_ids.filtered(lambda b: b.state == 'posted')[0].id,
+            'boq_id': boq_id,
             'order_line': order_line,
         }
         return val
