@@ -4,18 +4,18 @@ from odoo import fields, models, api, _
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    boq_id = fields.Many2one('bill.quantity', 'Bill of Quantity', compute='_get_boq_id', store=True)
+    boq_id = fields.Many2one('bill.quantity', 'Bill of Quantity') #, compute='_get_boq_id', store=True)
 
-    @api.depends('opportunity_id', 'opportunity_id.boq_ids')
-    def _get_boq_id(self):
-        for sale in self:
-            boq_id = False
-            if sale.opportunity_id:
-                if sale.opportunity_id.boq_ids:
-                    boq = sale.opportunity_id.boq_ids.filtered(lambda b: b.state == 'posted')
-                    if boq:
-                        boq_id = boq[0].id
-            sale.boq_id = boq_id
+    # @api.depends('opportunity_id', 'opportunity_id.boq_ids')
+    # def _get_boq_id(self):
+    #     for sale in self:
+    #         boq_id = False
+    #         if sale.opportunity_id:
+    #             if sale.opportunity_id.boq_ids:
+    #                 boq = sale.opportunity_id.boq_ids.filtered(lambda b: b.state == 'posted')
+    #                 if boq:
+    #                     boq_id = boq[0].id
+    #         sale.boq_id = boq_id
 
     @api.onchange('opportunity_id')
     def _onchange_opportunity_id(self):

@@ -61,6 +61,7 @@ class Lead(models.Model):
             'analytic_account_id': self.analytic_account_id.id,
             'origin': self.name,
             'opportunity_id': self.id,
+            'boq_id': self.boq_id.id or self.boq_ids.filtered(lambda b: b.state == 'posted')[0].id,
             'order_line': order_line,
         }
         return val

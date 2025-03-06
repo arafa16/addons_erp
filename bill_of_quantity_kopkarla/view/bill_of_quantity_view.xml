@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <record id="sale_action_quotations" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="res_model">sale.order</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="domain">[('boq_id', '=', active_id)]</field>
+            <field name="context">{'search_default_opportunity_id': [active_id], 'default_opportunity_id': active_id}</field>
+        </record>
+
+        <record id="sale_action_orders" model="ir.actions.act_window">
+            <field name="name">Sale orders</field>
+            <field name="res_model">sale.order</field>
+            <field name="domain">[('boq_id', '=', active_id), ('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="context">{'search_default_opportunity_id': [active_id], 'default_opportunity_id': active_id}</field>
+        </record>
+
         <record id="view_bill_quantity_tree" model="ir.ui.view">
             <field name="name">bill.quantity.tree</field>
             <field name="model">bill.quantity</field>
@@ -40,6 +55,8 @@
                         <button name="action_approval" string="Approval" class="btn-primary" type="object" attrs="{'invisible': [('state','!=','calculation')]}"/>
                         <button name="action_post" string="Post" class="btn-primary" type="object" attrs="{'invisible': [('allow_post','=',False)]}"/>
                         <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('allow_cancel','=',False)]}"/>
+                        <button string="New Quotation" name="action_quotations_new" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('order_type_id', 'not in', [1, 4])]}"/>
+
                         <!--<field name="state" widget="statusbar" statusbar_visible="draft,to_rfi,posted"/>-->
                         <field name="state" widget="statusbar" statusbar_visible="draft,to_rfi,calculation,approval,posted"/>
                     </header>
@@ -80,6 +97,22 @@
                                     <field name="line_asset_count" class="o_stat_value"/>
                                     <span class="o_stat_text" attrs="{'invisible': [('line_asset_count', '&lt;', 2)]}"> Assets</span>
                                     <span class="o_stat_text" attrs="{'invisible': [('line_asset_count', '&gt;', 1)]}"> Asset</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" type="action"
+                                    name="%(bill_of_quantity_kopkarla.sale_action_quotations)d" icon="fa-pencil-square-o"
+                                    context="{'default_partner_id': partner_id, 'search_default_draft': 1, 'search_default_sent': 1}">
+                                <div class="o_stat_info">
+                                    <field name="sale_number" class="o_stat_value"/>
+                                    <span class="o_stat_text"> Quotation(s) </span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" type="action" attrs="{'invisible': [('sale_amount_total', '=', 0)]}"
+                                    name="%(bill_of_quantity_kopkarla.sale_action_orders)d" icon="fa-usd"
+                                    context="{'search_default_partner_id': partner_id, 'default_partner_id': partner_id, 'search_default_sales': 1}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="sale_amount_total" widget="monetary" options="{'currency_field': 'company_currency'}"/></span>
+                                    <span class="o_stat_text"> Orders</span>
                                 </div>
                             </button>
                             <!--<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('active', '=', True), ('probability', '&lt;', 100)]}">

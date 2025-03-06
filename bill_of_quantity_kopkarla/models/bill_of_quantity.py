@@ -104,6 +104,82 @@ class Bill_Quantity(models.Model):
     allow_to_rfi = fields.Boolean(compute='_get_allow_to_rfi_calculation')
     allow_calculation = fields.Boolean(compute='_get_allow_to_rfi_calculation')
 
+    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.user.company_id.id)
+    company_currency = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True, relation="res.currency")
+    sale_amount_total = fields.Monetary(compute='_compute_sale_amount_total', string="Sum of Orders", help="Untaxed Total of Confirmed Orders", currency_field='company_currency')
+    sale_number = fields.Integer(compute='_compute_sale_amount_total', string="Number of Quotations")
+    order_ids = fields.One2many('sale.order', 'boq_id', string='Orders')
+
+    @api.depends('order_ids')
+    def _compute_sale_amount_total(self):
+        for lead in self:
+            total = 0.0
+            nbr = 0
+            company_currency = lead.company_currency or self.env.user.company_id.currency_id
+            for order in lead.order_ids:
+                if order.state in ('draft', 'sent'):
+                    nbr += 1
+                if order.state not in ('draft', 'sent', 'cancel'):
+                    total += order.currency_id.compute(order.amount_untaxed, company_currency)
+            lead.sale_amount_total = total
+            lead.sale_number = nbr
+
+    def quotation_values(self):
+        order_line = []
+        if self.order_type_id. name in ('Trading', 'Rental'):
+            for line in self.line_material_ids:
+                order_line.append((0, 0, {
+                    "product_id": line.product_id.id,
+                    "name": line.name,
+                    "product_uom_qty": line.qty,
+                    "product_uom": line.uom_id.id,
+                    "price_unit": line.sale_price,
+                    # "price_subtotal": sum(self.contract_id.line_ids.mapped('qty')) * line.price_unit
+                }))
+        opportunity_id = self.crm_id
+        addr = opportunity_id.partner_id.address_get(['delivery', 'invoice'])
+        val = {
+            'partner_id': opportunity_id.partner_id.id,
+            'partner_invoice_id': opportunity_id.partner_invoice_id.id or addr['invoice'],
+            'partner_shipping_id': opportunity_id.partner_shipping_id.id or addr['delivery'],
+            'payment_term_id': opportunity_id.partner_id.property_payment_term_id and opportunity_id.partner_id.property_payment_term_id.id or False,
+            'team_id': opportunity_id.team_id.id,
+            'campaign_id': opportunity_id.campaign_id.id,
+            'medium_id': opportunity_id.medium_id.id,
+            'source_id': opportunity_id.source_id.id,
+            'user_id': opportunity_id.user_id.id,
+            'jenis_so': opportunity_id.jenis_so,
+            'proj_type': opportunity_id.proj_type_id.id,
+            'so_bagian': opportunity_id.department_id.id,
+            'sales_area_kode': opportunity_id.area_id.id,
+
+            'cost_center_id': opportunity_id.cost_center_id.id,
+            'analytic_account_id': opportunity_id.analytic_account_id.id,
+            'origin': self.name,
+            'opportunity_id': opportunity_id.id,
+            'boq_id': self.id,
+            'order_line': order_line,
+        }
+        return val
+
+    @api.multi
+    def action_quotations_new(self):
+        view_id = self.env.ref('sale.view_order_form')
+        # order_line = []
+        res = self.env['sale.order'].create(self.quotation_values())
+        return {
+            'name': _("New Quotation"),
+            'res_model': 'sale.order',
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'views': [(False, 'form')],
+            'type': 'ir.actions.act_window',
+            'view_id': view_id.id,
+            # 'context': context_val,
+            'res_id': res.id,
+            'context': {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
+        }
+
     @api.onchange('order_type_id')
     def _onchange_order_type_id(self):
         if self.order_type_id:
