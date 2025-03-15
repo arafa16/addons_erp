@@ -21,6 +21,7 @@ class AccountInvoice(models.Model):
     done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan', default=lambda self: self.env['res.config.settings'].get_values().get('default_done_sign_by'))
     management_sign_by = fields.Many2one('hr.employee', string='Pengurus', default=lambda self: self.env['res.config.settings'].get_values().get('default_management_sign_by'))
 
+    kpp_dpp_amount = fields.Monetary(string='DPP Amount')
     kpp_status = fields.Selection([('bersedia', 'Bersedia'), ('tidak bersedia', 'Tidak Bersedia')], 'Status')
     kpp_pph21 = fields.Selection([('Tarif 2,5%', 'Tarif 2,5%'), ('Tarif 5%', 'Tarif 5%')], 'PPh 21')
     kpp_pph21_op = fields.Char('Kode OP PPh 21')
@@ -40,6 +41,13 @@ class AccountInvoice(models.Model):
     fasilitas_pajak_2 = fields.Selection([('0,5% dipotong oleh Lintasarta', '0,5% dipotong oleh Lintasarta'),
                                           ('0,5% disetor sendiri (wajib melampirkan bukti penyetoran PPh)', '0,5% disetor sendiri (wajib melampirkan bukti penyetoran PPh)')], 'Kriteria Wajib Pajak')
     fasilitas_pajak_3 = fields.Char('Nomor Fasilitas Pajak lainnya')
+
+    @api.onchange('kpp_status')
+    def _onchange_kpp_status(self):
+        if self.kpp_status == 'bersedia':
+            self.kpp_dpp_amount = self.amount_untaxed
+        else:
+            self.kpp_dpp_amount = 0
 
     @api.multi
     def action_invoice_open(self):

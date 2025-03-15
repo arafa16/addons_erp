@@ -51,7 +51,7 @@
                             Berdasarkan hal tersebut, kami <strong><t t-if="o.kpp_status != 'bersedia'"><del>bersedia</del>/tidak bersedia</t><t t-else="">bersedia/<del>tidak bersedia</del></t> **)</strong> dipotong pajak dengan:
                         </p>
                         <table style="width:100%;">
-                            <tr><td colspan="3" style="padding-top: 10px; padding-bottom: 10px;">Dasar pengenaan pajak sebesar <span t-esc="'Rp {0:,.0f}'.format(o.amount_untaxed if o.kpp_status == 'bersedia' else 0)" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td></tr>
+                            <tr><td colspan="3" style="padding-top: 10px; padding-bottom: 10px;">Dasar pengenaan pajak sebesar <span t-field="o.kpp_dpp_amount" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td></tr>
 
                             <tr><td style="padding-top: 10px; padding-left: 20px; width: 7%; font-weight: bold;">1.</td><td colspan="2" style="padding-top: 10px; width: 93%; font-weight: bold;">PPh 21</td></tr>
                             <t t-if="o.kpp_pph21 == 'Tarif 2,5%'">

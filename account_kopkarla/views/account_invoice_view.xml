@@ -144,8 +144,11 @@
                     </page>
                     <page string="Konfirmasi Pemotongan Pajak">
                         <group>
-                            <group colspan="2">
+                            <group>
                                 <field name="kpp_status" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                            <group>
+                                <field name="kpp_dpp_amount"/>
                             </group>
                             <group>
                                 <field name="kpp_pph21" widget="radio" options="{'horizontal': true}"/>
