@@ -38,7 +38,21 @@
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="related_area" string="Operation Area"/>
                     <field name="sale_order_id" string="Sales Order"/>
+                    <field name="related_proj_type" string="Jenis Project"/>
+                    <field name="related_ord_type" string="Jenis Order"/>
+                    <field name="related_pek_type" string="Jenis Pekerjaan"/>
                 </xpath>
+            </field>
+        </record>
+        <record id="enhanced_project_dashboard_search_inherit_type" model="ir.ui.view">
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <filter name="project" position="after">
+                    <filter string="Jenis Project" name="project_type" context="{'group_by':'related_proj_type'}"/>
+                    <filter string="Jenis Order" name="order_type" context="{'group_by':'related_ord_type'}"/>
+                    <filter string="Jenis Pekerjaan" name="pek_type" context="{'group_by':'related_pek_type'}"/>
+                </filter>
             </field>
         </record>
     </data>
