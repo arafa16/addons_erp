@@ -4,6 +4,7 @@ from odoo.tools import float_round, float_compare
 # from odoo.tools import amount_to_text_en, float_round, float_compare
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero
+import logging
 
 INV_TO_PARTN = {
     'out_invoice': 'customer',
@@ -18,6 +19,8 @@ INV_TO_PAYM_SIGN = {
     'in_invoice': -1,
     'out_refund': -1,
 }
+
+_logger = logging.getLogger(__name__)
 
 
 class PaymentJournal(models.Model):
@@ -355,6 +358,7 @@ class PaymentJournal(models.Model):
         for pay in payments:
             pay.post_payment_journal(self)
             move = self.env['account.move'].search([('name', '=', pay.move_name)])
+            _logger.warning("Payment: %s, Move: %s" % (pay.communication, move.mapped('name')))
             for line in move.line_ids:
                 line.name = '%s: %s' % (self.name, self.communication)
             self.write({'payment_invoice_id': pay.id, 'move_id': move.id, 'state': 'posted'})
