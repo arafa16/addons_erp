@@ -126,12 +126,15 @@ class Bill_Quantity(models.Model):
 
     def quotation_values(self):
         order_line = []
-        if self.order_type_id. name in ('Trading', 'Rental'):
+        if self.order_type_id.name in ('Trading', 'Rental'):
             for line in self.line_material_ids:
                 order_line.append((0, 0, {
                     "product_id": line.product_id.id,
                     "name": line.name,
-                    "product_uom_qty": line.qty,
+                    "is_rental_order": self.order_type_id.name == 'Rental',
+                    'rental_uom_id': line.uom_id.id if self.order_type_id.name == 'Rental' else False,
+                    "product_uom_qty": line.qty if self.order_type_id.name != 'Rental' else 1,
+                    "rental_tenure": line.qty if self.order_type_id.name == 'Rental' else 0,
                     "product_uom": line.uom_id.id,
                     "price_unit": line.sale_price,
                     # "price_subtotal": sum(self.contract_id.line_ids.mapped('qty')) * line.price_unit
