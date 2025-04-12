@@ -13,7 +13,6 @@
             <field name="lang">${object.user_rfq_id.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
 <p>Dear ${object.user_rfq_id.name},</p><p>
-<p>Dear ${object.user_rfq_id.name},</p><p>
 RFI Product: <b>${object.product_id.name}</b>
 <br/>
 </p><p>Best regards,</p>
