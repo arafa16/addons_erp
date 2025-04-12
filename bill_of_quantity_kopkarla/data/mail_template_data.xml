@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_rfi" model="mail.template">
+            <field name="name">RFI - Send by Email</field>
+            <field name="email_from">${(object.sudo().create_uid.email and '&quot;%s&quot; &lt;%s&gt;' % (object.sudo().create_uid.name, object.sudo().create_uid.email) or '')|safe}</field>
+            <field name="subject">RFI ${object.product_id.name or 'n/a' }</field>
+            <field name="email_to">${object.user_rfq_id.partner_id.email|safe}</field>
+            <field name="model_id" ref="bill_of_quantity_kopkarla.model_bill_quantity_line"/>
+            <field name="auto_delete" eval="False"/>
+            <!--<field name="report_template" ref="report_purchase_quotation"/>-->
+            <field name="report_name">RFI_${(object.product_id.name or '').replace('/','_')}</field>
+            <field name="lang">${object.user_rfq_id.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<p>Dear ${object.user_rfq_id.name},</p><p>
+<p>Dear ${object.user_rfq_id.name},</p><p>
+RFI Product: <b>${object.product_id.name}</b>
+<br/>
+</p><p>Best regards,</p>
+<p>
+${user.name | safe}
+</p>
+]]>
+            </field>
+        </record>
+    </data>
+</odoo>

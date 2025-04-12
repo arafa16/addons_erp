@@ -13,6 +13,7 @@
         "security/rfi_security.xml",
         "security/ir.model.access.csv",
         "data/boq_sequence.xml",
+        "data/mail_template_data.xml",
         # "view/main_menu.xml",
         'wizards/rfi_select_vendor_view.xml',
         'wizards/rfi_reject_reason_view.xml',
