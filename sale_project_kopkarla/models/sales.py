@@ -49,6 +49,9 @@ class EnhancedSalesArea(models.Model):
     def write(self, vals):
         if 'opportunity_id' in vals and not vals.get('opportunity_id', True):
             raise UserError('Opportunity / pipeline CRM tidak boleh kosong!')
+        if 'state' in vals and vals.get('state') == 'sale':
+            if not vals.get('tgl_due_po', False) and not self.tgl_due_po:
+                raise UserError('Due Date PO harus di isi sebelum confim SO!')
         return super(EnhancedSalesArea, self).write(vals)
 
     @api.multi
