@@ -25,6 +25,12 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                     </header>
                     <sheet string="Budget Adjustment">
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_budget_lines" type="object" class="oe_stat_button" icon="fa-codepen"
+                                attrs="{'invisible': [('line_ids', '=', False)]}">
+                                <span>Lines</span>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -137,5 +143,103 @@
             name="Budgets Adjustment"
             action="act_budget_adjustment_view" sequence="4"
             groups="account.group_account_user"/>
+
+        <record id="view_account_budget_adjustment_line_tree" model="ir.ui.view">
+            <field name="name">account.budget.adjustment.line.tree</field>
+            <field name="model">budget.adjustment.line</field>
+            <field name="arch" type="xml">
+                <tree string="Budgets Adjustment Lines">
+                    <field name="budget_adjusment_id"/>
+                    <field name="budget_line_id"/>
+                    <field name="cost_center_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="restrict"/>
+                    <field name="amount"/>
+                    <!--<field name="budget_line_opponent_id"/>
+                    <field name="cost_center_opponent_id"/>
+                    <field name="analytic_account_opponent_id"/>
+                    <field name="date_from_opponent"/>
+                    <field name="date_to_opponent"/>
+                    <field name="amount_opponent"/>-->
+                    <field name="posted_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_budget_adjustment_line_form" model="ir.ui.view">
+            <field name="name">account.budget.adjustment.line.form</field>
+            <field name="model">budget.adjustment.line</field>
+            <field name="arch" type="xml">
+                <form string="Budgets Adjustment Lines">
+                    <header>
+                    </header>
+                    <sheet string="Budget Adjustment">
+                        <!--<div class="oe_button_box" name="button_box">
+                            <button name="action_budget_lines" type="object" class="oe_stat_button" icon="fa-codepen"
+                                attrs="{'invisible': [('line_ids', '=', False)]}">
+                                <span>Lines</span>
+                            </button>
+                        </div>-->
+                        <!--<div class="oe_title">
+                            <label for="budget_line_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="budget_line_id"/>
+                            </h1>
+                        </div>-->
+                        <group>
+                            <group>
+                                <field name="budget_adjusment_id"/>
+                                <field name="budget_line_id"/>
+                                <field name="cost_center_id"/>
+                                <field name="analytic_account_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="restrict"/>
+                                <field name="amount"/>
+                                <field name="posted_date"/>
+                            </group>
+                            <!--<group>
+                                <field name="budget_line_opponent_id"/>
+                                <field name="cost_center_opponent_id"/>
+                                <field name="analytic_account_opponent_id"/>
+                                <field name="date_from_opponent"/>
+                                <field name="date_to_opponent"/>
+                                <field name="amount_opponent"/>
+                            </group>-->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_budget_adjustment_line_search" model="ir.ui.view">
+            <field name="name">budget.adjustment.line.search</field>
+            <field name="model">budget.adjustment.line</field>
+            <field name="arch" type="xml">
+                <search string="Budget Adjustment">
+                    <field name="budget_adjusment_id"/>
+                    <!--<filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
+                    <separator/>
+                    <filter string="This Month" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <filter string="Last Month" name="last_month" domain="['&amp;', ('date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Budget To" name='budget_to' context="{'group_by':'budget_line_id_adj'}"/>
+                        <filter string="Cost Center To" name='cost_center_to' context="{'group_by':'cost_center_id_adj'}"/>
+                        <filter string="Analytic Account To" name='anaytic_account_to' context="{'group_by':'analytic_account_id_adj'}"/>
+                        <separator/>
+                        <filter string="Budget From" name='budget_from' context="{'group_by':'budget_line_id_src'}"/>
+                        <filter string="Cost Center From" name='cost_center_from' context="{'group_by':'cost_center_id_src'}"/>
+                        <filter string="Analytic Account From" name='anaytic_account_from' context="{'group_by':'analytic_account_id_src'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Date" context="{'group_by':'date'}"/>
+                        <separator/>
+                        <filter string="Status" context="{'group_by':'state'}"/>
+                    </group>-->
+                </search>
+            </field>
+        </record>
     </data>
 </odoo>

@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+
 class BudgetAdjustment(models.Model):
     _name = "budget.adjustment"
     _description = "Budget Adjustment"
@@ -64,6 +65,40 @@ class BudgetAdjustment(models.Model):
         self.analytic_account_id_src = self.budget_line_id_src.analytic_account_id.id
         self.date_from_src = self.budget_line_id_src.date_from
         self.date_to_src = self.budget_line_id_src.date_to
+
+    @api.multi
+    def action_budget_lines(self):
+        view = self.env.ref('account_budget_kopkarla.view_account_budget_adjustment_line_tree')
+        form = self.env.ref('account_budget_kopkarla.view_account_budget_adjustment_line_form')
+        search_view = self.env.ref('account_budget_kopkarla.view_budget_adjustment_line_search')
+
+        context = {'search_default_budget_adjustment_id': self.id,
+                   # 'default_budget_adjustment_id': self.id,
+                   # 'budget_position': self.env.context.get('budget_position'),
+                   }
+        domain = [('budget_adjusment_id', '=', self.id)]
+        # if self.env.context.get('budget_position') == 'source':
+        #     if self.cost_center_id_adj:
+        #         domain.append(('cost_center_id', '=', self.cost_center_id_adj.id))
+        #     if self.analytic_account_id_adj:
+        #         domain.append(('analytic_account_id', '=', self.analytic_account_id_adj.id))
+
+            # context.update({'cost_center_adj': self.cost_center_id_adj.id})
+            # context.update({'analytic_account_adj': self.analytic_account_id_adj.id})
+        return {
+            'name': 'Budget Adjustment Lines',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'budget.adjustment.line',
+            'views': [(view.id, 'tree'), (form.id, 'form')],
+            # 'view_id': view.id,
+            'target': 'current',
+            'search_view_id': search_view.id,
+            # 'limit': 5,
+            'domain': domain,
+            'context': context,
+        }
 
     @api.multi
     def action_get_budget(self):
