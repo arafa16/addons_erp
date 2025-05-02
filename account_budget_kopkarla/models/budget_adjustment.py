@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 class BudgetAdjustment(models.Model):
     _name = "budget.adjustment"
     _description = "Budget Adjustment"
-    _order = "name desc"
+    _order = "id desc"
     _inherit = ['mail.thread']
 
     name = fields.Char(string='Budget Adjustment Number', required=True, readonly=True, copy=False, default='/', help='The name that will be used on budget adjustment')
