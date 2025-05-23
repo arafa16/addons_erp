@@ -29,7 +29,7 @@
                 </xpath>
                 <field name="product_id" position="replace">
                     <field name="product_id" invisible="1" force_save="1"/>
-                    <field name="product_all_id" attrs="{'column_invisible': [('parent.salesorder_id', '!=', False)]}" options="{'no_create': True}"/>
+                    <field name="product_all_id" attrs="{'column_invisible': ['|', ('parent.salesorder_id', '!=', False), ('parent.department_id', 'not in', (15, 16))]}" options="{'no_create': True}"/>
                     <field name="product_nwh_id" attrs="{'column_invisible': [('parent.salesorder_id', '=', False)]}" options="{'no_create': True}"/>
                     <field name="salesorder_id" invisible="1"/>
                     <field name="account_id" force_save="1" readonly="1"/>
