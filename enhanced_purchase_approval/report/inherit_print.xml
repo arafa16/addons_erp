@@ -38,6 +38,12 @@
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('page')]" position="after">
+                <p>
+                    <ul style="padding-left: 15;">
+                        <li>Purchase Order ini tidak dapat dialihkan, dipindahtangankan, dijaminkan, atau dijadikan agunan kepada pihak ketiga tanpa persetujuan tertulis terlebih dahulu dari KOPKARLA</li>
+                        <li>Setiap invoice wajib melampirkan PO yang sudah ditandatangani kedua belah pihak</li>
+                    </ul>
+                </p>
                 <div class="row">
                     <div t-if="o.required1 and not o.required2" class="col-xs-4">
                         <div style="padding-bottom:90px; text-align:center;">
