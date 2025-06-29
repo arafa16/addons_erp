@@ -19,6 +19,10 @@ class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
 
     cost_center_id = fields.Many2one("cost.center", string="Cost Center")
+    state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
+                               ('open', 'Bid Selection'), ('done', 'Done'),
+                               ('cancel', 'Cancelled')],
+                              'Status', related='requisition_id.state')
 
     @api.onchange('product_qty')
     def set_cost_center(self):

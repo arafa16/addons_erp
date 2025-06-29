@@ -47,4 +47,10 @@ class PurchaseRequestBidding(models.Model):
             tender = self.env['purchase.requisition'].create(isi)
             self.nomor_bidding = tender.id
         else:
-            raise UserError("You don't have access to set RfQ")  
+            raise UserError("You don't have access to set RfQ")
+
+
+class SprogroupPurchaseRequestLine(models.Model):
+    _inherit = "sprogroup.purchase.request.line"
+
+    nomor_bidding = fields.Many2one('purchase.requisition', string='Nomor Bidding', related='request_id.nomor_bidding')

@@ -1,0 +1,28 @@
+<odoo>
+    <data noupdate="1">
+        <record id="inventory_stock_monitoring_id" model="mail.template">
+            <field name="name">Inventory Stock Monitoring</field>
+            <field name="model_id" ref="stock.model_stock_warehouse_orderpoint"/> <!-- Ganti dengan model yang sesuai -->
+            <field name="subject">Product ${object.product_id.name} dibawah stok minimum</field>
+            <field name="email_from">${(object.env.user.email or '')|safe}</field>
+            <field name="email_to">hypur71@hotmail.com</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html">
+                <![CDATA[
+                <p>Dear Bapak / Ibu,<br><br></p>
+                <p>Product:&nbsp;Stock ${object.product_id.name}</p>
+                <p>Lokasi: ${object.location_id.name}</p>
+                <p>Current Stock:&nbsp;${object.qty_onhand} ${object.product_id.uom_id.name}</p>
+                <p>Minimum Stock: ${object.product_min_qty} ${object.product_id.uom_id.name}</p>
+                <p>Maximum Stock: ${object.product_max_qty} ${object.product_id.uom_id.name}</p>
+                <p>Procure Recommendation: ${object.procure_recommended_qty} ${object.product_id.uom_id.name}</p>
+                <p>Lead Days: ${object.lead_days} hari</p>
+                <p>Recommended Date: ${object.procure_recommended_date}</p>
+                <p><br></p>
+                <p>Best regards,</p>
+                <p>Odoo</p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

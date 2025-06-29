@@ -7,3 +7,4 @@ from . import sale_order
 from . import procurement
 from . import stock_inventory
 from . import setting
+from . import stock_quant

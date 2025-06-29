@@ -25,6 +25,7 @@
         'stock_account',
         'enhanced_project_mr',
         'cost_centers_kopkarla',
+        'stock_orderpoint_manual_procurement_kopkarla'
     ],
     'data': [
         'views/setting.xml',
