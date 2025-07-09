@@ -99,7 +99,7 @@ class Orderpointbo(models.Model):
 
     @api.multi
     def send_notification_below_minimum_stock(self):
-        template_id = self.env.ref('stock_kopkarla.inventory_stock_monitoring_id')
+        template_id = self.env.ref('stock_orderpoint_manual_procurement_kopkarla.inventory_stock_monitoring_id')
         if template_id:
             template_id.body_html = template_id.body_html.replace('${object.procure_recommended_date}', datetime.strptime(self.procure_recommended_date, '%Y-%m-%d').strftime('%d %B %Y'))
             template_id.send_mail(self.id, force_send=True)
