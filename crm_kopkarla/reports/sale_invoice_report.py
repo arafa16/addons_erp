@@ -56,7 +56,7 @@ class SaleInvoiceReport(models.Model):
     # volume = fields.Float('Volume', readonly=True)
 
     # order_type_id = fields.Many2one('crm.order.type', 'Order Type', readonly=True)
-    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("datacom", "Trading Datacom"), ("rental", "Rental Order")], string='Order Type', readonly=True)
+    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("trading", "Trading"), ("datacom", "Datacom"), ("rental", "Rental Order")], string='Order Type', readonly=True)
     proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', readonly=True)
     area_id = fields.Many2one('enhanced.sales.area', string='Sales Area', raedonly=True)
 

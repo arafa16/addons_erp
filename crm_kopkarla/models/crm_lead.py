@@ -23,7 +23,7 @@ class Lead(models.Model):
     #                                ("trading", "Trading"),
     #                                ("rental", "Rental Order")], string='Order Type')
     order_type_id = fields.Many2one('crm.order.type', 'Order Type', required=True, track_visibility='onchange')
-    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("datacom", "Trading Datacom"), ("rental", "Rental Order")], related='order_type_id.jenis_so', string='Mapped Type', track_visibility='onchange')
+    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("trading", "Trading"), ("datacom", "Datacom"), ("rental", "Rental Order")], related='order_type_id.jenis_so', string='Mapped Type', track_visibility='onchange')
     rental_type = fields.Selection([('Sewa Beli', 'Sewa Beli'), ('Sewa Pakai', 'Sewa Pakai'), ('Back to Back', 'Back to Back'),], 'Rental Type', track_visibility='onchange')
     is_rental = fields.Boolean(related='order_type_id.is_rental')
     proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', track_visibility='onchange')
