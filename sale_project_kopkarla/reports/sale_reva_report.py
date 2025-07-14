@@ -54,7 +54,7 @@ class SaleRevaReport(models.Model):
         ('sale', 'Sales Order'),
         ('done', 'Sales Done'),
         ], string='Status', readonly=True)
-    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("datacom", "Trading Datacom"),
+    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("trading", "Trading"), ("datacom", "Datacom"),
                                  ("rental", "Rental Order")], string='Order Type', readonly=True)
     reva_status = fields.Char(string='Reva Status', readonly=True)
     reva_group_id = fields.Many2one('enhanced.reva.group.tabel', 'Reva Group', readonly=True)

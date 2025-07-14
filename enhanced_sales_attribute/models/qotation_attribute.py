@@ -6,7 +6,7 @@ class QotationAttribute(models.Model):
     nomor_surat = fields.Char(string='Reference Number')
     nomor_fam = fields.Char(string='R.F.Q')
     delivery_doc  = fields.Date(string='Delivery Date')
-    jenis_so = fields.Selection([("common","General Order"),("Project","Project"),("rental","Rental Order")], string='Order Type',required=True,default=lambda self: self._context.get('default_jenis','common'))
+    jenis_so = fields.Selection([("common","General Order"),("Project","Project"),("rental","Rental Order")], string='Order Type',required=True,default=lambda self: self._context.get('default_jenis','Project'))
     
     att_note = fields.Many2one('enhanced.note.tabel', string='Note Template')
 
