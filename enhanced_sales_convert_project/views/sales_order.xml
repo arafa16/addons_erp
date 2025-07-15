@@ -19,9 +19,9 @@
                     <field name="kanbanbaru" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='state']" position="before">
-                    <button name="convert_to_project" class="buttontoska" style="color:#FFFFFF" type="object" string="Set to Project" attrs="{'invisible':['|','|',('state', 'not in', ['sale','done']),('jenis_so','!=','Project'),('task_id','!=',False)]}"/>
+                    <button name="convert_to_project" class="buttontoska" style="color:#FFFFFF" type="object" string="Set to Project" attrs="{'invisible':['|','|',('state', 'not in', ['sale','done']),('jenis_so','not in',['Project','dtc']),('task_id','!=',False)]}"/>
                     <button name="task_relation" class="buttonungu" style="color:#FFFFFF" type="object" string="Related Project Task" attrs="{'invisible':[('task_id','=',False)]}"/>
-                    <button name="task_spk_invoice_reject" style="color:#FFFFFF; background-color:#920c0c;" type="object" string="Reject BAST" attrs="{'invisible':['|','|','|',('allowInvoice','=',True),('jenis_so', '!=', 'Project'),('invoice_status','not in',['to invoice','no']),('kanbanbaru','!=','D')]}"/>
+                    <button name="task_spk_invoice_reject" style="color:#FFFFFF; background-color:#920c0c;" type="object" string="Reject BAST" attrs="{'invisible':['|','|','|',('allowInvoice','=',True),('jenis_so','not in',['Project','dtc']),('invoice_status','not in',['to invoice','no']),('kanbanbaru','!=','D')]}"/>
                 </xpath>
             </field>
         </record>

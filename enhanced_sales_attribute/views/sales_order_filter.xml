@@ -17,7 +17,8 @@
                     <filter string="General Order" domain="[('jenis_so','=','common')]" name="general_order"/>
                     <filter string="Rental Order" domain="[('jenis_so','=','rental')]" name="rental_order"/>
                     <filter string="Project Order" domain="[('jenis_so','=','Project')]" name="project_order"/>
-                    <filter string="Trading Datacom" domain="[('jenis_so','=','datacom')]" name="trading_datacom"/>
+                    <filter string="Datacom" domain="[('jenis_so','=','dtc')]" name="filter_dtc"/>
+                    <filter string="Trading" domain="[('jenis_so','=','datacom')]" name="trading_datacom"/>
                     <separator/>
                     <filter string="Ada SPK" domain="[('stat_spk','=',True)]"/>
                     <filter string="Tidak ada SPK" domain="[('stat_spk','=',False)]"/>

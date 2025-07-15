@@ -8,4 +8,4 @@ class SalesOrderEnhancedProject(models.Model):
     ord_type = fields.Many2one('enhanced.sales.jenis.tabel', string='Jenis Order')
     pek_type = fields.Many2one('enhanced.sales.pekerjaan.tabel', string='Jenis Pekerjaan')
     sales_area_kode = fields.Many2one('enhanced.sales.area', string='Sales Area')
-    jenis_so = fields.Selection(selection_add=[("trading","Trading"), ("datacom","Datacom")])
+    jenis_so = fields.Selection(selection_add=[("dtc","Datacom"), ("datacom","Trading")])

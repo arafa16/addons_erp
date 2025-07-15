@@ -44,7 +44,7 @@ class OpportunitySaleReport(models.Model):
     # medium_id = fields.Many2one('utm.medium', string='Medium', readonly=True)
 
     order_type_id = fields.Many2one('crm.order.type', 'Order Type CRM', required=True, track_visibility='onchange')
-    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("trading", "Trading"), ("datacom", "Datacom"), ("rental", "Rental Order")], string='Order Type', track_visibility='onchange')
+    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("dtc", "Datacom"), ("datacom", "Trading"), ("rental", "Rental Order")], string='Order Type', track_visibility='onchange')
     proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', track_visibility='onchange')
     area_id = fields.Many2one('enhanced.sales.area', string='Sales Area', required=True)
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', readonly=True)

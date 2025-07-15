@@ -17,7 +17,7 @@ class Order_Type(models.Model):
 
     name = fields.Char('Order Type')
     proj_type_id = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project')
-    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("trading", "Trading"), ("datacom", "Datacom"), ("rental", "Rental Order")], string='Mapped Type')
+    jenis_so = fields.Selection([("common", "General Order"), ("Project", "Project"), ("dtc", "Datacom"), ("datacom", "Trading"), ("rental", "Rental Order")], string='Mapped Type')
     boq_due = fields.Selection([('1', '1 Hari Kerja'), ('2', '2 Hari Kerja'), ('3', '3 Hari Kerja')])
     need_spk = fields.Boolean('SPK')
     using_mitra = fields.Boolean('BoQ Mitra')
