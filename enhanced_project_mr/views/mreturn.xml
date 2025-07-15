@@ -73,7 +73,7 @@
                         <page string="Material">
                             <field name="material_ids">
                                 <tree editable="bottom" create="false" write="false" delete="false">
-                                    <field name="barang_id" readonly="1" clickable="False"/>
+                                    <field name="barang_id" readonly="1" clickable="False" options="{'no_create': True}"/>
                                     <field name="quantity" readonly="1"/>
                                     <field name="ret" readonly="1"/>
                                     <field name="ret_pros"/>

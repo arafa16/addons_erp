@@ -21,8 +21,8 @@
                             <page string="Material">
                                 <field name="material_ids">
                                     <tree editable="bottom">
-                                        <field name="barang_id"/>
-                                        <field name="gudang_pengambilan" domain="[('usage','=','internal')]"/>
+                                        <field name="barang_id" options="{'no_create': True}"/>
+                                        <field name="gudang_pengambilan" domain="[('usage','=','internal')]" options="{'no_create': True}"/>
                                         <field name="tersedia" readonly="1"/>
                                         <field name="permintaan"/>
                                     </tree>
