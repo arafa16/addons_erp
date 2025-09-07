@@ -16,6 +16,7 @@ class PurchaseReport(models.Model):
 
     so_id = fields.Many2one('sale.order', 'Sales Order', readonly=True)
     so_date = fields.Date('SO Date', readonly=True)
+    proj_type = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', readonly=True)
     pr_id = fields.Many2one('sprogroup.purchase.request', 'Purchase Request', readonly=True)
     pr_date = fields.Date('PR Date', readonly=True)
     po_id = fields.Many2one('purchase.order', 'Purchase Order', readonly=True)
@@ -84,7 +85,7 @@ class PurchaseReport(models.Model):
                 WITH currency_rate as (%s)
                 select
                     min(l.id) as id,
-                    so.id as so_id, so.date_order::date as so_date,
+                    so.id as so_id, so.date_order::date as so_date, so.proj_type as proj_type,
                     pr.id as pr_id, pr.date_start as pr_date,
                     s.id as po_id, s.date_order::date as po_date,
                     ai.number as inv_id, ai.date as inv_date, ai.state as inv_state, 
@@ -132,7 +133,7 @@ class PurchaseReport(models.Model):
                 group by
                     so.id, so.date_order::date,
                     pr.id, pr.date_start,
-                    s.id, s.date_order::date,
+                    s.id, s.date_order::date, proj_type,
                     ai.number, ai.date, ai.state, 
                     l.account_id, aa.id,
                     s.company_id,

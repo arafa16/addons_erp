@@ -7,6 +7,7 @@
                 <tree string="Purchase Line">
                     <field name="so_id"/>
                     <field name="so_date"/>
+                    <field name="proj_type"/>
                     <field name="pr_id"/>
                     <field name="pr_date"/>
                     <field name="po_id"/>
@@ -82,15 +83,16 @@
             <field name="context">{'group_by': ['partner_id'], 'measures': ['delay_pass']}</field>
         </record>-->
 
-        <record id="view_purchase_order_audit_search" model="ir.ui.view">
+    <record id="view_purchase_order_audit_search" model="ir.ui.view">
         <field name="name">report.purchase.order.audit.search</field>
         <field name="model">purchase.audit.report</field>
         <field name="arch" type="xml">
             <search string="Purchase Audit">
-                <filter string="Quotations" name="quotes" domain="[('state','=','draft')]"/>
-                <filter string="Orders" name="orders" domain="[('state','!=','draft'),('state','!=','cancel')]"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
+                <filter string="Orders" name="orders" domain="[('state','in',('purchase','done'))]"/>
+                <filter string="Quotations" name="quotes" domain="[('state','not in',('purchase','done','cancel'))]"/>
+                <filter string="Canceled" name="cancel" domain="[('state','=','cancel')]"/>
                 <group expand="0" string="Extended Filters">
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -101,10 +103,14 @@
                     <filter string="Vendor" name="group_partner_id" context="{'group_by':'partner_id'}"/>
                     <filter string="Responsible" name="Responsible" context="{'group_by':'user_id'}"/>
                     <filter string="Product Category" name="group_category_id" context="{'group_by':'category_id'}"/>
+                    <filter string="Jenis Project" name="group_proj_type" context="{'group_by':'proj_type'}"/>
                     <filter string="Status" context="{'group_by':'state'}"/>
                     <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
-                    <filter string="Order Month" context="{'group_by':'po_date:month'}" help="Order of Day"/>
+                    <filter string="Sales Order Date" context="{'group_by':'so_date:month'}"/>
+                    <filter string="Purchase Request Date" context="{'group_by':'pr_date:month'}"/>
+                    <filter string="Purchase Order Date" context="{'group_by':'po_date:month'}"/>
+                    <filter string="Invoice Date" context="{'group_by':'inv_date:month'}"/>
                 </group>
             </search>
         </field>
