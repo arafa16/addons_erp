@@ -96,7 +96,7 @@ class HRAdvance(models.Model):
     is_paid = fields.Boolean(string='Is Paid')
     cost_center_id = fields.Many2one('cost.center', string="Cost Center", required=True, ondelete="set null")
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', required=True, ondelete="set null")
-    expense_id = fields.Many2one('hr.expense.sheet', string="Expense", readonly=True, ondelete="set null")
+    expense_id = fields.Many2one('hr.expense.sheet', string="Expense", readonly=True, ondelete="set null", copy=False)
     order_id = fields.Many2one('sale.order', string="Sale Order", readonly=True, states={'draft': [('readonly', False)]}, ondelete="set null", tracking=True)
     request_id = fields.Many2one('sprogroup.purchase.request', string="Purchase Request", readonly=True, states={'draft': [('readonly', False)]}, ondelete="set null")
     department_id_charge_to = fields.Many2one('hr.department', string="Charge Department", readonly=True, states={'draft': [('readonly', False)]}, ondelete="restrict")
