@@ -19,6 +19,9 @@ class PurchaseReport(models.Model):
     proj_type = fields.Many2one('enhanced.sales.project.tabel', string='Jenis Project', readonly=True)
     pr_id = fields.Many2one('sprogroup.purchase.request', 'Purchase Request', readonly=True)
     pr_date = fields.Date('PR Date', readonly=True)
+    qty_pr = fields.Float('Quantity PR', readonly=True)
+    up_pr = fields.Float('Unit Price PR', readonly=True)
+    amt_pr = fields.Float('Amount PR', readonly=True)
     po_id = fields.Many2one('purchase.order', 'Purchase Order', readonly=True)
     po_date = fields.Date('PO Date', readonly=True)
     inv_id = fields.Char('Invoice', readonly=True)
@@ -86,7 +89,10 @@ class PurchaseReport(models.Model):
                 select
                     min(l.id) as id,
                     so.id as so_id, so.date_order::date as so_date, so.proj_type as proj_type,
-                    pr.id as pr_id, pr.date_start as pr_date,
+                    pr.id as pr_id, pr.date_start as pr_date, 
+                    sum(pr_l.product_qty) as qty_pr, 
+                    (sum(pr_l.product_qty * pr_l.cost_product) / sum(pr_l.product_qty)) as up_pr, 
+                    sum(pr_l.product_qty * pr_l.cost_product) as amt_pr,
                     s.id as po_id, s.date_order::date as po_date,
                     ai.number as inv_id, ai.date as inv_date, ai.state as inv_state, 
                     aa.id as account_id,
@@ -129,6 +135,7 @@ class PurchaseReport(models.Model):
                 left join account_account aa on ail.account_id = aa.id
                 left join purchase_requisition req on s.requisition_id = req.id
                 left join sprogroup_purchase_request pr on req.nomor_pr = pr.id
+                left join sprogroup_purchase_request_line pr_l on pr.id = pr_l.request_id and l.product_id = pr_l.product_id
                 left join sale_order so on pr.salesorder_id = so.id
                 group by
                     so.id, so.date_order::date,

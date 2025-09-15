@@ -8,8 +8,14 @@
                     <field name="so_id"/>
                     <field name="so_date"/>
                     <field name="proj_type"/>
+                    <field name="product_id"/>
+                    <field name="product_tmpl_id"/>
+                    <field name="category_id"/>
                     <field name="pr_id"/>
                     <field name="pr_date"/>
+                    <field name="qty_pr"/>
+                    <field name="up_pr"/>
+                    <field name="amt_pr"/>
                     <field name="po_id"/>
                     <field name="po_date" />
                     <field name="inv_id"/>
@@ -19,9 +25,6 @@
                     <field name="account_id"/>
                     <field name="cost_center_id"/>
                     <field name="account_analytic_id"/>
-                    <field name="product_id"/>
-                    <field name="product_tmpl_id"/>
-                    <field name="category_id"/>
                     <field name="qty_purch"/>
                     <field name="up_purch"/>
                     <field name="amt_purch" sum="Total Purchase amount" widget="monetary"/>
