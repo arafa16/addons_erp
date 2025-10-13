@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="enhanced_purchase_approval_loa_print" inherit_id="purchase.report_purchaseorder_document">
+        <template id="external_layout_header_purchase" inherit_id="web.external_layout_background">
+            <xpath expr="//div/div[3]" position="after">
+                <t t-if="o and o._name == 'purchase.order' and o.state != 'draft'">
+                    <div class="row" style="clear: both; margin-top: 0px;">
+                        <div class="col-12 text-center">
+                            <h2 class="mt-0">Purchase Order Confirmation #<span t-field="o.name"/></h2>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="enhanced_purchase_approval_loa_print" inherit_id="purchase.report_purchaseorder_document" priority="1">
+            <xpath expr="//h2[span[@t-field='o.name']]" position="replace"/>
             <xpath expr="//div[hasclass('page')]/div[2]" position="replace">
                 <div class="row" style="font-size: 12px;">
                     <div class="col-xs-3">
@@ -110,10 +123,35 @@
                 <attribute name="style">white-space:nowrap</attribute>
             </xpath>
         </template>
+
         <template id="enhanced_purchase_rfk_print" inherit_id="purchase.report_purchasequotation_document">
             <xpath expr="//div[hasclass('page')]/h2[1]" position="replace">
                 <h3>Request for Quotation #<span t-field="o.id"/></h3>
             </xpath>
         </template>
+
+        <record id="report_purchase_paperformat" model="report.paperformat">
+            <field name="name">Purchase A4</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">50</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">40</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report id="purchase.action_report_purchase_order"
+            model="purchase.order"
+            string="Purchase Order"
+            report_type="qweb-pdf"
+            name="purchase.report_purchaseorder"
+            file="purchase.report_purchaseorder"
+            paperformat="enhanced_purchase_approval.report_purchase_paperformat"/>
     </data>
 </odoo>
