@@ -4,7 +4,7 @@
         <template id="external_layout_header_purchase" inherit_id="web.external_layout_background">
             <xpath expr="//div/div[3]" position="after">
                 <t t-if="o and o._name == 'purchase.order' and o.state != 'draft'">
-                    <div class="row" style="clear: both; margin-top: 0px;">
+                    <div class="row" style="clear: both; margin-top: -5px;">
                         <div class="col-12 text-center">
                             <h2 class="mt-0">Purchase Order Confirmation #<span t-field="o.name"/></h2>
                         </div>
@@ -137,12 +137,12 @@
             <field name="page_height">297</field>
             <field name="page_width">210</field>
             <field name="orientation">Portrait</field>
-            <field name="margin_top">50</field>
-            <field name="margin_bottom">20</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">22</field>
             <field name="margin_left">7</field>
             <field name="margin_right">7</field>
             <field name="header_line" eval="False"/>
-            <field name="header_spacing">40</field>
+            <field name="header_spacing">35</field>
             <field name="dpi">90</field>
         </record>
 
