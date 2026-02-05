@@ -110,6 +110,15 @@
                             </div>
                         </div>
                         <div class="o_setting_right_pane">
+                            <label string="Disetujui" for="default_disetujui_sign_by"/>
+                            <div class="text-muted">
+                                Disetujui
+                            </div>
+                            <div class="text-muted">
+                                <field name="default_disetujui_sign_by" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                        </div>
+                        <div class="o_setting_right_pane">
                             <label string="Default pelaksana" for="default_done_sign_by"/>
                             <div class="text-muted">
                                 Pelaksana

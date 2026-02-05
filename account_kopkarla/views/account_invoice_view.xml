@@ -241,6 +241,7 @@
                             <group>
                                 <field name="created_sign_by" options="{'no_create': True}"/>
                                 <field name="checked_sign_by" options="{'no_create': True}"/>
+                                <field name="disetujui_sign_by" options="{'no_create': True}"/>
                                 <field name="known_sign_by" options="{'no_create': True}"/>
                                 <field name="done_sign_by" options="{'no_create': True}"/>
                                 <field name="management_sign_by" options="{'no_create': True}"/>

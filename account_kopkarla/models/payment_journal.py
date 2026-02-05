@@ -66,6 +66,7 @@ class PaymentJournal(models.Model):
         default='Write-Off')
     created_sign_by = fields.Many2one('hr.employee', string='Dibuat', default=lambda self: self.env['res.config.settings'].get_values().get('default_created_sign_by'))
     checked_sign_by = fields.Many2one('hr.employee', string='Diperiksa', default=lambda self: self.env['res.config.settings'].get_values().get('default_checked_sign_by'))
+    disetujui_sign_by = fields.Many2one('hr.employee', string='Disetujui', default=lambda self: self.env['res.config.settings'].get_values().get('default_disetujui_sign_by'))
     known_sign_by = fields.Many2one('hr.employee', string='Mengetahui', default=lambda self: self.env['res.config.settings'].get_values().get('default_known_sign_by'))
     done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan', default=lambda self: self.env['res.config.settings'].get_values().get('default_done_sign_by'))
     management_sign_by = fields.Many2one('hr.employee', string='Pengurus', default=lambda self: self.env['res.config.settings'].get_values().get('default_management_sign_by'))

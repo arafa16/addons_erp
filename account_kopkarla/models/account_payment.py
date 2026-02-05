@@ -8,6 +8,7 @@ class account_payment(models.Model):
 
     created_sign_by = fields.Many2one('hr.employee', string='Dibuat', compute='_get_default_sign')
     checked_sign_by = fields.Many2one('hr.employee', string='Diperiksa', compute='_get_default_sign')
+    disetujui_sign_by = fields.Many2one('hr.employee', string='Disetujui', compute='_get_default_sign')
     known_sign_by = fields.Many2one('hr.employee', string='Mengetahui', compute='_get_default_sign')
     done_sign_by = fields.Many2one('hr.employee', string='Dilaksanakan', compute='_get_default_sign')
     management_sign_by = fields.Many2one('hr.employee', string='Pengurus', compute='_get_default_sign')
@@ -15,6 +16,7 @@ class account_payment(models.Model):
     def _get_default_sign(self):
         self.created_sign_by = self.env['res.config.settings'].get_values().get('default_created_sign_by')
         self.checked_sign_by = self.env['res.config.settings'].get_values().get('default_checked_sign_by')
+        self.disetujui_sign_by = self.env['res.config.settings'].get_values().get('default_disetujui_sign_by')
         self.known_sign_by = self.env['res.config.settings'].get_values().get('default_known_sign_by')
         self.done_sign_by = self.env['res.config.settings'].get_values().get('default_done_sign_by')
         self.management_sign_by = self.env['res.config.settings'].get_values().get('default_management_sign_by')
