@@ -2,12 +2,7 @@
 {
 	'name': 'Dashboard Ninja Advance',
 
-	'summary': """
-		Dashboard Ninja Advance for Odoo allows you to showcase your complex data in form of 
-        interactive and engaging charts or list views. Manage the complicated data of your 
-        business and get a detailed insight into your sale. Dashboard Ninja Advance, 
-        Dashboard Ninja, Modern Odoo Dashboards, Powerful Dashboard, Beautiful Dashboard,
-        Modern Dashboard, Chart Dashboard, Graph Dashboard, Pie Chart Dashboard, Ninja Dashboard.
+	'summary': """Dashboard Ninja Advance for Odoo provides interactive charts, list views, dashboards, and detailed business insights.
 """,
 
 	'description': """
