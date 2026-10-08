@@ -21,7 +21,14 @@ class SalesOrder(models.Model):
     required3 = fields.Boolean(string='LoA Level 3', compute="setButtoncheck3")
     required4 = fields.Boolean(string='LoA Level 4', compute="setButtoncheck4")
     required5 = fields.Boolean(string='LoA Level 5', compute="setButtoncheck5")
-    loa_request = fields.Selection([(1,"Request LoA to Asisten Manager"),(2,"Request LoA to Manager"),(3,"Request LoA to General manager"),(4,"Request LoA to Pengurus/Direktur"),(5,"Request LoA to Ketua Pengurus"),(10,"Done")], string='Status LoA')
+    loa_request = fields.Selection([
+        (1,"Request LoA to Asisten Manager"),
+        (2,"Request LoA to Manager"),
+        (3,"Request LoA to General manager"),
+        (4,"Request LoA to Pengurus/Direktur"),
+        (5,"Request LoA to Ketua Pengurus"),
+        (10,"Done")
+    ], string='Status LoA')
 
 
     bolehConfirm = fields.Boolean(string='No Var')
@@ -41,6 +48,29 @@ class SalesOrder(models.Model):
             self.penandatangan = self.penandatangan2.id
         else:
             self.penandatangan = self.penandatangan1.id
+
+    def _approval_levels(self):
+        """Return configured approval levels in sequential order."""
+        levels = []
+        for level, required, employee in (
+                (1, self.required1, self.penandatangan1),
+                (2, self.required2, self.penandatangan2),
+                (3, self.required3, self.penandatangan3),
+                (4, self.required4, self.penandatangan4),
+                (5, self.required5, self.penandatangan5)):
+            if required and employee.id:
+                levels.append((level, employee))
+        return levels
+
+    def _approval_start(self):
+        """Return the first configured level in the approval sequence."""
+        levels = self._approval_levels()
+        return levels[0] if levels else False
+
+    def _approval_target(self):
+        """Return the highest configured level that must be approved."""
+        levels = self._approval_levels()
+        return levels[-1] if levels else False
 
     @api.depends('order_line')
     def setButtoncheck1(self):
@@ -223,27 +253,29 @@ class SalesOrder(models.Model):
                     if self.pek_type.bypassLoA == True:
                         prosesLoa = False
             if prosesLoa == True:
+                start = self._approval_start()
+                if not start:
+                    raise UserError('Tidak ada level approval yang aktif')
+
+                start_level, start_employee = start
                 tujuan = []
-                if self.required5 == True:
-                    teksmail = self.penandatangan5.user_id.email
+                if start_level == 5:
+                    teksmail = start_employee.user_id.email
                     tail = 'Ketua Pengurus'
-                    self.loa_request = 5
-                if self.required4 == True:
-                    teksmail = self.penandatangan4.user_id.email
+                elif start_level == 4:
+                    teksmail = start_employee.user_id.email
                     tail = 'Pengurus/Direktur'
-                    self.loa_request = 4
-                if self.required3 == True:
-                    teksmail = self.penandatangan3.user_id.email
+                elif start_level == 3:
+                    teksmail = start_employee.user_id.email
                     tail = 'General Manager'
-                    self.loa_request = 3
-                if self.required2 == True:
-                    teksmail = self.penandatangan2.user_id.email
+                elif start_level == 2:
+                    teksmail = start_employee.user_id.email
                     tail = 'Manager'
-                    self.loa_request = 2
-                if self.required1 == True:
-                    teksmail = self.penandatangan1.user_id.email
+                else:
+                    teksmail = start_employee.user_id.email
                     tail = 'Asisten Manager'
-                    self.loa_request = 1
+
+                self.loa_request = start_level
                 tujuan.append(teksmail)
                 template = 'salesorder_quotation_loa'
                 self.requestLoA = True
@@ -309,49 +341,42 @@ class SalesOrder(models.Model):
 
     @api.multi
     def press_approval(self):
-        nextLoa = False
-        idlanjut = 0
+        levels = self._approval_levels()
+        if not levels:
+            raise UserError('Tidak ada level approval yang aktif')
+
+        current = False
+        next_level = False
+        next_employee = False
         tail = ''
         tujuan = []
         tailoroginal = self.apvteks
-        if self.loa_request == 1:
-            curent = self.penandatangan1
-            if self.required2 == True:
-                nextLoa = True
-                idlanjut = 2
-                tail = 'Manager'
-                tujuan.append(self.penandatangan2.user_id.email)
-        if self.loa_request == 2:
-            curent = self.penandatangan2
-            if self.required3 == True:
-                nextLoa = True
-                idlanjut = 3
-                tail = 'General Manager'
-                tujuan.append(self.penandatangan3.user_id.email)
-        if self.loa_request == 3:
-            curent = self.penandatangan3
-            if self.required4 == True:
-                nextLoa = True
-                idlanjut = 4
-                tail = 'Pengurus/Direktur'
-                tujuan.append(self.penandatangan4.user_id.email)
-        if self.loa_request == 4:
-            curent = self.penandatangan4
-            if self.required5 == True:
-                nextLoa = True
-                idlanjut = 5
-                tail = 'Ketua Pengurus'
-                tujuan.append(self.penandatangan5.user_id.email)
-        if self.loa_request == 5:
-            curent = self.penandatangan5
+        current_index = next(
+            (index for index, item in enumerate(levels)
+             if item[0] == self.loa_request),
+            False)
 
-        if curent.user_id.id == self._uid:
+        if current_index is False:
+            raise UserError('LoA Confirm, Access Denied')
+
+        current = levels[current_index][1]
+        if current_index + 1 < len(levels):
+            next_level, next_employee = levels[current_index + 1]
+            tail = {
+                2: 'Manager',
+                3: 'General Manager',
+                4: 'Pengurus/Direktur',
+                5: 'Ketua Pengurus',
+            }.get(next_level, '')
+            tujuan.append(next_employee.user_id.email)
+
+        if current.user_id.id == self._uid:
             idusr = self._uid
             getusrs = self.env['res.users'].browse(idusr)
             self.message_post(body="Document LoA Level " + str(tailoroginal) + " Approved By <b>"+getusrs.display_name+" <i>("+getusrs.email+")</i></b>")
-            if nextLoa == True:
+            if next_level:
                 self.apvteks = tail
-                self.loa_request = idlanjut
+                self.loa_request = next_level
                 template = 'salesorder_quotation_loa'
                 self._sent_mail(tujuan, template,tail)
             else:
@@ -365,6 +390,10 @@ class SalesOrder(models.Model):
             raise UserError('LoA Confirm, Access Denied')
 
     def button_action_baypass(self):
+        if self._approval_target():
+            target_level = self._approval_target()[0]
+            raise UserError(
+                'Cannot bypass mandatory approval level %s' % target_level)
         self.state = 'loaconfirmed'
 
     @api.multi

@@ -38,6 +38,24 @@ class PurchaseOrderInherit(models.Model):
     loa_request = fields.Selection([(1,"Request LoA to Asisten Manager"),(2,"Request LoA to Manager"),(3,"Request LoA to General manager"),(4,"Request LoA to Pengurus/Direktur"),(5,"Request LoA to Ketua Pengurus"),(10,"Done")], string='Status LoA')
     amount_total_base = fields.Float(string='Total in Company Currency', store=True, compute='_get_amount_total_base')
 
+    def _approval_levels(self):
+        """Return active approval levels in sequential order."""
+        levels = []
+        for level, required, employee in (
+                (1, self.required1, self.penandatangan1),
+                (2, self.required2, self.penandatangan2),
+                (3, self.required3, self.penandatangan3),
+                (4, self.required4, self.penandatangan4),
+                (5, self.required5, self.penandatangan5)):
+            if required and employee.id:
+                levels.append((level, employee))
+        return levels
+
+    def _approval_start(self):
+        """Return the first active approval level."""
+        levels = self._approval_levels()
+        return levels[0] if levels else False
+
     @api.multi
     @api.depends('amount_total', 'currency_id')
     def _get_amount_total_base(self):
@@ -191,33 +209,25 @@ class PurchaseOrderInherit(models.Model):
     @api.multi
     def button_action_request_loa_confirm(self):
         if self._uid == self.checker1.user_id.id:
-            tujuan = []
-            if self.required5 == True:
-                teksmail = self.penandatangan5.user_id.email
-                tail = 'Ketua Pengurus'
-                self.loa_request = 5
-            if self.required4 == True:
-                teksmail = self.penandatangan4.user_id.email
-                tail = 'Pengurus/Direktur'
-                self.loa_request = 4
-            if self.required3 == True:
-                teksmail = self.penandatangan3.user_id.email
-                tail = 'General Manager'
-                self.loa_request = 3
-            if self.required2 == True:
-                teksmail = self.penandatangan2.user_id.email
-                tail = 'Manager'
-                self.loa_request = 2
-            if self.required1 == True:
-                teksmail = self.penandatangan1.user_id.email
-                tail = 'Asisten Manager'
-                self.loa_request = 1
-            tujuan.append(teksmail)
-            template = 'purchase_order_loa'
+            start = self._approval_start()
+            if not start:
+                raise UserError('Tidak ada level approval yang aktif')
+
+            start_level, start_employee = start
+            tail = {
+                1: 'Asisten Manager',
+                2: 'Manager',
+                3: 'General Manager',
+                4: 'Pengurus/Direktur',
+                5: 'Ketua Pengurus',
+            }.get(start_level, '')
+            tujuan = [start_employee.user_id.email]
+
+            self.loa_request = start_level
             self.setToLoA = True
             self.apvteks = tail
             self.state = 'requestloa'
-            self._sent_mail(tujuan, template,tail)
+            self._sent_mail(tujuan, 'purchase_order_loa', tail)
         else:
             raise UserError('Access Denied, Only User Checker can Request LoA Action')
 
@@ -332,49 +342,42 @@ class PurchaseOrderInherit(models.Model):
 
     @api.multi
     def press_approval(self):
-        nextLoa = False
-        idlanjut = 0
+        levels = self._approval_levels()
+        if not levels:
+            raise UserError('Tidak ada level approval yang aktif')
+
+        current_index = next(
+            (index for index, item in enumerate(levels)
+             if item[0] == self.loa_request),
+            None)
+        if current_index is None:
+            raise UserError('LoA Confirm, Access Denied')
+
+        current_employee = levels[current_index][1]
+        next_level = False
+        next_employee = False
         tail = ''
         tujuan = []
         tailoroginal = self.apvteks
-        if self.loa_request == 1:
-            curent = self.penandatangan1
-            if self.required2 == True:
-                nextLoa = True
-                idlanjut = 2
-                tail = 'Manager'
-                tujuan.append(self.penandatangan2.user_id.email)
-        if self.loa_request == 2:
-            curent = self.penandatangan2
-            if self[0].required3 == True:
-                nextLoa = True
-                idlanjut = 3
-                tail = 'General Manager'
-                tujuan.append(self.penandatangan3.user_id.email)
-        if self.loa_request == 3:
-            curent = self.penandatangan3
-            if self.required4 == True:
-                nextLoa = True
-                idlanjut = 4
-                tail = 'Pengurus/Direktur'
-                tujuan.append(self.penandatangan4.user_id.email)
-        if self.loa_request == 4:
-            curent = self.penandatangan4
-            if self.required5 == True:
-                nextLoa = True
-                idlanjut = 5
-                tail = 'Ketua Pengurus'
-                tujuan.append(self.penandatangan5.user_id.email)
-        if self.loa_request == 5:
-            curent = self.penandatangan5
 
-        if curent.user_id.id == self._uid:
+        if current_employee.user_id.id == self._uid:
+            if current_index + 1 < len(levels):
+                next_level, next_employee = levels[current_index + 1]
+                tail = {
+                    2: 'Manager',
+                    3: 'General Manager',
+                    4: 'Pengurus/Direktur',
+                    5: 'Ketua Pengurus',
+                }.get(next_level, '')
+                tujuan.append(next_employee.user_id.email)
+
             idusr = self._uid
             getusrs = self.env['res.users'].browse(idusr)
             self.message_post(body="Document LoA Level " + str(tailoroginal) + " Approved By <b>"+getusrs.display_name+" <i>("+getusrs.email+")</i></b>")
-            if nextLoa == True:
+
+            if next_level:
                 self.apvteks = tail
-                self.loa_request = idlanjut
+                self.loa_request = next_level
                 template = 'purchase_order_loa'
                 self._sent_mail(tujuan, template,tail)
             else:
